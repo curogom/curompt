@@ -46,12 +46,12 @@ func newCollectCmd() *cobra.Command {
   # 수집 후 자동 평가
   curo-prompt collect --from claude --eval`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			from, _ := cmd.Flags().GetString("from")
-			filePath, _ := cmd.Flags().GetString("file")
-			collectAll, _ := cmd.Flags().GetBool("all")
-			eval, _ := cmd.Flags().GetBool("eval")
-			output, _ := cmd.Flags().GetString("output")
-			provider, _ := cmd.Flags().GetString("provider")
+			from, _ := cmd.Flags().GetString("from")         //nolint:errcheck
+			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
+			collectAll, _ := cmd.Flags().GetBool("all")      //nolint:errcheck
+			eval, _ := cmd.Flags().GetBool("eval")           //nolint:errcheck
+			output, _ := cmd.Flags().GetString("output")     //nolint:errcheck
+			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck
 
 			if from == "" {
 				return fmt.Errorf("--from 옵션은 필수입니다 (claude, codex, cursor)")

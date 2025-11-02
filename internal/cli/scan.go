@@ -27,10 +27,10 @@ func newScanCmd() *cobra.Command {
   curo-prompt scan --repo .
   curo-prompt scan --repo ./prompts --output reports/`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			repoPath, _ := cmd.Flags().GetString("repo")
-			outputDir, _ := cmd.Flags().GetString("output")
-			patterns, _ := cmd.Flags().GetStringSlice("patterns")
-			provider, _ := cmd.Flags().GetString("provider")
+			repoPath, _ := cmd.Flags().GetString("repo")          //nolint:errcheck
+			outputDir, _ := cmd.Flags().GetString("output")       //nolint:errcheck
+			patterns, _ := cmd.Flags().GetStringSlice("patterns") //nolint:errcheck
+			provider, _ := cmd.Flags().GetString("provider")      //nolint:errcheck
 
 			if repoPath == "" {
 				repoPath = "."
@@ -92,7 +92,10 @@ func newScanCmd() *cobra.Command {
 				}
 
 				// 수집된 프롬프트 생성
-				absPath, _ := filepath.Abs(file)
+				absPath, err := filepath.Abs(file)
+				if err != nil {
+					absPath = file // Fallback to relative path
+				}
 				collectedPrompt := &model.CollectedPrompt{
 					ID:         uuid.New().String(),
 					Tool:       "scan",
@@ -174,7 +177,8 @@ func findPromptFiles(rootPath string, patterns []string) ([]string, error) {
 
 		// 패턴 매칭
 		for _, pattern := range patterns {
-			if matched, _ := filepath.Match(pattern, info.Name()); matched {
+			matched, _ := filepath.Match(pattern, info.Name()) //nolint:errcheck
+			if matched {
 				files = append(files, path)
 				break
 			}

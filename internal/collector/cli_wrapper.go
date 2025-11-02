@@ -39,7 +39,10 @@ func (c *CLIWrapperCollector) WrapCommand(ctx context.Context, command string, a
 	cmd.Stderr = os.Stderr
 
 	// 현재 디렉토리 설정
-	wd, _ := os.Getwd()
+	wd, err := os.Getwd()
+	if err != nil {
+		wd = "."
+	}
 	cmd.Dir = wd
 
 	// 명령 실행

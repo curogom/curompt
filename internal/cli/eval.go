@@ -100,6 +100,9 @@ func newEvalCmd() *cobra.Command {
 }
 
 func getWorkingDir() string {
-	wd, _ := os.Getwd()
+	wd, err := os.Getwd()
+	if err != nil {
+		return "."
+	}
 	return wd
 }

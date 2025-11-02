@@ -29,9 +29,9 @@ func newListCmd() *cobra.Command {
   curo-prompt list --tool cursor      # cursor로 수집된 프롬프트만
   curo-prompt list --eval             # 목록 조회 후 각각 평가 수행`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			limit, _ := cmd.Flags().GetInt("limit")
-			tool, _ := cmd.Flags().GetString("tool")
-			eval, _ := cmd.Flags().GetBool("eval")
+			limit, _ := cmd.Flags().GetInt("limit")  //nolint:errcheck
+			tool, _ := cmd.Flags().GetString("tool") //nolint:errcheck
+			eval, _ := cmd.Flags().GetBool("eval")   //nolint:errcheck
 			output, _ := cmd.Flags().GetString("output")
 			provider, _ := cmd.Flags().GetString("provider")
 

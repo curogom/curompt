@@ -120,7 +120,11 @@ func (c *LogFileCollector) Collect(ctx context.Context) ([]*model.CollectedPromp
 		}
 
 		// Parse prompt
-		parsedPrompt, _ := c.parser.Parse(promptText)
+		parsedPrompt, err := c.parser.Parse(promptText)
+		if err != nil {
+			// Skip invalid prompts
+			continue
+		}
 
 		// Create collected prompt
 		collected := &model.CollectedPrompt{
@@ -231,7 +235,7 @@ func (c *LogFileCollector) findCodexProjectPath(sessionID string) string {
 // findSessionFile recursively searches for session file
 func (c *LogFileCollector) findSessionFile(dir string, sessionID string) []string {
 	var matches []string
-	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
