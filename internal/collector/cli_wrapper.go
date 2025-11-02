@@ -46,7 +46,7 @@ func (c *CLIWrapperCollector) WrapCommand(ctx context.Context, command string, a
 	cmd.Dir = wd
 
 	// 명령 실행
-	err := cmd.Run()
+	err = cmd.Run()
 
 	// 프롬프트 추출 (도구별로 다른 방법)
 	// TODO: 실제 구현은 각 도구별로 다름
