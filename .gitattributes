@@ -1,0 +1,3 @@
+# Test files contain dummy tokens, not real secrets
+internal/redactor/redactor_test.go linguist-documentation=false
+*.test linguist-documentation=false

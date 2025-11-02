@@ -9,31 +9,35 @@ import (
 func TestRedactor_MasksAPIKeys(t *testing.T) {
 	// Red: 실패하는 테스트 작성
 	redactor := NewRedactor()
-	input := "API key: sk-1234567890abcdef"
+	// NOTE: This is a dummy API key for testing only, not a real secret
+	input := "API key: sk-test-dummy-key-1234567890abcdef"
 
 	result := redactor.Redact(input)
 
-	assert.NotContains(t, result, "sk-1234567890abcdef")
+	assert.NotContains(t, result, "sk-test-dummy-key-1234567890abcdef")
 	assert.Contains(t, result, "[REDACTED]")
 }
 
 func TestRedactor_MasksBearerTokens(t *testing.T) {
 	redactor := NewRedactor()
-	input := "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+	// NOTE: This is a dummy JWT token for testing only, not a real secret
+	// Base64 encoded "dummy-header.dummy-payload.dummy-signature"
+	input := "Authorization: Bearer dummy-header.dummy-payload.dummy-signature"
 
 	result := redactor.Redact(input)
 
-	assert.NotContains(t, result, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+	assert.NotContains(t, result, "dummy-header.dummy-payload.dummy-signature")
 	assert.Contains(t, result, "[REDACTED]")
 }
 
 func TestRedactor_MasksAPIKeyWithColon(t *testing.T) {
 	redactor := NewRedactor()
-	input := "api_key: abc123def456"
+	// NOTE: This is a dummy API key for testing only, not a real secret
+	input := "api_key: test-dummy-key-abc123def456"
 
 	result := redactor.Redact(input)
 
-	assert.NotContains(t, result, "abc123def456")
+	assert.NotContains(t, result, "test-dummy-key-abc123def456")
 	assert.Contains(t, result, "[REDACTED]")
 }
 
@@ -58,11 +62,12 @@ func TestRedactor_PreservesNonSensitiveText(t *testing.T) {
 
 func TestRedactor_MultipleSecrets(t *testing.T) {
 	redactor := NewRedactor()
-	input := "API key: sk-test123, Bearer token: abc123, .env file has secrets"
+	// NOTE: All tokens/keys here are dummy values for testing only, not real secrets
+	input := "API key: sk-test-dummy-123, Bearer token: test-dummy-token-abc123, .env file has secrets"
 
 	result := redactor.Redact(input)
 
-	assert.NotContains(t, result, "sk-test123")
-	assert.NotContains(t, result, "abc123")
+	assert.NotContains(t, result, "sk-test-dummy-123")
+	assert.NotContains(t, result, "test-dummy-token-abc123")
 	assert.Contains(t, result, "[REDACTED]")
 }
