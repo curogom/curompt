@@ -13,9 +13,6 @@ linters:
     - gofmt         # 포맷팅
     - goimports     # import 정렬
 
-run:
-  timeout: 5m
-
 linters-settings:
   errcheck:
     check-type-assertions: true
@@ -32,4 +29,3 @@ issues:
       linters:
         - errcheck
         - gosimple
-
