@@ -171,17 +171,20 @@ func (r *sqliteRepository) FindByID(ctx context.Context, id string) (*model.Coll
 
 		if inputs != "" {
 			if err := json.Unmarshal([]byte(inputs), &collectedPrompt.Prompt.Inputs); err != nil {
-				// If invalid, Inputs will remain empty
+				// If invalid, Inputs will remain empty - this is acceptable
+				_ = err
 			}
 		}
 		if invariants != "" {
 			if err := json.Unmarshal([]byte(invariants), &collectedPrompt.Prompt.Invariants); err != nil {
-				// If invalid, Invariants will remain empty
+				// If invalid, Invariants will remain empty - this is acceptable
+				_ = err
 			}
 		}
 		if outputFormat != "" {
 			if err := json.Unmarshal([]byte(outputFormat), &collectedPrompt.Prompt.OutputFormat); err != nil {
-				// If invalid, OutputFormat will remain empty
+				// If invalid, OutputFormat will remain empty - this is acceptable
+				_ = err
 			}
 		}
 	}
@@ -189,7 +192,8 @@ func (r *sqliteRepository) FindByID(ctx context.Context, id string) (*model.Coll
 	// Metadata 재구성
 	if metadata != "" {
 		if err := json.Unmarshal([]byte(metadata), &collectedPrompt.Metadata); err != nil {
-			// If invalid, Metadata will remain empty
+			// If invalid, Metadata will remain empty - this is acceptable
+			_ = err
 		}
 	}
 
@@ -236,24 +240,28 @@ func (r *sqliteRepository) FindByTool(ctx context.Context, tool string) ([]*mode
 			p.Prompt = &parser.Prompt{Raw: p.RawPrompt, Role: role}
 			if inputs != "" {
 				if err := json.Unmarshal([]byte(inputs), &p.Prompt.Inputs); err != nil {
-					// If invalid, Inputs will remain empty
+					// If invalid, Inputs will remain empty - this is acceptable
+					_ = err
 				}
 			}
 			if invariants != "" {
 				if err := json.Unmarshal([]byte(invariants), &p.Prompt.Invariants); err != nil {
-					// If invalid, Invariants will remain empty
+					// If invalid, Invariants will remain empty - this is acceptable
+					_ = err
 				}
 			}
 			if outputFormat != "" {
 				if err := json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat); err != nil {
-					// If invalid, OutputFormat will remain empty
+					// If invalid, OutputFormat will remain empty - this is acceptable
+					_ = err
 				}
 			}
 		}
 
 		if metadata != "" {
 			if err := json.Unmarshal([]byte(metadata), &p.Metadata); err != nil {
-				// If invalid, Metadata will remain empty
+				// If invalid, Metadata will remain empty - this is acceptable
+				_ = err
 			}
 		}
 
@@ -303,24 +311,28 @@ func (r *sqliteRepository) FindRecent(ctx context.Context, limit int) ([]*model.
 			p.Prompt = &parser.Prompt{Raw: p.RawPrompt, Role: role}
 			if inputs != "" {
 				if err := json.Unmarshal([]byte(inputs), &p.Prompt.Inputs); err != nil {
-					// If invalid, Inputs will remain empty
+					// If invalid, Inputs will remain empty - this is acceptable
+					_ = err
 				}
 			}
 			if invariants != "" {
 				if err := json.Unmarshal([]byte(invariants), &p.Prompt.Invariants); err != nil {
-					// If invalid, Invariants will remain empty
+					// If invalid, Invariants will remain empty - this is acceptable
+					_ = err
 				}
 			}
 			if outputFormat != "" {
 				if err := json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat); err != nil {
-					// If invalid, OutputFormat will remain empty
+					// If invalid, OutputFormat will remain empty - this is acceptable
+					_ = err
 				}
 			}
 		}
 
 		if metadata != "" {
 			if err := json.Unmarshal([]byte(metadata), &p.Metadata); err != nil {
-				// If invalid, Metadata will remain empty
+				// If invalid, Metadata will remain empty - this is acceptable
+				_ = err
 			}
 		}
 
