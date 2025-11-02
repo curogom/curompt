@@ -3,10 +3,11 @@ package scorer
 import (
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/analyzer"
-	"github.com/curogom/curo-prompt/internal/parser"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/curogom/curo-prompt/internal/analyzer"
+	"github.com/curogom/curo-prompt/internal/parser"
 )
 
 func TestStructureMetricCalculator_Calculate(t *testing.T) {
