@@ -126,6 +126,10 @@ func (e *Evaluator) calculateConcisenessScore(rawPrompt string, tokenCount int) 
 // calculateRiskScore calculates risk metric
 func (e *Evaluator) calculateRiskScore(prompt *parser.Prompt) float64 {
 	calc := scorer.NewRiskMetricCalculator(prompt)
-	score, _ := calc.Calculate()
+	score, err := calc.Calculate()
+	if err != nil {
+		// Return default score on error
+		return 50.0
+	}
 	return score
 }
