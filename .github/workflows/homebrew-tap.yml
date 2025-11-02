@@ -30,9 +30,14 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event_name }}" == "release" ]; then
+            # Release 이벤트인 경우
             VERSION=${GITHUB_REF#refs/tags/}
-          else
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # workflow_dispatch인 경우
             VERSION=${{ github.event.inputs.version }}
+          else
+            # 기본값 (release 워크플로우에서 트리거된 경우)
+            VERSION=${{ github.event.inputs.version || github.event.client_payload.version || 'unknown' }}
           fi
           VERSION_NUM=${VERSION#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
