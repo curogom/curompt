@@ -1,0 +1,32 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - errcheck      # 에러 체크
+    - gosimple      # 간단한 코드 개선 제안
+    - govet         # go vet
+    - ineffassign   # 사용하지 않는 할당
+    - staticcheck   # 정적 분석
+    - unused        # 사용하지 않는 코드
+    - gofmt         # 포맷팅
+    - goimports     # import 정렬
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: github.com/curogom/curo-prompt
+
+issues:
+  exclude-rules:
+    # 테스트 파일은 일부 규칙 완화
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosimple
+

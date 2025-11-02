@@ -1,0 +1,87 @@
+package reporter
+
+import (
+	"testing"
+
+	"github.com/curogom/curo-prompt/internal/analyzer"
+	"github.com/curogom/curo-prompt/internal/evaluator"
+	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curo-prompt/internal/scorer"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestMarkdownReporter_Generate(t *testing.T) {
+	// Red: 실패하는 테스트 작성
+	reporter := NewMarkdownReporter()
+
+	result := &evaluator.EvaluationResult{
+		Prompt: &model.CollectedPrompt{
+			ID:         "test-1",
+			Tool:       "codex",
+			RawPrompt:  "# ROLE\nEngineer",
+			Timestamp:  1234567890,
+			Command:    "codex exec test",
+			WorkingDir: "/tmp",
+		},
+		Analysis: &analyzer.AnalysisResult{
+			HasRole:         true,
+			HasInputs:       false,
+			HasInvariants:   false,
+			HasOutputFormat: false,
+			SectionCount:    1,
+			DuplicateRules:  []string{},
+		},
+		Score: &scorer.ScoreResult{
+			OverallScore: 75.5,
+			Metrics: scorer.Metrics{
+				Structure:            80.0,
+				Conciseness:          70.0,
+				InstructionFollowing: 80.0,
+				Risk:                 70.0,
+			},
+		},
+		TokenCount:    100,
+		TokenProvider: "claude",
+	}
+
+	report, err := reporter.Generate(result)
+
+	require.NoError(t, err)
+	assert.NotEmpty(t, report)
+	assert.Contains(t, report, "프롬프트 평가 리포트")
+	assert.Contains(t, report, "75.5")
+	assert.Contains(t, report, "codex")
+}
+
+func TestMarkdownReporter_WithMissingSections(t *testing.T) {
+	reporter := NewMarkdownReporter()
+
+	result := &evaluator.EvaluationResult{
+		Prompt: &model.CollectedPrompt{
+			ID:        "test-1",
+			Tool:      "codex",
+			RawPrompt: "# ROLE\nEngineer",
+		},
+		Analysis: &analyzer.AnalysisResult{
+			HasRole:         true,
+			HasInputs:       false,
+			HasInvariants:   false,
+			HasOutputFormat: false,
+			SectionCount:    1,
+		},
+		Score: &scorer.ScoreResult{
+			OverallScore: 50.0,
+			Metrics: scorer.Metrics{
+				Structure: 50.0,
+			},
+		},
+		TokenCount: 50,
+	}
+
+	report, err := reporter.Generate(result)
+	require.NoError(t, err)
+
+	// MissingSections가 없어도 리포트는 생성되어야 함
+	assert.NotEmpty(t, report)
+}

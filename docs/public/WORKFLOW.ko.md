@@ -1,0 +1,216 @@
+# 워크플로우 & 프롬프트 수집
+
+> 🇬🇧 **English**: [English Version](./WORKFLOW.md)
+
+## 개요
+
+이 문서는 `curo-prompt`가 프롬프트를 수집, 저장, 관리하는 방법을 설명합니다.
+
+## 현재 워크플로우
+
+### 1. 초기 설정
+
+처음 `curo-prompt`를 실행하면 데이터베이스가 자동으로 초기화됩니다:
+
+```bash
+# 첫 실행 - ~/.curo-prompt/db.sqlite에 DB 생성됨
+curo-prompt scan --repo .
+```
+
+데이터베이스 위치: `~/.curo-prompt/db.sqlite`
+
+### 2. 프롬프트 수집 방법
+
+#### 방법 1: 파일 스캔 (현재 - MVP)
+
+레포지토리 내 기존 프롬프트 파일을 스캔:
+
+```bash
+# 현재 디렉토리에서 프롬프트 파일 스캔
+curo-prompt scan --repo .
+
+# 특정 디렉토리 스캔
+curo-prompt scan --repo ./prompts
+
+# 커스텀 파일 패턴
+curo-prompt scan --repo . --patterns "*.md" --patterns "*.txt"
+```
+
+**작동 방식 (한 번에 모든 작업 수행):**
+1. 패턴에 맞는 모든 프롬프트 파일 찾기
+2. **수집**: 각 프롬프트를 CollectedPrompt로 생성
+3. **평가**: 각 프롬프트 평가 (Evaluate 호출)
+4. **저장**: 데이터베이스에 저장 (`~/.curo-prompt/db.sqlite`)
+5. **리포트 생성**: `reports/` 디렉토리에 리포트 생성
+
+**참고**: `scan` 명령은 한 번에 모든 작업을 수행합니다: 수집 → 평가 → 저장 → 리포트 생성
+
+#### 방법 2: 직접 평가 (DB에 저장 안 함)
+
+저장하지 않고 단일 프롬프트 파일 평가:
+
+```bash
+# 저장 없이 평가
+curo-prompt eval --file prompt.md
+
+# 평가 후 리포트 저장
+curo-prompt eval --file prompt.md --output reports/
+```
+
+**참고**: `eval` 명령은 현재 **데이터베이스에 저장하지 않습니다**. 저장하려면 `scan` 명령을 사용하세요.
+
+#### 방법 3: CLI 래퍼 수집 (예정 - 아직 완전히 구현 안 됨)
+
+외부 CLI 도구를 래핑하여 프롬프트 캡처:
+
+```bash
+# codex/cursor 명령에서 프롬프트 캡처
+curo-prompt wrap codex exec "TASK: 기능 추가"
+curo-prompt wrap cursor chat "로그인 구현"
+```
+
+**상태**: Collector 인프라는 있으나 도구별 파싱 구현이 필요함.
+
+### 3. 저장된 프롬프트 조회
+
+`list` 명령으로 저장된 프롬프트 조회:
+
+```bash
+# 최근 프롬프트 10개 조회
+curo-prompt list
+
+# 더 많이 조회
+curo-prompt list --limit 20
+
+# 특정 도구로 수집된 프롬프트만 조회
+curo-prompt list --tool scan
+curo-prompt list --tool codex
+
+# 조회 후 재평가
+curo-prompt list --eval
+```
+
+**출력 예시:**
+```
+저장된 프롬프트: 5개
+
+[1] ID: a1b2c3d4
+    도구: scan
+    시간: 2025-01-15 14:30:22
+    명령: scan --repo ./prompts
+    경로: /Users/user/project
+    프롬프트: # ROLE\nSenior Engineer\n\n# INPUTS\n- task: string...
+```
+
+### 4. 저장된 프롬프트 재평가
+
+데이터베이스에 저장된 프롬프트를 재평가:
+
+```bash
+# 최근 프롬프트 모두 조회 후 평가
+curo-prompt list --eval --limit 10
+
+# 특정 도구의 프롬프트 평가
+curo-prompt list --tool scan --eval --output reports/
+```
+
+## 데이터베이스 스키마
+
+저장되는 정보:
+
+- `id`: 고유 프롬프트 ID
+- `tool`: 수집 도구 (scan, codex, cursor 등)
+- `raw_prompt`: 원본 프롬프트 텍스트
+- `role`, `inputs`, `invariants`, `output_format`: 파싱된 섹션
+- `timestamp`: 수집 시간 (Unix timestamp)
+- `command`: 수집에 사용된 명령어
+- `working_dir`: 수집 시 작업 디렉토리
+- `metadata`: 추가 메타데이터 (JSON)
+
+## 현재 제한사항
+
+### ❌ 아직 구현되지 않음
+
+1. **자동 CLI 래퍼 수집**
+   - Collector는 있으나 도구별 파싱이 미완성
+   - codex, cursor 명령 파싱 구현 필요
+
+2. **Eval 명령이 저장하지 않음**
+   - `eval` 명령은 평가하지만 데이터베이스에 저장하지 않음
+   - 저장하려면 `scan` 명령 사용
+
+3. **로그 파일 수집**
+   - 아직 구현되지 않음
+   - 예정: `.cursor/`, `.codex/` 로그 파일 파싱
+
+4. **세션 캡처**
+   - 아직 구현되지 않음
+   - 예정: CLI 도구의 stdin/stdout 캡처
+
+### ✅ 현재 작동 중
+
+1. **파일 스캔 & 저장**
+   - `scan` 명령이 파일을 찾아 평가하고 데이터베이스에 저장
+   
+2. **프롬프트 목록**
+   - `list` 명령으로 저장된 프롬프트 표시
+   - 도구별 필터링, 결과 제한
+
+3. **재평가**
+   - `list --eval`로 저장된 프롬프트 재평가
+
+## 권장 워크플로우
+
+### 신규 사용자
+
+1. **초기 설정**
+   ```bash
+   # 기존 프롬프트 파일 스캔
+   curo-prompt scan --repo ./prompts
+   ```
+
+2. **수집된 프롬프트 확인**
+   ```bash
+   # 수집된 내용 확인
+   curo-prompt list
+   ```
+
+3. **리포트 검토**
+   ```bash
+   # 생성된 리포트 확인
+   ls reports/
+   cat reports/your_prompt_report.md
+   ```
+
+### 일반적인 사용
+
+1. **새 프롬프트 작성 후**
+   ```bash
+   # 새 프롬프트 스캔
+   curo-prompt scan --repo ./prompts
+   ```
+
+2. **빠른 평가 (저장 없이)**
+   ```bash
+   # 저장 없이 평가만
+   curo-prompt eval --file new_prompt.md
+   ```
+
+3. **저장된 프롬프트 재평가**
+   ```bash
+   # 최근 프롬프트 모두 재평가
+   curo-prompt list --eval
+   ```
+
+## 향후 개선 사항 (M2+)
+
+- CLI 래퍼를 통한 자동 수집
+- 로그 파일 파싱
+- 세션 캡처
+- Git hook 통합
+- 저장된 프롬프트 배치 작업
+
+---
+
+**질문?** [시작하기 가이드](./GETTING_STARTED.md) 또는 [아키텍처](./ARCHITECTURE.md)를 확인하세요.
+

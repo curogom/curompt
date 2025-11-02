@@ -1,0 +1,84 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output
+coverage.out
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local config
+.curo-prompt/
+*.local.yaml
+
+# Reports
+reports/*.md
+reports/*.json
+!reports/.gitkeep
+
+# Build artifacts
+dist/
+build/
+
+
+# Homebrew
+Formula/
+
+# Test reports
+test-reports/
+reports/
+*.md_report.md
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# AI Agent files (private, not for open source)
+**/CLAUDE.md
+**/Claude.md
+**/AGENT.md
+**/Agent.md
+**/*agent*.md
+**/*claude*.md
+*agent*.md
+*claude*.md
+
+# Private configuration
+*.secret.yaml
+*.secret.yml
+*.private.*
+.secrets/
+secrets/
+
+# Test data and user-specific data
+test-reports/
+test-prompts/user-*
+.curo-prompt/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Homebrew Formula (managed in separate tap repo)
+Formula/
