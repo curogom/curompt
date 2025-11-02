@@ -69,17 +69,20 @@ This script automatically:
 #### Method 1: Homebrew (Recommended for macOS)
 
 ```bash
-# Tap 추가
+# Add tap
 brew tap curogom/curo-prompt
 
-# 설치
+# Install
 brew install curo-prompt
 
-# 업데이트
+# Update
 brew upgrade curo-prompt
+
+# Verify
+curo-prompt --version
 ```
 
-> **Note**: Tap 레포지토리가 준비되면 이 방법으로 설치 가능합니다. 현재는 개발 중입니다.
+> **Note**: Private tap repository setup in progress. Will be available after the first release (`v0.1.0`).
 
 #### Method 2: Go install
 

@@ -6,7 +6,29 @@
 
 ## 설치 방법
 
-### 방법 1: Go install (권장) ⭐
+### 방법 1: Homebrew (macOS 권장) ⭐
+
+**참고**: Tap 레포지토리 설정이 필요합니다. 현재는 private tap 또는 준비 중입니다.
+
+```bash
+# Tap 추가
+brew tap curogom/curo-prompt
+
+# 설치
+brew install curo-prompt
+
+# 업데이트
+brew upgrade curo-prompt
+
+# 확인
+curo-prompt --version
+```
+
+**상태**: Tap 레포지토리 설정 진행 중. 첫 번째 릴리스 후 사용 가능.
+
+---
+
+### 방법 2: Go install (Linux 권장) ⭐
 
 가장 간단하고 표준적인 방법입니다.
 

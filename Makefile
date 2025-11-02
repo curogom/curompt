@@ -69,6 +69,15 @@ vet: ## go vet 실행
 
 check: fmt vet lint test ## 모든 검사 실행 (포맷, vet, 린트, 테스트)
 
+release-prepare: ## 릴리스 준비 (태그 생성 및 Formula 업데이트)
+	@echo "릴리스 준비:"
+	@echo "1. 버전 태그 생성 예: git tag -a v0.1.0 -m 'Release v0.1.0'"
+	@echo "2. 태그 푸시: git push origin v0.1.0"
+	@echo "3. GitHub Release가 자동 생성됩니다"
+	@echo "4. Formula 업데이트: ./scripts/update-homebrew-formula.sh v0.1.0"
+
+.PHONY: release-prepare
+
 ci: fmt vet lint test ## CI 파이프라인 실행 (로컬에서 CI 테스트)
 	@echo "✅ CI 검사 완료"
 
