@@ -1,0 +1,7 @@
+[Include] prompts/dev_contract_v2.md
+
+STACK_PROFILE:
+<examples/stack.profile.yaml 내용>
+
+TASK:
+NestJS gateway에 /events SSE 추가. Flutter 클라이언트 배지 업데이트.

@@ -218,4 +218,3 @@ func findBinary(t *testing.T) string {
 
 	return ""
 }
-

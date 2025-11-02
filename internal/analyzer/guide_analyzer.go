@@ -9,14 +9,14 @@ import (
 
 // GuideComplianceResult represents compliance with prompt engineering guides
 type GuideComplianceResult struct {
-	ClarityScore      float64   // 명확성 점수 (0-100)
-	ContextScore      float64   // 컨텍스트 제공 점수 (0-100)
-	ExampleScore      float64   // 예시 제공 점수 (0-100)
-	StructureScore    float64   // 구조화 점수 (0-100)
-	ConstraintScore   float64   // 제약 명시 점수 (0-100)
-	Suggestions       []string  // 구체적인 개선 제안
-	AmbiguousPhrases  []string  // 감지된 모호한 표현
-	MissingElements   []string  // 누락된 요소
+	ClarityScore     float64  // 명확성 점수 (0-100)
+	ContextScore     float64  // 컨텍스트 제공 점수 (0-100)
+	ExampleScore     float64  // 예시 제공 점수 (0-100)
+	StructureScore   float64  // 구조화 점수 (0-100)
+	ConstraintScore  float64  // 제약 명시 점수 (0-100)
+	Suggestions      []string // 구체적인 개선 제안
+	AmbiguousPhrases []string // 감지된 모호한 표현
+	MissingElements  []string // 누락된 요소
 }
 
 // GuideAnalyzer analyzes prompt compliance with Claude/ChatGPT guides
@@ -43,16 +43,16 @@ func (g *GuideAnalyzer) Analyze() GuideComplianceResult {
 
 	// 1. 명확성 분석
 	result.ClarityScore = g.analyzeClarity(text, &result)
-	
+
 	// 2. 컨텍스트 분석
 	result.ContextScore = g.analyzeContext(text)
-	
+
 	// 3. 예시 분석
 	result.ExampleScore = g.analyzeExamples(text)
-	
+
 	// 4. 구조화 분석
 	result.StructureScore = g.analyzeStructure()
-	
+
 	// 5. 제약 명시 분석
 	result.ConstraintScore = g.analyzeConstraints(text)
 
@@ -65,7 +65,7 @@ func (g *GuideAnalyzer) Analyze() GuideComplianceResult {
 // analyzeClarity checks for clarity (detects ambiguous phrases)
 func (g *GuideAnalyzer) analyzeClarity(text string, result *GuideComplianceResult) float64 {
 	score := 100.0
-	
+
 	// 모호한 표현 패턴
 	ambiguousPatterns := map[string]float64{
 		"적절히": -10, "필요시": -10, "가능하면": -10, "적당히": -10,
@@ -242,7 +242,7 @@ func (g *GuideAnalyzer) findPhraseContext(text, phrase string) []string {
 	var results []string
 	lowerText := strings.ToLower(text)
 	lowerPhrase := strings.ToLower(phrase)
-	
+
 	index := strings.Index(lowerText, lowerPhrase)
 	if index >= 0 {
 		start := index - 20
@@ -256,7 +256,7 @@ func (g *GuideAnalyzer) findPhraseContext(text, phrase string) []string {
 		context := text[start:end]
 		results = append(results, context)
 	}
-	
+
 	return results
 }
 
@@ -296,4 +296,3 @@ func (r *GuideComplianceResult) generateSuggestions() {
 		r.MissingElements = append(r.MissingElements, "제약 조건 명시")
 	}
 }
-

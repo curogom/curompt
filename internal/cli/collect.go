@@ -8,8 +8,8 @@ import (
 
 	"github.com/curogom/curo-prompt/internal/collector"
 	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/curogom/curo-prompt/internal/reporter"
+	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/spf13/cobra"
 )
 
@@ -64,7 +64,7 @@ func newCollectCmd() *cobra.Command {
 				if err != nil {
 					return fmt.Errorf("현재 디렉토리 확인 실패: %w", err)
 				}
-				
+
 				// Claude Code: CLAUDE.md 파일로 프로젝트 루트 찾기
 				// Codex: 현재 디렉토리를 프로젝트 경로로 사용 (session 파일의 cwd와 매칭)
 				if from == "claude" || from == "claude-code" {
@@ -233,7 +233,7 @@ func findProjectRoot(startDir string) string {
 		// Check for CLAUDE.md or Claude.md
 		claudeMd := filepath.Join(current, "CLAUDE.md")
 		claudeMdLower := filepath.Join(current, "Claude.md")
-		
+
 		if _, err := os.Stat(claudeMd); err == nil {
 			return current
 		}
@@ -251,4 +251,3 @@ func findProjectRoot(startDir string) string {
 	}
 	return ""
 }
-

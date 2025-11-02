@@ -17,20 +17,20 @@ import (
 
 // LogFileCollector collects prompts from log files
 type LogFileCollector struct {
-	repository   repository.PromptRepository
-	parser       parser.Parser
-	tool         string // claude, codex, cursor
-	logPath      string // Path to log file
+	repository    repository.PromptRepository
+	parser        parser.Parser
+	tool          string // claude, codex, cursor
+	logPath       string // Path to log file
 	projectFilter string // Optional: filter by project path (empty = all projects)
 }
 
 // NewLogFileCollector creates a new log file collector
 func NewLogFileCollector(repo repository.PromptRepository, tool string, logPath string) *LogFileCollector {
 	return &LogFileCollector{
-		repository: repo,
-		parser:     parser.NewParser(),
-		tool:       tool,
-		logPath:    logPath,
+		repository:    repo,
+		parser:        parser.NewParser(),
+		tool:          tool,
+		logPath:       logPath,
 		projectFilter: "",
 	}
 }
@@ -147,10 +147,10 @@ func (c *LogFileCollector) Collect(ctx context.Context) ([]*model.CollectedPromp
 // parseClaudeHistoryLine parses a line from Claude Code history.jsonl
 func (c *LogFileCollector) parseClaudeHistoryLine(line string) (prompt string, timestamp int64, metadata map[string]string, err error) {
 	var data struct {
-		Display       string                 `json:"display"`
+		Display        string                 `json:"display"`
 		PastedContents map[string]interface{} `json:"pastedContents"`
-		Timestamp    int64                  `json:"timestamp"`
-		Project      string                 `json:"project"`
+		Timestamp      int64                  `json:"timestamp"`
+		Project        string                 `json:"project"`
 	}
 
 	if err := json.Unmarshal([]byte(line), &data); err != nil {
@@ -211,7 +211,7 @@ func (c *LogFileCollector) parseCodexHistoryLine(line string) (prompt string, ti
 func (c *LogFileCollector) findCodexProjectPath(sessionID string) string {
 	home := os.Getenv("HOME")
 	sessionsDir := filepath.Join(home, ".codex", "sessions")
-	
+
 	// session 파일 찾기 (YYYY/MM/DD/rollout-TIMESTAMP-SESSION_ID.jsonl 형식)
 	pattern := filepath.Join(sessionsDir, "**", "*"+sessionID+"*.jsonl")
 	matches, err := filepath.Glob(pattern)
@@ -219,11 +219,11 @@ func (c *LogFileCollector) findCodexProjectPath(sessionID string) string {
 		// 패턴 매칭 실패 시 직접 검색
 		matches = c.findSessionFile(sessionsDir, sessionID)
 	}
-	
+
 	if len(matches) == 0 {
 		return ""
 	}
-	
+
 	// session 파일의 첫 줄(session_meta)에서 cwd 추출
 	return c.extractCwdFromSessionFile(matches[0])
 }
@@ -259,16 +259,16 @@ func (c *LogFileCollector) extractCwdFromSessionFile(sessionFile string) string 
 				Cwd string `json:"cwd"`
 			} `json:"payload"`
 		}
-		
+
 		if err := json.Unmarshal(scanner.Bytes(), &entry); err != nil {
 			continue
 		}
-		
+
 		if entry.Type == "session_meta" && entry.Payload.Cwd != "" {
 			return entry.Payload.Cwd
 		}
 	}
-	
+
 	return ""
 }
 
@@ -308,4 +308,3 @@ func (c *LogFileCollector) parseCursorHistoryLine(line string) (prompt string, t
 func (c *LogFileCollector) Name() string {
 	return fmt.Sprintf("log-file-%s", c.tool)
 }
-

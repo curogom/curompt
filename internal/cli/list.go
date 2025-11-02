@@ -10,8 +10,8 @@ import (
 
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/curogom/curo-prompt/internal/reporter"
+	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/spf13/cobra"
 )
 
@@ -195,4 +195,3 @@ func truncate(s string, maxLen int) string {
 	}
 	return s[:maxLen] + "..."
 }
-

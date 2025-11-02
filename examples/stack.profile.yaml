@@ -1,0 +1,37 @@
+service: danggroom
+modules:
+  frontend:
+    choices: [Flutter]
+    commands:
+      test: "flutter test"
+      lint: "flutter analyze"
+      build: "flutter build ipa -t lib/main_prod.dart"
+    allowed_packages:
+      - flutter_riverpod
+      - freezed
+  backend_core:
+    choices: [Go]
+    commands:
+      test: "go test ./..."
+      lint: "golangci-lint run"
+      build: "go build ./cmd/api"
+    allowed_packages:
+      - chi
+      - sqlc
+  backend_edge:
+    choices: [NestJS]
+    commands:
+      test: "pnpm test"
+      lint: "pnpm lint"
+      dev: "pnpm start:dev"
+      build: "pnpm build && pnpm start:prod"
+    allowed_packages:
+      - '@nestjs/*'
+      - zod
+      - prisma
+interfaces:
+  openapi: "apps/api/openapi.yaml"
+  db_schema: "infra/db/schema.sql"
+policies:
+  code_style: ["dart_code_metrics", "golangci-lint", "eslint+prettier"]
+  security: ["no hardcoded secrets", "least privilege env vars"]

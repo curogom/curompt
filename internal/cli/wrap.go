@@ -65,4 +65,3 @@ Claude Code CLI를 래핑하여 프롬프트를 자동으로 수집합니다.`,
 
 	return cmd
 }
-

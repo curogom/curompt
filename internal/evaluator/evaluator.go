@@ -11,12 +11,12 @@ import (
 
 // EvaluationResult contains the complete evaluation result
 type EvaluationResult struct {
-	Prompt            *model.CollectedPrompt
-	Analysis          *analyzer.AnalysisResult
-	Score             *scorer.ScoreResult
-	TokenCount        int
-	TokenProvider     string // claude, openai 등
-	GuideCompliance   *analyzer.GuideComplianceResult // 가이드 준수 분석 결과
+	Prompt          *model.CollectedPrompt
+	Analysis        *analyzer.AnalysisResult
+	Score           *scorer.ScoreResult
+	TokenCount      int
+	TokenProvider   string                          // claude, openai 등
+	GuideCompliance *analyzer.GuideComplianceResult // 가이드 준수 분석 결과
 }
 
 // Evaluator evaluates collected prompts
