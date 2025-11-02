@@ -52,6 +52,7 @@ jobs:
           echo "  sha256 \"$SHA256\""
       
       - name: Create Release
+        id: release
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -60,6 +61,21 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Trigger Homebrew Tap Update
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Release 생성 후 homebrew-tap 워크플로우 트리거
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'homebrew-tap.yml',
+              ref: 'main',
+              inputs: {
+                version: '${{ steps.tag.outputs.version }}'
+              }
+            });
 
   build:
     name: Build Binaries
