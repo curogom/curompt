@@ -9,10 +9,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/parser"
 	"github.com/curogom/curo-prompt/internal/repository"
-	"github.com/google/uuid"
 )
 
 // LogFileCollector collects prompts from log files

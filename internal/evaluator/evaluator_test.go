@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curo-prompt/internal/parser"
 )
 
 func TestEvaluator_Evaluate(t *testing.T) {

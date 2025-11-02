@@ -6,9 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/curogom/curo-prompt/internal/collector"
 	"github.com/curogom/curo-prompt/internal/repository"
-	"github.com/spf13/cobra"
 )
 
 // newWrapCmd creates the wrap command for CLI tool collection
