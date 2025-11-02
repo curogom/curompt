@@ -41,12 +41,9 @@ test-coverage: ## 테스트 커버리지 리포트
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "커버리지 리포트 생성: coverage.html"
 
-lint: ## 코드 린트 검사
-	@if command -v golangci-lint >/dev/null 2>&1; then \
-		golangci-lint run; \
-	else \
-		echo "golangci-lint가 설치되지 않았습니다. go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
-	fi
+lint: ## 코드 린트 검사 (CI와 동일한 방식)
+	@echo "🔍 Running lint checks (same as CI)..."
+	@go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --timeout=5m || (echo "❌ Lint failed! Fix issues before pushing." && exit 1)
 
 fmt: ## 코드 포맷팅
 	go fmt ./...

@@ -3,8 +3,9 @@ package analyzer
 import (
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/parser"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/curogom/curo-prompt/internal/parser"
 )
 
 func TestAnalyzer_DetectsRoleSection(t *testing.T) {
