@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+# GitHub Actions 권한 설정
+permissions:
+  contents: write  # Release 생성에 필요
+
 jobs:
   release:
     name: Create Release
