@@ -7,11 +7,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/spf13/cobra"
+
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/reporter"
-	"github.com/google/uuid"
-	"github.com/spf13/cobra"
 )
 
 // newEvalCmd creates the eval command

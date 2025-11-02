@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"time"
+
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/reporter"
 	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 // newScanCmd creates the scan command

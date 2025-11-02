@@ -8,11 +8,12 @@ import (
 	"sort"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/reporter"
 	"github.com/curogom/curo-prompt/internal/repository"
-	"github.com/spf13/cobra"
 )
 
 // newListCmd creates the list command for viewing stored prompts
