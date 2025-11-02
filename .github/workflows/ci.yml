@@ -81,6 +81,16 @@ jobs:
       - name: Build
         run: make build
       
+      - name: Verify binary exists
+        run: |
+          if [ ! -f ./bin/curo-prompt ]; then
+            echo "Error: Binary not found at ./bin/curo-prompt"
+            ls -la bin/ || echo "bin/ directory does not exist"
+            exit 1
+          fi
+          echo "Binary found:"
+          ls -lh ./bin/curo-prompt
+      
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

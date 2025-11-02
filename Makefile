@@ -23,6 +23,10 @@ build: ## 바이너리 빌드
 	@echo "빌드 중..."
 	@mkdir -p bin
 	go build $(LDFLAGS) -o $(BINARY_PATH) $(MAIN_PATH)
+	@if [ ! -f $(BINARY_PATH) ]; then \
+		echo "Error: Build failed - binary not found"; \
+		exit 1; \
+	fi
 	@echo "빌드 완료: $(BINARY_PATH)"
 
 install: ## 시스템에 설치 (GOPATH/bin 또는 ~/go/bin)
