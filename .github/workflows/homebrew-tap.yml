@@ -56,9 +56,16 @@ jobs:
           fi
           
           TARBALL_URL="https://github.com/curogom/curo-prompt/archive/refs/tags/${{ steps.version.outputs.version }}.tar.gz"
+          VERSION_NUM="${{ steps.version.outputs.version_num }}"
           
+          # Update URL
           sed -i "s|url \".*\"|url \"${TARBALL_URL}\"|" "$FORMULA_FILE"
+          
+          # Update SHA256
           sed -i "s/sha256 \".*\"/sha256 \"${{ steps.sha256.outputs.sha256 }}\"/" "$FORMULA_FILE"
+          
+          # Update version declaration
+          sed -i "s/version \".*\"/version \"${VERSION_NUM}\"/" "$FORMULA_FILE"
           
           echo "✅ Formula updated:"
           cat "$FORMULA_FILE"
