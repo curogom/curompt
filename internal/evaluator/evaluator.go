@@ -102,7 +102,11 @@ func (e *Evaluator) Evaluate(ctx context.Context, collectedPrompt *model.Collect
 // calculateStructureScore calculates structure metric
 func (e *Evaluator) calculateStructureScore(prompt *parser.Prompt, analysis *analyzer.AnalysisResult) float64 {
 	calc := scorer.NewStructureMetricCalculator(prompt, analysis)
-	score, _ := calc.Calculate()
+	score, err := calc.Calculate()
+	if err != nil {
+		// Return default score on error
+		return 50.0
+	}
 	return score
 }
 
@@ -111,7 +115,11 @@ func (e *Evaluator) calculateConcisenessScore(rawPrompt string, tokenCount int) 
 	// 간단한 근사치로 계산 (실제로는 ConcisenessMetricCalculator 사용)
 	prompt := &parser.Prompt{Raw: rawPrompt}
 	calc := scorer.NewConcisenessMetricCalculator(prompt, e.tokenizer)
-	score, _ := calc.Calculate()
+	score, err := calc.Calculate()
+	if err != nil {
+		// Return default score on error
+		return 50.0
+	}
 	return score
 }
 

@@ -170,13 +170,16 @@ func (r *sqliteRepository) FindByID(ctx context.Context, id string) (*model.Coll
 		collectedPrompt.Prompt.Role = role
 
 		if inputs != "" {
-			json.Unmarshal([]byte(inputs), &collectedPrompt.Prompt.Inputs)
+			_ = json.Unmarshal([]byte(inputs), &collectedPrompt.Prompt.Inputs)
+			// Ignore unmarshal errors - if invalid, Inputs will remain empty
 		}
 		if invariants != "" {
-			json.Unmarshal([]byte(invariants), &collectedPrompt.Prompt.Invariants)
+			_ = json.Unmarshal([]byte(invariants), &collectedPrompt.Prompt.Invariants)
+			// Ignore unmarshal errors - if invalid, Invariants will remain empty
 		}
 		if outputFormat != "" {
-			json.Unmarshal([]byte(outputFormat), &collectedPrompt.Prompt.OutputFormat)
+			_ = json.Unmarshal([]byte(outputFormat), &collectedPrompt.Prompt.OutputFormat)
+			// Ignore unmarshal errors - if invalid, OutputFormat will remain empty
 		}
 	}
 

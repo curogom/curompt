@@ -31,6 +31,13 @@ jobs:
       - name: Run tests
         run: go test ./... -v -coverprofile=coverage.out
       
+      - name: Verify coverage file
+        run: |
+          if [ ! -f coverage.out ]; then
+            echo "Warning: coverage.out not generated, creating empty file"
+            touch coverage.out
+          fi
+      
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23'
@@ -39,7 +46,12 @@ jobs:
           fail_ci_if_error: false
       
       - name: Show coverage
-        run: go tool cover -func=coverage.out | tail -1
+        run: |
+          if [ -f coverage.out ] && [ -s coverage.out ]; then
+            go tool cover -func=coverage.out | tail -1
+          else
+            echo "No coverage data available"
+          fi
 
   lint:
     name: Lint
