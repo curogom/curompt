@@ -9,11 +9,13 @@ on:
         description: 'Version tag (e.g., v0.1.0)'
         required: true
 
+permissions:
+  contents: write  # Tap 레포지토리 업데이트에 필요
+
 jobs:
   update-tap:
     name: Update Homebrew Tap Formula
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Checkout tap repository
