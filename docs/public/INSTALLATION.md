@@ -10,23 +10,44 @@ This guide helps you install `curo-prompt` on your system so you can run the `cu
 
 ### Method 1: Homebrew (Recommended for macOS) ⭐
 
-**Note**: This requires a tap repository to be set up. Currently available via private tap or coming soon.
+The easiest way to install `curo-prompt` on macOS. The tap repository is ready and available now!
+
+#### Step 1: Add Tap
 
 ```bash
-# Add tap
 brew tap curogom/curo-prompt
-
-# Install
-brew install curo-prompt
-
-# Update
-brew upgrade curo-prompt
-
-# Verify
-curo-prompt --version
 ```
 
-**Status**: Tap repository setup in progress. Will be available after first release.
+#### Step 2: Install
+
+```bash
+brew install curo-prompt
+```
+
+#### Step 3: Verify Installation
+
+```bash
+# Check version
+curo-prompt --version
+
+# Check help
+curo-prompt --help
+```
+
+#### Update
+
+```bash
+brew upgrade curo-prompt
+```
+
+#### Uninstall
+
+```bash
+brew uninstall curo-prompt
+brew untap curogom/curo-prompt  # Optional: Remove tap
+```
+
+> **✅ Available now**: The Homebrew tap is ready. You can install `curo-prompt` using the commands above!
 
 ---
 

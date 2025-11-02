@@ -66,7 +66,9 @@ This script automatically:
 
 ### Installation Methods
 
-#### Method 1: Homebrew (Recommended for macOS)
+#### Method 1: Homebrew (Recommended for macOS) ⭐
+
+The easiest way to install `curo-prompt` on macOS:
 
 ```bash
 # Add tap
@@ -75,14 +77,16 @@ brew tap curogom/curo-prompt
 # Install
 brew install curo-prompt
 
-# Update
-brew upgrade curo-prompt
-
-# Verify
+# Verify installation
 curo-prompt --version
 ```
 
-> **Note**: Private tap repository setup in progress. Will be available after the first release (`v0.1.0`).
+**Update**:
+```bash
+brew upgrade curo-prompt
+```
+
+> **✅ Available now**: Homebrew tap is ready! You can install `curo-prompt` using the commands above.
 
 #### Method 2: Go install
 

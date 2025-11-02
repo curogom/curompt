@@ -8,23 +8,44 @@
 
 ### 방법 1: Homebrew (macOS 권장) ⭐
 
-**참고**: Tap 레포지토리 설정이 필요합니다. 현재는 private tap 또는 준비 중입니다.
+macOS에서 `curo-prompt`를 설치하는 가장 쉬운 방법입니다. Tap 레포지토리가 준비되어 바로 사용 가능합니다!
+
+#### 1단계: Tap 추가
 
 ```bash
-# Tap 추가
 brew tap curogom/curo-prompt
-
-# 설치
-brew install curo-prompt
-
-# 업데이트
-brew upgrade curo-prompt
-
-# 확인
-curo-prompt --version
 ```
 
-**상태**: Tap 레포지토리 설정 진행 중. 첫 번째 릴리스 후 사용 가능.
+#### 2단계: 설치
+
+```bash
+brew install curo-prompt
+```
+
+#### 3단계: 설치 확인
+
+```bash
+# 버전 확인
+curo-prompt --version
+
+# 도움말 확인
+curo-prompt --help
+```
+
+#### 업데이트
+
+```bash
+brew upgrade curo-prompt
+```
+
+#### 제거
+
+```bash
+brew uninstall curo-prompt
+brew untap curogom/curo-prompt  # 선택사항: Tap 제거
+```
+
+> **✅ 사용 가능**: Homebrew tap이 준비되었습니다. 위 명령어로 바로 설치할 수 있습니다!
 
 ---
 
