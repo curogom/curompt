@@ -62,7 +62,29 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 
 ### 설치 방법
 
-#### 방법 1: Go install (권장)
+#### 방법 1: Homebrew (macOS 권장) ⭐
+
+macOS에서 `curo-prompt`를 설치하는 가장 쉬운 방법:
+
+```bash
+# Tap 추가
+brew tap curogom/curo-prompt
+
+# 설치
+brew install curo-prompt
+
+# 설치 확인
+curo-prompt --version
+```
+
+**업데이트**:
+```bash
+brew upgrade curo-prompt
+```
+
+> **✅ 사용 가능**: Homebrew tap이 준비되었습니다! 위 명령어로 `curo-prompt`를 설치할 수 있습니다.
+
+#### 방법 2: Go install
 
 Go 모듈을 직접 설치하여 `$GOPATH/bin` 또는 `~/go/bin`에 설치합니다:
 
