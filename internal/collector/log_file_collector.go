@@ -92,6 +92,14 @@ func (c *LogFileCollector) Collect(ctx context.Context) ([]*model.CollectedPromp
 			if err != nil {
 				continue
 			}
+			// 프로젝트 필터 적용
+			if c.projectFilter != "" {
+				projectPath := m["project"]
+				if projectPath != c.projectFilter {
+					// 이 프로젝트가 아니면 스킵
+					continue
+				}
+			}
 			promptText = p
 			timestamp = ts
 			metadata = m
@@ -189,10 +197,79 @@ func (c *LogFileCollector) parseCodexHistoryLine(line string) (prompt string, ti
 	metadata = make(map[string]string)
 	if data.SessionID != "" {
 		metadata["session_id"] = data.SessionID
+		// session_id를 사용하여 session 파일에서 프로젝트 경로 찾기
+		if projectPath := c.findCodexProjectPath(data.SessionID); projectPath != "" {
+			metadata["project"] = projectPath
+		}
 	}
 	metadata["source"] = "history.jsonl"
 
 	return prompt, timestamp, metadata, nil
+}
+
+// findCodexProjectPath finds the project path from Codex session file
+func (c *LogFileCollector) findCodexProjectPath(sessionID string) string {
+	home := os.Getenv("HOME")
+	sessionsDir := filepath.Join(home, ".codex", "sessions")
+	
+	// session 파일 찾기 (YYYY/MM/DD/rollout-TIMESTAMP-SESSION_ID.jsonl 형식)
+	pattern := filepath.Join(sessionsDir, "**", "*"+sessionID+"*.jsonl")
+	matches, err := filepath.Glob(pattern)
+	if err != nil || len(matches) == 0 {
+		// 패턴 매칭 실패 시 직접 검색
+		matches = c.findSessionFile(sessionsDir, sessionID)
+	}
+	
+	if len(matches) == 0 {
+		return ""
+	}
+	
+	// session 파일의 첫 줄(session_meta)에서 cwd 추출
+	return c.extractCwdFromSessionFile(matches[0])
+}
+
+// findSessionFile recursively searches for session file
+func (c *LogFileCollector) findSessionFile(dir string, sessionID string) []string {
+	var matches []string
+	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if !info.IsDir() && strings.Contains(info.Name(), sessionID) && strings.HasSuffix(info.Name(), ".jsonl") {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+	return matches
+}
+
+// extractCwdFromSessionFile extracts cwd from session file's session_meta entry
+func (c *LogFileCollector) extractCwdFromSessionFile(sessionFile string) string {
+	file, err := os.Open(sessionFile)
+	if err != nil {
+		return ""
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		var entry struct {
+			Type    string `json:"type"`
+			Payload struct {
+				Cwd string `json:"cwd"`
+			} `json:"payload"`
+		}
+		
+		if err := json.Unmarshal(scanner.Bytes(), &entry); err != nil {
+			continue
+		}
+		
+		if entry.Type == "session_meta" && entry.Payload.Cwd != "" {
+			return entry.Payload.Cwd
+		}
+	}
+	
+	return ""
 }
 
 // parseCursorHistoryLine parses a line from Cursor history/log files

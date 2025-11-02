@@ -59,7 +59,69 @@ curo-prompt eval --file prompt.md --output reports/
 
 **Note**: `eval` command currently **does not save** to database. Only `scan` command saves.
 
-#### Method 3: CLI Wrapper Collection ⚠️
+#### Method 3: Log File Collection ✅
+
+Collect prompts from tool history/log files:
+
+```bash
+# Collect from Claude Code (current project only)
+cd /path/to/project
+curo-prompt collect --from claude
+
+# Collect from all projects
+curo-prompt collect --from claude --all
+
+# Collect from Codex (current directory as project)
+cd /path/to/project
+curo-prompt collect --from codex
+
+# Collect from all Codex prompts
+curo-prompt collect --from codex --all
+
+# Collect and auto-evaluate
+curo-prompt collect --from claude --eval
+```
+
+**How it works:**
+1. Reads history/log files from `~/.claude/history.jsonl` or `~/.codex/history.jsonl`
+2. Parses prompts from log entries
+3. Extracts project information (from session files for Codex)
+4. Filters by project (if `--all` not used)
+5. Saves to database automatically
+
+**Project Filtering:**
+
+**Claude Code:**
+- Requires `CLAUDE.md` or `Claude.md` file in project root
+- Without `--all`: Only collects prompts from current project
+- With `--all`: Collects from all projects
+
+**Codex:**
+- Uses current directory as project path (no `CLAUDE.md` needed)
+- Matches against session file's `cwd` field
+- Without `--all`: Only collects prompts from current directory
+- With `--all`: Collects from all projects
+
+**Examples:**
+
+```bash
+# Claude Code: Project-specific collection
+cd ~/projects/my-app  # Must have CLAUDE.md
+curo-prompt collect --from claude
+# → Collects only prompts from ~/projects/my-app
+
+# Codex: Project-specific collection
+cd ~/projects/my-app  # No CLAUDE.md needed
+curo-prompt collect --from codex
+# → Collects only prompts from ~/projects/my-app
+
+# Collect from all projects
+curo-prompt collect --from claude --all
+curo-prompt collect --from codex --all
+# → Collects from all projects in history
+```
+
+#### Method 4: CLI Wrapper Collection ⚠️
 
 Wrap external CLI tools to capture prompts:
 
@@ -155,9 +217,9 @@ Stored information:
    - `eval` command evaluates but doesn't save to database
    - Use `scan` command if you want to save
 
-3. **Log File Collection**
-   - Not yet implemented
-   - Planned: Parse `.cursor/`, `.codex/` log files
+3. **Cursor IDE Collection**
+   - Cursor log file parsing not yet implemented
+   - Planned: Parse Cursor workspace logs
 
 4. **Session Capture**
    - Not yet implemented
@@ -168,11 +230,16 @@ Stored information:
 1. **File Scanning & Storage**
    - `scan` command finds files, evaluates, and saves to database
    
-2. **Prompt Listing**
+2. **Log File Collection**
+   - `collect` command parses history files from Claude Code and Codex
+   - Project-specific filtering support
+   - Automatic project detection from session files (Codex)
+
+3. **Prompt Listing**
    - `list` command shows stored prompts
    - Filter by tool, limit results
 
-3. **Re-evaluation**
+4. **Re-evaluation**
    - `list --eval` re-evaluates stored prompts
 
 ## Recommended Workflow

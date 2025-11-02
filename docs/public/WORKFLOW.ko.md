@@ -59,7 +59,69 @@ curo-prompt eval --file prompt.md --output reports/
 
 **참고**: `eval` 명령은 현재 **데이터베이스에 저장하지 않습니다**. 저장하려면 `scan` 명령을 사용하세요.
 
-#### 방법 3: CLI 래퍼 수집 (예정 - 아직 완전히 구현 안 됨)
+#### 방법 3: 로그 파일 수집 ✅
+
+도구의 히스토리/로그 파일에서 프롬프트 수집:
+
+```bash
+# Claude Code에서 수집 (현재 프로젝트만)
+cd /path/to/project
+curo-prompt collect --from claude
+
+# 모든 프로젝트의 프롬프트 수집
+curo-prompt collect --from claude --all
+
+# Codex에서 수집 (현재 디렉토리를 프로젝트로 사용)
+cd /path/to/project
+curo-prompt collect --from codex
+
+# 모든 Codex 프롬프트 수집
+curo-prompt collect --from codex --all
+
+# 수집 후 자동 평가
+curo-prompt collect --from claude --eval
+```
+
+**작동 방식:**
+1. `~/.claude/history.jsonl` 또는 `~/.codex/history.jsonl` 읽기
+2. 로그 항목에서 프롬프트 파싱
+3. 프로젝트 정보 추출 (Codex는 session 파일에서)
+4. 프로젝트별 필터링 (`--all` 미사용 시)
+5. 데이터베이스에 자동 저장
+
+**프로젝트 필터링:**
+
+**Claude Code:**
+- 프로젝트 루트에 `CLAUDE.md` 또는 `Claude.md` 파일 필요
+- `--all` 없이: 현재 프로젝트만 수집
+- `--all` 사용: 모든 프로젝트 수집
+
+**Codex:**
+- 현재 디렉토리를 프로젝트 경로로 사용 (`CLAUDE.md` 불필요)
+- Session 파일의 `cwd` 필드와 매칭
+- `--all` 없이: 현재 디렉토리만 수집
+- `--all` 사용: 모든 프로젝트 수집
+
+**예시:**
+
+```bash
+# Claude Code: 프로젝트별 수집
+cd ~/projects/my-app  # CLAUDE.md 파일 필요
+curo-prompt collect --from claude
+# → ~/projects/my-app 프로젝트 프롬프트만 수집
+
+# Codex: 프로젝트별 수집
+cd ~/projects/my-app  # CLAUDE.md 불필요
+curo-prompt collect --from codex
+# → ~/projects/my-app 프로젝트 프롬프트만 수집
+
+# 모든 프로젝트 수집
+curo-prompt collect --from claude --all
+curo-prompt collect --from codex --all
+# → 히스토리의 모든 프로젝트 프롬프트 수집
+```
+
+#### 방법 4: CLI 래퍼 수집 ⚠️
 
 외부 CLI 도구를 래핑하여 프롬프트 캡처:
 
@@ -139,9 +201,9 @@ curo-prompt list --tool scan --eval --output reports/
    - `eval` 명령은 평가하지만 데이터베이스에 저장하지 않음
    - 저장하려면 `scan` 명령 사용
 
-3. **로그 파일 수집**
-   - 아직 구현되지 않음
-   - 예정: `.cursor/`, `.codex/` 로그 파일 파싱
+3. **Cursor IDE 수집**
+   - Cursor 로그 파일 파싱 아직 구현되지 않음
+   - 예정: Cursor 워크스페이스 로그 파싱
 
 4. **세션 캡처**
    - 아직 구현되지 않음
@@ -152,11 +214,16 @@ curo-prompt list --tool scan --eval --output reports/
 1. **파일 스캔 & 저장**
    - `scan` 명령이 파일을 찾아 평가하고 데이터베이스에 저장
    
-2. **프롬프트 목록**
+2. **로그 파일 수집**
+   - `collect` 명령이 Claude Code와 Codex의 히스토리 파일 파싱
+   - 프로젝트별 필터링 지원
+   - Session 파일에서 자동 프로젝트 감지 (Codex)
+
+3. **프롬프트 목록**
    - `list` 명령으로 저장된 프롬프트 표시
    - 도구별 필터링, 결과 제한
 
-3. **재평가**
+4. **재평가**
    - `list --eval`로 저장된 프롬프트 재평가
 
 ## 권장 워크플로우

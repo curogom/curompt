@@ -26,11 +26,19 @@ func newCollectCmd() *cobra.Command {
   - cursor: Cursor IDE 로그 (예정)
 
 예시:
-  # 현재 프로젝트 프롬프트만 수집 (CLAUDE.md가 있는 디렉토리)
+  # Claude Code: 현재 프로젝트만 수집 (CLAUDE.md가 있는 디렉토리)
+  cd /path/to/project
   curo-prompt collect --from claude
   
-  # 모든 프로젝트의 프롬프트 수집
+  # Claude Code: 모든 프로젝트의 프롬프트 수집
   curo-prompt collect --from claude --all
+  
+  # Codex: 현재 디렉토리만 수집 (CLAUDE.md 불필요)
+  cd /path/to/project
+  curo-prompt collect --from codex
+  
+  # Codex: 모든 프로젝트의 프롬프트 수집
+  curo-prompt collect --from codex --all
   
   # 특정 파일 지정
   curo-prompt collect --from claude --file ~/.claude/history.jsonl
@@ -49,16 +57,30 @@ func newCollectCmd() *cobra.Command {
 				return fmt.Errorf("--from 옵션은 필수입니다 (claude, codex, cursor)")
 			}
 
-			// 프로젝트 루트 확인 (--all이 아닌 경우, Claude Code만)
+			// 프로젝트 루트 확인 (--all이 아닌 경우)
 			var projectRoot string
-			if !collectAll && (from == "claude" || from == "claude-code") {
+			if !collectAll {
 				wd, err := os.Getwd()
 				if err != nil {
 					return fmt.Errorf("현재 디렉토리 확인 실패: %w", err)
 				}
-				projectRoot = findProjectRoot(wd)
-				if projectRoot == "" {
-					return fmt.Errorf("프로젝트 루트를 찾을 수 없습니다. CLAUDE.md 또는 Claude.md 파일이 있는 디렉토리로 이동하거나 --all 옵션을 사용하세요")
+				
+				// Claude Code: CLAUDE.md 파일로 프로젝트 루트 찾기
+				// Codex: 현재 디렉토리를 프로젝트 경로로 사용 (session 파일의 cwd와 매칭)
+				if from == "claude" || from == "claude-code" {
+					projectRoot = findProjectRoot(wd)
+					if projectRoot == "" {
+						return fmt.Errorf("프로젝트 루트를 찾을 수 없습니다. CLAUDE.md 또는 Claude.md 파일이 있는 디렉토리로 이동하거나 --all 옵션을 사용하세요")
+					}
+				} else if from == "codex" {
+					// Codex의 경우 현재 디렉토리를 프로젝트 경로로 사용
+					projectRoot = wd
+				} else {
+					// 기타 도구는 CLAUDE.md 기반
+					projectRoot = findProjectRoot(wd)
+					if projectRoot == "" {
+						return fmt.Errorf("프로젝트 루트를 찾을 수 없습니다. CLAUDE.md 또는 Claude.md 파일이 있는 디렉토리로 이동하거나 --all 옵션을 사용하세요")
+					}
 				}
 				cmd.Printf("프로젝트 루트: %s\n", projectRoot)
 			}
