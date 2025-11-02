@@ -6,11 +6,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/curogom/curo-prompt/internal/collector"
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/reporter"
 	"github.com/curogom/curo-prompt/internal/repository"
-	"github.com/spf13/cobra"
 )
 
 // newCollectCmd creates the collect command for log file collection
