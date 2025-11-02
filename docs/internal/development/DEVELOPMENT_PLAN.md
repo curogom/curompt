@@ -755,9 +755,26 @@ Reporter로 리포트 생성
 - [ ] 비용 계산
 - [ ] JSON 리포트 형식 추가
 
+#### Week 10-11: Homebrew Private Tap 배포
+- [ ] Homebrew Tap 레포지토리 생성
+  - 별도 GitHub 레포지토리 생성 (`homebrew-curo-prompt`)
+  - Formula 파일 관리
+- [ ] 자동화 스크립트 구현
+  - [ ] 릴리스 시 자동 SHA256 계산
+  - [ ] Formula 자동 업데이트
+  - [ ] 버전 관리 통합
+- [ ] 배포 문서화
+  - [ ] Tap 설정 가이드
+  - [ ] 사용자 설치 가이드
+  - [ ] 유지보수 프로세스
+- [ ] CI/CD 통합
+  - [ ] 릴리스 워크플로우에 Formula 업데이트 추가
+  - [ ] 자동화 검증
+
 **산출물**:
 - 동적 평가 기능
 - JSON 리포트
+- Homebrew Private Tap 배포
 
 ---
 

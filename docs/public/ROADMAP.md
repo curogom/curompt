@@ -43,6 +43,10 @@ Incremental development starting from core features. Each milestone is an indepe
   - p50/p95 latency
   - Cost calculation
 - ✅ JSON report format
+- ✅ Homebrew Private Tap distribution
+  - Private tap repository setup
+  - Automated formula updates
+  - Easy installation via `brew install`
 
 **Considerations**: API costs incurred, implementation recommended after necessity review
 

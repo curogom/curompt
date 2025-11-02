@@ -41,6 +41,10 @@
   - p50/p95 지연 시간
   - 비용 계산
 - ✅ JSON 리포트 형식
+- ✅ Homebrew Private Tap 배포
+  - Private tap 레포지토리 설정
+  - 자동화된 Formula 업데이트
+  - `brew install`로 쉬운 설치
 
 **고려사항**: API 비용 발생, 필요성 검토 후 구현 권장
 
