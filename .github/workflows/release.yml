@@ -10,6 +10,9 @@ permissions:
   contents: write  # Release 생성에 필요
 
 jobs:
+  build:
+    permissions:
+      contents: write
   release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -59,8 +62,7 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: Build Binaries
@@ -96,6 +98,5 @@ jobs:
         with:
           files: |
             bin/${{ matrix.asset_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
