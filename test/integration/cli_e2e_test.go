@@ -8,10 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/curogom/curo-prompt/internal/evaluator"
+	"github.com/curogom/curo-prompt/internal/model"
 )
 
 // TestCLI_EvalCommand tests the eval command end-to-end

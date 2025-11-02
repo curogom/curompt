@@ -5,15 +5,15 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/curogom/curo-prompt/internal/evaluator"
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/repository"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestWorkflow_CollectAnalyzeScoreReport(t *testing.T) {

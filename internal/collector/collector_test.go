@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/curogom/curo-prompt/internal/model"
 )
 
 func TestCollector_Interface(t *testing.T) {

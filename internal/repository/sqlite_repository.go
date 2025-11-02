@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"time"
 
+	_ "modernc.org/sqlite"
+
 	"github.com/curogom/curo-prompt/internal/model"
 	"github.com/curogom/curo-prompt/internal/parser"
-	_ "modernc.org/sqlite"
 )
 
 // sqliteRepository implements PromptRepository using SQLite

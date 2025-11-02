@@ -5,9 +5,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/provider"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/curogom/curo-prompt/internal/provider"
 )
 
 func TestClaudeProvider_Evaluate(t *testing.T) {

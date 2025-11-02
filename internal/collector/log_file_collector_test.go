@@ -6,9 +6,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/curogom/curo-prompt/internal/repository"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/curogom/curo-prompt/internal/repository"
 )
 
 func TestLogFileCollector_Collect_ClaudeHistory(t *testing.T) {
