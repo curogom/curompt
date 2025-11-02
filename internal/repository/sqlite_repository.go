@@ -188,7 +188,9 @@ func (r *sqliteRepository) FindByID(ctx context.Context, id string) (*model.Coll
 
 	// Metadata 재구성
 	if metadata != "" {
-		json.Unmarshal([]byte(metadata), &collectedPrompt.Metadata)
+		if err := json.Unmarshal([]byte(metadata), &collectedPrompt.Metadata); err != nil {
+			// If invalid, Metadata will remain empty
+		}
 	}
 
 	return &collectedPrompt, nil
@@ -233,18 +235,26 @@ func (r *sqliteRepository) FindByTool(ctx context.Context, tool string) ([]*mode
 		if role != "" || inputs != "" {
 			p.Prompt = &parser.Prompt{Raw: p.RawPrompt, Role: role}
 			if inputs != "" {
-				json.Unmarshal([]byte(inputs), &p.Prompt.Inputs)
+				if err := json.Unmarshal([]byte(inputs), &p.Prompt.Inputs); err != nil {
+					// If invalid, Inputs will remain empty
+				}
 			}
 			if invariants != "" {
-				json.Unmarshal([]byte(invariants), &p.Prompt.Invariants)
+				if err := json.Unmarshal([]byte(invariants), &p.Prompt.Invariants); err != nil {
+					// If invalid, Invariants will remain empty
+				}
 			}
 			if outputFormat != "" {
-				json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat)
+				if err := json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat); err != nil {
+					// If invalid, OutputFormat will remain empty
+				}
 			}
 		}
 
 		if metadata != "" {
-			json.Unmarshal([]byte(metadata), &p.Metadata)
+			if err := json.Unmarshal([]byte(metadata), &p.Metadata); err != nil {
+				// If invalid, Metadata will remain empty
+			}
 		}
 
 		prompts = append(prompts, &p)
@@ -292,18 +302,26 @@ func (r *sqliteRepository) FindRecent(ctx context.Context, limit int) ([]*model.
 		if role != "" || inputs != "" {
 			p.Prompt = &parser.Prompt{Raw: p.RawPrompt, Role: role}
 			if inputs != "" {
-				json.Unmarshal([]byte(inputs), &p.Prompt.Inputs)
+				if err := json.Unmarshal([]byte(inputs), &p.Prompt.Inputs); err != nil {
+					// If invalid, Inputs will remain empty
+				}
 			}
 			if invariants != "" {
-				json.Unmarshal([]byte(invariants), &p.Prompt.Invariants)
+				if err := json.Unmarshal([]byte(invariants), &p.Prompt.Invariants); err != nil {
+					// If invalid, Invariants will remain empty
+				}
 			}
 			if outputFormat != "" {
-				json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat)
+				if err := json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat); err != nil {
+					// If invalid, OutputFormat will remain empty
+				}
 			}
 		}
 
 		if metadata != "" {
-			json.Unmarshal([]byte(metadata), &p.Metadata)
+			if err := json.Unmarshal([]byte(metadata), &p.Metadata); err != nil {
+				// If invalid, Metadata will remain empty
+			}
 		}
 
 		prompts = append(prompts, &p)

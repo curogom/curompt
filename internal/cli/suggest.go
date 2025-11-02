@@ -26,9 +26,9 @@ func newSuggestCmd() *cobra.Command {
   curo-prompt suggest --file prompts/dev_contract_v2.md
   cat prompt.md | curo-prompt suggest`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			filePath, _ := cmd.Flags().GetString("file")
-			provider, _ := cmd.Flags().GetString("provider")
-			apply, _ := cmd.Flags().GetBool("apply")
+			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
+			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck
+			apply, _ := cmd.Flags().GetBool("apply")         //nolint:errcheck
 
 			// 프롬프트 읽기
 			var content []byte

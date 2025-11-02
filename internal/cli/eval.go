@@ -28,9 +28,9 @@ func newEvalCmd() *cobra.Command {
   cat prompts/dev_contract_v2.md | curo-prompt eval
   curo-prompt eval --provider claude --file prompt.md`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			provider, _ := cmd.Flags().GetString("provider")
-			filePath, _ := cmd.Flags().GetString("file")
-			outputPath, _ := cmd.Flags().GetString("output")
+			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck
+			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
+			outputPath, _ := cmd.Flags().GetString("output") //nolint:errcheck
 
 			// 프롬프트 읽기
 			var content []byte
