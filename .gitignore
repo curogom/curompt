@@ -82,3 +82,5 @@ test-prompts/user-*
 
 # Homebrew Formula (managed in separate tap repo)
 Formula/
+# Homebrew tap repository (local clone, not part of main repo)
+homebrew-curo-prompt/
