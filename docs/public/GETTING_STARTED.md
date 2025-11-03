@@ -30,10 +30,10 @@ curo-prompt is a CLI tool for analyzing, evaluating, and optimizing LLM prompts.
 Usage:
   curo-prompt [command]
 
-Available Commands:
-  eval        Evaluate and score prompts
-  scan        Scan and analyze prompt files in repository
+Available Commands (surface):
+  scan        Scan, parallel-evaluate, and summarize prompts (default entry)
   suggest     Generate prompt improvement suggestions
+  collect     Collect prompts from logs (Claude/Codex)
 ```
 
 ## 2. Create Test Prompt Files
@@ -91,25 +91,20 @@ Implementation plan in Markdown format
 EOF
 ```
 
-## 3. Basic Testing: eval Command
+## 3. Basic Testing: scan-first
 
 ### 3.1 Evaluate from File
 
 ```bash
-./bin/curo-prompt eval --file test-prompts/sample.md
+# Rich summary to console (<=100 lines): stats, distribution, Top-N, coaching
+./bin/curo-prompt scan --repo test-prompts
 ```
-
-Expected output:
-- Prompt analysis results
-- Overall score (0-100)
-- Per-metric scores
-- Token count
-- Improvement suggestions
 
 ### 3.2 Evaluate from Standard Input
 
 ```bash
-cat test-prompts/sample.md | ./bin/curo-prompt eval
+# Only the worst 5 prompts
+./bin/curo-prompt scan --repo test-prompts --top 5
 ```
 
 Or direct input:
@@ -121,19 +116,16 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 ### 3.3 Save Report to File
 
 ```bash
-./bin/curo-prompt eval --file test-prompts/sample.md --output reports/sample_report.md
+# Save a single merged report file
+./bin/curo-prompt scan --repo test-prompts --output reports --single-output all_reports.md
 ```
-
-Report file will be saved to `reports/sample_report.md`.
 
 ### 3.4 Change Provider (for token calculation)
 
 ```bash
-# Use Claude (default)
-./bin/curo-prompt eval --file test-prompts/sample.md --provider claude
-
-# Use OpenAI
-./bin/curo-prompt eval --file test-prompts/sample.md --provider openai
+# Provider for token/cost metadata
+./bin/curo-prompt scan --repo test-prompts --provider claude   # default
+./bin/curo-prompt scan --repo test-prompts --provider openai
 ```
 
 ## 4. Batch Scanning: scan Command
@@ -145,18 +137,17 @@ Report file will be saved to `reports/sample_report.md`.
 ./bin/curo-prompt scan --repo test-prompts
 ```
 
-Expected output:
+Expected output (summary):
 ```
-Found prompt files: 2
-
-[1/2] Analyzing: test-prompts/sample.md
-  ✅ Complete - Score: 85.3/100, Report: reports/sample.md_report.md
-
-[2/2] Analyzing: test-prompts/complex.md
-  ✅ Complete - Score: 72.1/100, Report: reports/complex.md_report.md
-
-Total 2 files analyzed
-Report location: reports
+요약: 총 N, 평균 XX.X, 중앙값 XX.X, 표준편차 X.X, 최저/최고
+분포: 0–39:A, 40–59:B, 60–79:C, 80–100:D | IQR(25%:p25, 75%:p75)
+개선 우선순위 Top-10:
+ 1) 40.0  /path/to/worst.md
+ ...
+잘 작성된 프롬프트 Top-5:
+ 1) 90.0  /path/to/best.md
+개선 가이드:
+ - ROLE을 명확히 ... (중략)
 ```
 
 ### 4.2 Custom Output Directory
@@ -271,7 +262,7 @@ mkdir -p prompts
 # ... create multiple prompt files ...
 
 # Batch scan and analyze
-./bin/curo-prompt scan --repo prompts --output reports
+./bin/curo-prompt scan --repo prompts --output reports --single-output all_reports.md
 
 # Check reports
 ls -la reports/

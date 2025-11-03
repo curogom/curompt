@@ -15,7 +15,7 @@ CLI tool for **analyzing, evaluating, and optimizing** LLM prompts used by devel
 - **Dynamic Evaluation** (Optional): Multi-sample → Schema fit rate, self-consistency, latency, cost
 - **Scoring**: 0–100 overall score + sub-metrics
 - **Refactoring Suggestions**: Token reduction, rule separation, few-shot summarization, cache optimization
-- **Report Output**: Terminal summary + `reports/*.md|json`
+- **Report Output**: Terminal rich summary by default (<=100 lines). Optional file output via `--output` and `--single-output`.
 
 ## Quick Start
 
@@ -26,20 +26,23 @@ make build
 ./bin/curo-prompt --help
 ```
 
-### 2. Basic Testing
+### 2. Basic Testing (scan 중심)
 
 ```bash
-# Evaluate sample prompt
-echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
+# 기본: 프로젝트 스캔 → 배치 수집 → 병렬 평가 → 리치 요약(stdout)
+./bin/curo-prompt scan
 
-# Evaluate from file
-./bin/curo-prompt eval --file prompts/dev_contract_v2.md
+# 하위 점수 Top-20만 보고 싶을 때
+./bin/curo-prompt scan --top 20
 
-# Batch scan
-./bin/curo-prompt scan --repo prompts/
+# 전체 리포트를 콘솔로 확인
+./bin/curo-prompt scan --full
 
-# Get improvement suggestions
-./bin/curo-prompt suggest --file prompts/dev_contract_v2.md
+# 파일 저장(단일 파일 병합)
+./bin/curo-prompt scan --output reports --single-output all_reports.md
+
+# 병렬 작업 수 조정(예: 8)
+./bin/curo-prompt scan --concurrency 8
 ```
 
 ### 3. Quick Test Script
@@ -52,8 +55,8 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 This script automatically:
 - ✅ Checks build
 - ✅ Creates test prompt files
-- ✅ Tests eval, suggest, scan commands
-- ✅ Verifies report generation
+- ✅ Tests scan command and verifies rich summary
+- ✅ Verifies optional report generation
 
 > **📖 Detailed guide**: See [Getting Started Guide](./docs/public/GETTING_STARTED.md) (step-by-step instructions, examples, troubleshooting)
 
@@ -153,8 +156,8 @@ curo-prompt --version
 # Check help
 curo-prompt --help
 
-# Basic test
-echo "# ROLE\nEngineer" | curo-prompt eval
+# Basic test (rich summary)
+curo-prompt scan --top 5
 ```
 
 > **📖 Detailed installation guide**: See [Installation Guide](./docs/public/INSTALLATION.md) (PATH setup, troubleshooting included)

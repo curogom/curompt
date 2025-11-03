@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -47,10 +48,20 @@ func newEvalCmd() *cobra.Command {
 					return fmt.Errorf("프롬프트 파일을 읽지 못했습니다: %w", err)
 				}
 			} else {
+				// 파일 미지정: 표준 입력 필요 여부 확인
+				stdinFile := os.Stdin
+				fd := stdinFile.Fd()
+				if isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd) {
+					return fmt.Errorf("입력이 필요합니다: --file <경로> 옵션을 사용하거나 표준 입력으로 프롬프트를 제공하세요")
+				}
+
 				// 표준 입력에서 읽기
 				content, err = io.ReadAll(os.Stdin)
 				if err != nil {
 					return fmt.Errorf("표준 입력에서 프롬프트를 읽지 못했습니다: %w", err)
+				}
+				if len(bytes.TrimSpace(content)) == 0 {
+					return fmt.Errorf("빈 입력입니다: --file <경로> 옵션을 사용하거나 표준 입력으로 프롬프트 내용을 제공하세요")
 				}
 			}
 

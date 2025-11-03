@@ -19,9 +19,9 @@ curo-prompt scan --repo .
 
 The database is created at: `~/.curo-prompt/db.sqlite`
 
-### 2. Prompt Collection Methods
+### 2. Prompt Collection Methods (Scan-first)
 
-#### Method 1: File Scanning (Current - MVP)
+#### Method 1: File Scanning (Default)
 
 Scan existing prompt files in your repository:
 
@@ -36,30 +36,19 @@ curo-prompt scan --repo ./prompts
 curo-prompt scan --repo . --patterns "*.md" --patterns "*.txt"
 ```
 
-**What happens (all in one command):**
-1. Finds all prompt files matching patterns
-2. **Collects** each prompt (creates CollectedPrompt)
-3. **Evaluates** each prompt (calls Evaluate)
-4. **Saves** to database (`~/.curo-prompt/db.sqlite`)
-5. **Generates** reports in `reports/` directory
+**What happens by default (all in one):**
+1. Finds all prompt files (batch collect)
+2. Evaluates them in parallel (concurrency = CPU cores)
+3. Shows a rich summary to stdout (<= 100 lines): stats, distribution, Top-N, coaching
+4. Optionally saves reports only if `--output` is specified (individual or single-file)
 
-**Note**: The `scan` command does everything in one go: collection → evaluation → storage → report generation.
+**Notes**:
+- Default is console summary only. Use `--output DIR` to write files.
+- Single merged report: `--single-output all_reports.md` (requires `--output`).
 
-#### Method 2: Direct Evaluation (Doesn't Save to DB)
+#### Method 2: Log File Collection ✅ (Optional)
 
-Evaluate a single prompt file without saving:
-
-```bash
-# Evaluate without saving
-curo-prompt eval --file prompt.md
-
-# Evaluate and save report
-curo-prompt eval --file prompt.md --output reports/
-```
-
-**Note**: `eval` command currently **does not save** to database. Only `scan` command saves.
-
-#### Method 3: Log File Collection ✅
+#### Method 3: CLI Wrapper Collection ⚠️ (Optional)
 
 Collect prompts from tool history/log files:
 
@@ -121,7 +110,10 @@ curo-prompt collect --from codex --all
 # → Collects from all projects in history
 ```
 
-#### Method 4: CLI Wrapper Collection ⚠️
+#### Deprecated: Direct Evaluation (`eval`)
+
+Single-file evaluation is covered by `scan` (pointing `--repo` to a file or using patterns).
+If needed, `eval` can be used but is no longer highlighted in docs.
 
 Wrap external CLI tools to capture prompts:
 
