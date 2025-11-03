@@ -116,6 +116,33 @@ func newScanCmd() *cobra.Command {
 			ctx := context.Background()
 			markdownReporter := reporter.NewMarkdownReporter()
 
+			// Serialize DB writes to avoid SQLITE_BUSY under parallel evaluation
+			var saveWg sync.WaitGroup
+			saveJobs := make(chan *model.CollectedPrompt, 128)
+			if repo != nil {
+				saveWg.Add(1)
+				go func() {
+					defer saveWg.Done()
+					for cp := range saveJobs {
+						// retry with simple backoff
+						var lastErr error
+						for attempt := 0; attempt < 5; attempt++ {
+							if err := repo.Save(ctx, cp); err != nil {
+								lastErr = err
+								time.Sleep(time.Duration(50*(1<<attempt)) * time.Millisecond)
+								continue
+							}
+							lastErr = nil
+							break
+						}
+						if lastErr != nil {
+							// non-fatal: print a warning
+							cmd.Printf("  ⚠️  저장 실패(최대 재시도 후): %v\n", lastErr)
+						}
+					}
+				}()
+			}
+
 			jobs := make(chan string)
 			var wg sync.WaitGroup
 			var mu sync.Mutex
@@ -161,12 +188,8 @@ func newScanCmd() *cobra.Command {
 						continue
 					}
 					if repo != nil {
-						if err := repo.Save(ctx, collectedPrompt); err != nil {
-							mu.Lock()
-							results = append(results, evalResult{filePath: file, absPath: absPath, report: report, score: result.Score.OverallScore, err: fmt.Errorf("저장 실패: %w", err)})
-							mu.Unlock()
-							continue
-						}
+						// enqueue for serialized save
+						saveJobs <- collectedPrompt
 					}
 					mu.Lock()
 					results = append(results, evalResult{filePath: file, absPath: absPath, report: report, score: result.Score.OverallScore})
@@ -192,12 +215,19 @@ func newScanCmd() *cobra.Command {
 					cmd.Printf("  ⚠️  %s: %v\n", r.filePath, r.err)
 					continue
 				}
+
 				if useFileOutput && singleOut == "" {
 					reportFileName := fmt.Sprintf("%s_report.md", sanitizeFileName(filepath.Base(r.filePath)))
 					reportPath := filepath.Join(outputDir, reportFileName)
 					if err := os.WriteFile(reportPath, []byte(r.report), 0644); err != nil {
 						cmd.Printf("  ⚠️  리포트 저장 실패: %v\n", err)
 						continue
+					}
+
+					// finalize DB writes (once after processing all results)
+					if repo != nil {
+						close(saveJobs)
+						saveWg.Wait()
 					}
 					cmd.Printf("  ✅ 완료 - 점수: %.1f/100, 리포트: %s\n", r.score, reportPath)
 				} else if useFileOutput && singleOut != "" {

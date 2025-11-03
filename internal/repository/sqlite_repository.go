@@ -25,6 +25,16 @@ func NewSQLiteRepository(dbPath string) (PromptRepository, error) {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 
+	// Improve concurrency behavior
+	// - WAL mode allows concurrent readers and a single writer
+	// - busy_timeout reduces SQLITE_BUSY errors by waiting
+	if _, err := db.Exec("PRAGMA journal_mode=WAL;"); err != nil {
+		_ = err // non-fatal
+	}
+	if _, err := db.Exec("PRAGMA busy_timeout=5000;"); err != nil {
+		_ = err // non-fatal
+	}
+
 	repo := &sqliteRepository{db: db}
 
 	if err := repo.initSchema(); err != nil {
