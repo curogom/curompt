@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync"
 	"time"
 	"unicode/utf8"
 
@@ -68,6 +69,7 @@ func newEvalCmd() *cobra.Command {
 			ctx := context.Background()
 
 			stopSpinner := startSpinner(cmd.ErrOrStderr(), "프롬프트 평가 중입니다")
+			defer stopSpinner("")
 
 			result, err := eval.Evaluate(ctx, collectedPrompt)
 			if err != nil {
@@ -125,19 +127,23 @@ func startSpinner(w io.Writer, message string) func(string) {
 		isTTY = isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd)
 	}
 
+	var once sync.Once
+
 	if !isTTY {
 		if message != "" {
 			fmt.Fprintf(w, "%s...\n", message)
 		}
 		return func(final string) {
-			if final != "" {
-				fmt.Fprintf(w, "%s\n", final)
-			}
+			once.Do(func() {
+				if final != "" {
+					fmt.Fprintf(w, "%s\n", final)
+				}
+			})
 		}
 	}
 
 	spinnerChars := []rune{'|', '/', '-', '\\'}
-	updates := make(chan string, 1)
+	updates := make(chan string)
 	done := make(chan struct{})
 
 	go func() {
@@ -151,7 +157,7 @@ func startSpinner(w io.Writer, message string) func(string) {
 		for {
 			select {
 			case final := <-updates:
-				padding := strings.Repeat(" ", utf8.RuneCountInString(message)+4)
+				padding := strings.Repeat(" ", utf8.RuneCountInString(message)+2)
 				fmt.Fprintf(w, "\r%s\r", padding)
 				if final != "" {
 					fmt.Fprintf(w, "%s\n", final)
@@ -166,11 +172,9 @@ func startSpinner(w io.Writer, message string) func(string) {
 	}()
 
 	return func(final string) {
-		select {
-		case updates <- final:
-		default:
-			// updates 채널이 이미 닫힌 경우 무시
-		}
-		<-done
+		once.Do(func() {
+			updates <- final
+			<-done
+		})
 	}
 }
