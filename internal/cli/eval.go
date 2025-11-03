@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
+	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/google/uuid"
+	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 
 	"github.com/curogom/curo-prompt/internal/evaluator"
@@ -40,13 +44,13 @@ func newEvalCmd() *cobra.Command {
 			if filePath != "" {
 				content, err = os.ReadFile(filePath)
 				if err != nil {
-					return fmt.Errorf("failed to read file: %w", err)
+					return fmt.Errorf("프롬프트 파일을 읽지 못했습니다: %w", err)
 				}
 			} else {
 				// 표준 입력에서 읽기
 				content, err = io.ReadAll(os.Stdin)
 				if err != nil {
-					return fmt.Errorf("failed to read from stdin: %w", err)
+					return fmt.Errorf("표준 입력에서 프롬프트를 읽지 못했습니다: %w", err)
 				}
 			}
 
@@ -64,26 +68,33 @@ func newEvalCmd() *cobra.Command {
 			eval := evaluator.NewEvaluator(provider)
 			ctx := context.Background()
 
+			stopSpinner := startSpinner(cmd.ErrOrStderr(), "프롬프트 평가 중입니다")
+			defer stopSpinner("")
+
 			result, err := eval.Evaluate(ctx, collectedPrompt)
 			if err != nil {
-				return fmt.Errorf("failed to evaluate: %w", err)
+				stopSpinner("프롬프트 평가 실패")
+				return fmt.Errorf("평가 실행 중 오류가 발생했습니다: %w", err)
 			}
 
 			// 리포트 생성
 			markdownReporter := reporter.NewMarkdownReporter()
 			report, err := markdownReporter.Generate(result)
 			if err != nil {
-				return fmt.Errorf("failed to generate report: %w", err)
+				stopSpinner("리포트 생성 실패")
+				return fmt.Errorf("리포트 생성 중 오류가 발생했습니다: %w", err)
 			}
 
-			// 출력
 			if outputPath != "" {
 				// 파일로 저장
 				if err := os.WriteFile(outputPath, []byte(report), 0644); err != nil {
-					return fmt.Errorf("failed to write report: %w", err)
+					stopSpinner("리포트 저장 실패")
+					return fmt.Errorf("리포트를 파일로 저장하지 못했습니다: %w", err)
 				}
+				stopSpinner("평가가 완료되었습니다")
 				cmd.Printf("리포트가 저장되었습니다: %s\n", outputPath)
 			} else {
+				stopSpinner("평가가 완료되었습니다")
 				// 터미널 출력
 				cmd.Print(report)
 			}
@@ -106,4 +117,64 @@ func getWorkingDir() string {
 		return "."
 	}
 	return wd
+}
+
+func startSpinner(w io.Writer, message string) func(string) {
+	writer, ok := w.(*os.File)
+	isTTY := false
+	if ok {
+		fd := writer.Fd()
+		isTTY = isatty.IsTerminal(fd) || isatty.IsCygwinTerminal(fd)
+	}
+
+	var once sync.Once
+
+	if !isTTY {
+		if message != "" {
+			fmt.Fprintf(w, "%s...\n", message)
+		}
+		return func(final string) {
+			once.Do(func() {
+				if final != "" {
+					fmt.Fprintf(w, "%s\n", final)
+				}
+			})
+		}
+	}
+
+	spinnerChars := []rune{'|', '/', '-', '\\'}
+	updates := make(chan string)
+	done := make(chan struct{})
+
+	go func() {
+		ticker := time.NewTicker(120 * time.Millisecond)
+		defer ticker.Stop()
+
+		idx := 0
+		fmt.Fprintf(w, "%s %c", message, spinnerChars[idx])
+		idx = (idx + 1) % len(spinnerChars)
+
+		for {
+			select {
+			case final := <-updates:
+				padding := strings.Repeat(" ", utf8.RuneCountInString(message)+2)
+				fmt.Fprintf(w, "\r%s\r", padding)
+				if final != "" {
+					fmt.Fprintf(w, "%s\n", final)
+				}
+				close(done)
+				return
+			case <-ticker.C:
+				fmt.Fprintf(w, "\r%s %c", message, spinnerChars[idx])
+				idx = (idx + 1) % len(spinnerChars)
+			}
+		}
+	}()
+
+	return func(final string) {
+		once.Do(func() {
+			updates <- final
+			<-done
+		})
+	}
 }
