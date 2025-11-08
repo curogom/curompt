@@ -1,4 +1,4 @@
-module github.com/curogom/curo-prompt
+module github.com/curogom/curompt
 
 go 1.24.0
 

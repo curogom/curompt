@@ -1,6 +1,6 @@
 package analyzer
 
-import "github.com/curogom/curo-prompt/internal/parser"
+import "github.com/curogom/curompt/internal/parser"
 
 // AnalysisResult contains the result of static analysis
 type AnalysisResult struct {

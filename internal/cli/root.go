@@ -10,9 +10,9 @@ import (
 // NewRootCmd creates and returns the root command
 func NewRootCmd(version, buildTime, gitCommit string) *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:   "curo-prompt",
+		Use:   "curompt",
 		Short: "CLI 기반 LLM 프롬프트 분석·평가·최적화 도구",
-		Long: `curo-prompt는 CLI 기반 개발자의 LLM 프롬프트를 분석·평가·최적화하는 도구입니다.
+		Long: `curompt는 CLI 기반 개발자의 LLM 프롬프트를 분석·평가·최적화하는 도구입니다.
 
 주요 기능:
 - 프롬프트 정적 분석 (섹션 구조, 중복 규칙, 토큰 계산)

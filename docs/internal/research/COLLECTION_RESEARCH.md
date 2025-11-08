@@ -43,7 +43,7 @@ claude
 exit
 
 # 로그 파일 파싱
-curo-prompt collect --from-log session.log --tool claude
+curompt collect --from-log session.log --tool claude
 ```
 
 **장점**: 모든 CLI 도구에 적용 가능  

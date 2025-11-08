@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 // GuideComplianceResult represents compliance with prompt engineering guides

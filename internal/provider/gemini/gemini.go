@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/curogom/curo-prompt/internal/parser"
-	"github.com/curogom/curo-prompt/internal/provider"
+	"github.com/curogom/curompt/internal/parser"
+	"github.com/curogom/curompt/internal/provider"
 )
 
 // GeminiProvider implements Provider for Google Gemini API

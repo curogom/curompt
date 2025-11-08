@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/curogom/curo-prompt/internal/analyzer"
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/scorer"
+	"github.com/curogom/curompt/internal/analyzer"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/scorer"
 )
 
 func TestMarkdownReporter_Generate(t *testing.T) {

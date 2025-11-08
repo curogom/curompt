@@ -87,7 +87,7 @@ go tool cover -func=coverage.out
 ```
 
 ### 바이너리 필요 테스트 (CLI E2E)
-CLI E2E 테스트는 `./bin/curo-prompt` 바이너리가 필요합니다.
+CLI E2E 테스트는 `./bin/curompt` 바이너리가 필요합니다.
 바이너리가 없으면 해당 테스트는 자동으로 스킵됩니다.
 
 ```bash
@@ -100,7 +100,7 @@ go test ./test/integration/... -v
 
 ## 테스트 전제 조건
 
-1. **바이너리 빌드**: CLI E2E 테스트는 `./bin/curo-prompt` 필요
+1. **바이너리 빌드**: CLI E2E 테스트는 `./bin/curompt` 필요
 2. **임시 디렉토리**: `t.TempDir()` 사용으로 자동 정리
 3. **SQLite**: 임시 데이터베이스 파일 생성
 

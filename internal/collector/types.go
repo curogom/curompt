@@ -3,7 +3,7 @@ package collector
 import (
 	"context"
 
-	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curompt/internal/model"
 )
 
 // Collector collects prompts from various sources

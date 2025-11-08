@@ -20,7 +20,7 @@ linters-settings:
   gofmt:
     simplify: true
   goimports:
-    local-prefixes: github.com/curogom/curo-prompt
+    local-prefixes: github.com/curogom/curompt
 
 issues:
   exclude-rules:

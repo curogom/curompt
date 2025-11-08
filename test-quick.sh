@@ -27,16 +27,16 @@ echo "✅ test-prompts/sample.md 생성 완료"
 
 echo ""
 echo "=== 3. eval 명령 테스트 ==="
-./bin/curo-prompt eval --file test-prompts/sample.md | head -20
+./bin/curompt eval --file test-prompts/sample.md | head -20
 
 echo ""
 echo "=== 4. suggest 명령 테스트 ==="
-./bin/curo-prompt suggest --file test-prompts/sample.md | head -15
+./bin/curompt suggest --file test-prompts/sample.md | head -15
 
 echo ""
 echo "=== 5. scan 명령 테스트 ==="
 mkdir -p test-reports
-./bin/curo-prompt scan --repo test-prompts --output test-reports 2>&1 | tail -10
+./bin/curompt scan --repo test-prompts --output test-reports 2>&1 | tail -10
 
 echo ""
 echo "=== 테스트 완료! ==="

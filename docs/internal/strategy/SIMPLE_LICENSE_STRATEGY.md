@@ -36,7 +36,7 @@ Copyright (c) 2025 CuroGom. All Rights Reserved.
 - 출처 표기 없이 사용 금지
 
 사용 시 다음을 명시해야 합니다:
-- "Based on curo-prompt by CuroGom" 또는 유사한 attribution
+- "Based on curompt by CuroGom" 또는 유사한 attribution
 
 **이 라이선스는 CuroGom의 명시적 허가 없이 상업적 복제를 방지하기 위한 것입니다.**
 ```
@@ -87,7 +87,7 @@ Copyright (c) 2025 CuroGom.
 1. 이 프로젝트를 무단으로 복제하거나 동일한 제품으로 재배포
 2. 출처 표기 없이 사용
 
-사용 시 "curo-prompt by CuroGom"을 명시해주세요.
+사용 시 "curompt by CuroGom"을 명시해주세요.
 
 질문이나 상업적 사용 문의는 CuroGom에 연락하세요.
 ```
@@ -151,7 +151,7 @@ Copyright (c) 2025 CuroGom. All Rights Reserved.
 1. 이 프로젝트의 핵심 아이디어, 구조, 기능을 무단으로 복제하여 
    동일하거나 유사한 제품을 상업적으로 배포하는 것은 금지됩니다.
 2. 사용 시 다음을 명시해야 합니다:
-   - "Based on curo-prompt by CuroGom" 또는 유사한 attribution
+   - "Based on curompt by CuroGom" 또는 유사한 attribution
 
 상업적 사용 문의:
 이 프로젝트를 상업적으로 사용하거나 배포하고자 하는 경우,

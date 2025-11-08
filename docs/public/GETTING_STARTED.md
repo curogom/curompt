@@ -2,7 +2,7 @@
 
 > 🇰🇷 **Korean**: [한국어 버전](./GETTING_STARTED.ko.md)
 
-This is a hands-on guide for first-time users of `curo-prompt`.
+This is a hands-on guide for first-time users of `curompt`.
 
 ## Prerequisites
 
@@ -14,21 +14,21 @@ This is a hands-on guide for first-time users of `curo-prompt`.
 
 ```bash
 # Navigate to project directory
-cd /path/to/curo-prompt
+cd /path/to/curompt
 
 # Build
 make build
 
 # Check binary
-./bin/curo-prompt --help
+./bin/curompt --help
 ```
 
 Expected output:
 ```
-curo-prompt is a CLI tool for analyzing, evaluating, and optimizing LLM prompts.
+curompt is a CLI tool for analyzing, evaluating, and optimizing LLM prompts.
 
 Usage:
-  curo-prompt [command]
+  curompt [command]
 
 Available Commands (surface):
   scan        Scan, parallel-evaluate, and summarize prompts (default entry)
@@ -97,35 +97,35 @@ EOF
 
 ```bash
 # Rich summary to console (<=100 lines): stats, distribution, Top-N, coaching
-./bin/curo-prompt scan --repo test-prompts
+./bin/curompt scan --repo test-prompts
 ```
 
 ### 3.2 Evaluate from Standard Input
 
 ```bash
 # Only the worst 5 prompts
-./bin/curo-prompt scan --repo test-prompts --top 5
+./bin/curompt scan --repo test-prompts --top 5
 ```
 
 Or direct input:
 
 ```bash
-echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
+echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 ```
 
 ### 3.3 Save Report to File
 
 ```bash
 # Save a single merged report file
-./bin/curo-prompt scan --repo test-prompts --output reports --single-output all_reports.md
+./bin/curompt scan --repo test-prompts --output reports --single-output all_reports.md
 ```
 
 ### 3.4 Change Provider (for token calculation)
 
 ```bash
 # Provider for token/cost metadata
-./bin/curo-prompt scan --repo test-prompts --provider claude   # default
-./bin/curo-prompt scan --repo test-prompts --provider openai
+./bin/curompt scan --repo test-prompts --provider claude   # default
+./bin/curompt scan --repo test-prompts --provider openai
 ```
 
 ## 4. Batch Scanning: scan Command
@@ -134,7 +134,7 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 
 ```bash
 # Scan test-prompts directory
-./bin/curo-prompt scan --repo test-prompts
+./bin/curompt scan --repo test-prompts
 ```
 
 Expected output (summary):
@@ -153,17 +153,17 @@ Expected output (summary):
 ### 4.2 Custom Output Directory
 
 ```bash
-./bin/curo-prompt scan --repo test-prompts --output my-reports
+./bin/curompt scan --repo test-prompts --output my-reports
 ```
 
 ### 4.3 Specify File Patterns
 
 ```bash
 # Scan only .md files
-./bin/curo-prompt scan --repo test-prompts --patterns "*.md"
+./bin/curompt scan --repo test-prompts --patterns "*.md"
 
 # Multiple patterns
-./bin/curo-prompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
+./bin/curompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
 ```
 
 ## 5. Improvement Suggestions: suggest Command
@@ -171,7 +171,7 @@ Expected output (summary):
 ### 5.1 Basic Suggestions
 
 ```bash
-./bin/curo-prompt suggest --file test-prompts/sample.md
+./bin/curompt suggest --file test-prompts/sample.md
 ```
 
 Expected output:
@@ -200,7 +200,7 @@ EOF
 Check suggestions for this file:
 
 ```bash
-./bin/curo-prompt suggest --file test-prompts/needs-improvement.md
+./bin/curompt suggest --file test-prompts/needs-improvement.md
 ```
 
 Expected output:
@@ -221,7 +221,7 @@ Current Score: 45.2 / 100
 ### 5.3 Suggestions from Standard Input
 
 ```bash
-cat test-prompts/sample.md | ./bin/curo-prompt suggest
+cat test-prompts/sample.md | ./bin/curompt suggest
 ```
 
 ## 6. Real Workflow Testing
@@ -242,13 +242,13 @@ Code in Go
 EOF
 
 # 2. Evaluate and check score
-./bin/curo-prompt eval --file my-prompt.md
+./bin/curompt eval --file my-prompt.md
 
 # 3. Check improvement suggestions
-./bin/curo-prompt suggest --file my-prompt.md
+./bin/curompt suggest --file my-prompt.md
 
 # 4. Save report
-./bin/curo-prompt eval --file my-prompt.md --output my-report.md
+./bin/curompt eval --file my-prompt.md --output my-report.md
 
 # 5. Check report
 cat my-report.md
@@ -262,7 +262,7 @@ mkdir -p prompts
 # ... create multiple prompt files ...
 
 # Batch scan and analyze
-./bin/curo-prompt scan --repo prompts --output reports --single-output all_reports.md
+./bin/curompt scan --repo prompts --output reports --single-output all_reports.md
 
 # Check reports
 ls -la reports/
@@ -310,14 +310,14 @@ Report files (`.md`) include:
 make build
 
 # Verify binary exists
-ls -la ./bin/curo-prompt
+ls -la ./bin/curompt
 ```
 
 ### 8.2 Cannot Read File
 
 ```bash
 # Check file path (use absolute path)
-./bin/curo-prompt eval --file /full/path/to/prompt.md
+./bin/curompt eval --file /full/path/to/prompt.md
 
 # Check file permissions
 ls -la test-prompts/sample.md
@@ -337,7 +337,7 @@ mkdir -p reports
 chmod 755 reports
 
 # Try again
-./bin/curo-prompt scan --repo test-prompts --output reports
+./bin/curompt scan --repo test-prompts --output reports
 ```
 
 ## 9. Advanced Usage
@@ -347,9 +347,9 @@ chmod 755 reports
 ```bash
 # Generate prompt → Evaluate → Suggest
 echo "# ROLE\nEngineer" | \
-  ./bin/curo-prompt eval | \
+  ./bin/curompt eval | \
   tee eval-output.txt | \
-  ./bin/curo-prompt suggest
+  ./bin/curompt suggest
 ```
 
 ### 9.2 Batch Processing Script
@@ -360,7 +360,7 @@ echo "# ROLE\nEngineer" | \
 
 for file in prompts/*.md; do
     echo "Evaluating: $file"
-    ./bin/curo-prompt eval --file "$file" --output "reports/$(basename $file .md)_report.md"
+    ./bin/curompt eval --file "$file" --output "reports/$(basename $file .md)_report.md"
 done
 ```
 

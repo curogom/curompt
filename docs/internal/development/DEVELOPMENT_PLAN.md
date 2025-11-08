@@ -757,7 +757,7 @@ Reporter로 리포트 생성
 
 #### Week 10-11: Homebrew Private Tap 배포
 - [ ] Homebrew Tap 레포지토리 생성
-  - 별도 GitHub 레포지토리 생성 (`homebrew-curo-prompt`)
+  - 별도 GitHub 레포지토리 생성 (`homebrew-curompt`)
   - Formula 파일 관리
 - [ ] 자동화 스크립트 구현
   - [ ] 릴리스 시 자동 SHA256 계산

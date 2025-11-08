@@ -8,10 +8,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curo-prompt/internal/collector"
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/reporter"
-	"github.com/curogom/curo-prompt/internal/repository"
+	"github.com/curogom/curompt/internal/collector"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/reporter"
+	"github.com/curogom/curompt/internal/repository"
 )
 
 // newCollectCmd creates the collect command for log file collection
@@ -29,23 +29,23 @@ func newCollectCmd() *cobra.Command {
 예시:
   # Claude Code: 현재 프로젝트만 수집 (CLAUDE.md가 있는 디렉토리)
   cd /path/to/project
-  curo-prompt collect --from claude
+  curompt collect --from claude
   
   # Claude Code: 모든 프로젝트의 프롬프트 수집
-  curo-prompt collect --from claude --all
+  curompt collect --from claude --all
   
   # Codex: 현재 디렉토리만 수집 (CLAUDE.md 불필요)
   cd /path/to/project
-  curo-prompt collect --from codex
+  curompt collect --from codex
   
   # Codex: 모든 프로젝트의 프롬프트 수집
-  curo-prompt collect --from codex --all
+  curompt collect --from codex --all
   
   # 특정 파일 지정
-  curo-prompt collect --from claude --file ~/.claude/history.jsonl
+  curompt collect --from claude --file ~/.claude/history.jsonl
   
   # 수집 후 자동 평가
-  curo-prompt collect --from claude --eval`,
+  curompt collect --from claude --eval`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			from, _ := cmd.Flags().GetString("from")         //nolint:errcheck
 			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
@@ -87,7 +87,7 @@ func newCollectCmd() *cobra.Command {
 			}
 
 			// 저장소 초기화
-			dbPath := filepath.Join(os.Getenv("HOME"), ".curo-prompt", "db.sqlite")
+			dbPath := filepath.Join(os.Getenv("HOME"), ".curompt", "db.sqlite")
 			if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
 				return fmt.Errorf("DB 디렉토리 생성 실패: %w", err)
 			}

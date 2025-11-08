@@ -1,4 +1,4 @@
-# curo-prompt
+# curompt
 
 CLI tool for **analyzing, evaluating, and optimizing** LLM prompts used by developers.
 
@@ -23,26 +23,26 @@ CLI tool for **analyzing, evaluating, and optimizing** LLM prompts used by devel
 
 ```bash
 make build
-./bin/curo-prompt --help
+./bin/curompt --help
 ```
 
 ### 2. Basic Testing (scan 중심)
 
 ```bash
 # 기본: 프로젝트 스캔 → 배치 수집 → 병렬 평가 → 리치 요약(stdout)
-./bin/curo-prompt scan
+./bin/curompt scan
 
 # 하위 점수 Top-20만 보고 싶을 때
-./bin/curo-prompt scan --top 20
+./bin/curompt scan --top 20
 
 # 전체 리포트를 콘솔로 확인
-./bin/curo-prompt scan --full
+./bin/curompt scan --full
 
 # 파일 저장(단일 파일 병합)
-./bin/curo-prompt scan --output reports --single-output all_reports.md
+./bin/curompt scan --output reports --single-output all_reports.md
 
 # 병렬 작업 수 조정(예: 8)
-./bin/curo-prompt scan --concurrency 8
+./bin/curompt scan --concurrency 8
 ```
 
 ### 3. Quick Test Script
@@ -71,25 +71,25 @@ This script automatically:
 
 #### Method 1: Homebrew (Recommended for macOS) ⭐
 
-The easiest way to install `curo-prompt` on macOS:
+The easiest way to install `curompt` on macOS:
 
 ```bash
 # Add tap
-brew tap curogom/curo-prompt
+brew tap curogom/curompt
 
 # Install
-brew install curo-prompt
+brew install curompt
 
 # Verify installation
-curo-prompt --version
+curompt --version
 ```
 
 **Update**:
 ```bash
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 
-> **✅ Available now**: Homebrew tap is ready! You can install `curo-prompt` using the commands above.
+> **✅ Available now**: Homebrew tap is ready! You can install `curompt` using the commands above.
 
 #### Method 2: Go install
 
@@ -97,13 +97,13 @@ Install directly using Go modules to `$GOPATH/bin` or `~/go/bin`:
 
 ```bash
 # Clone repository (or if already cloned)
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 
 # Install
 make install
 # Or install directly
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 ```
 
 **PATH verification and setup**:
@@ -116,8 +116,8 @@ go env GOPATH
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 # Verify
-which curo-prompt
-curo-prompt --help
+which curompt
+curompt --help
 ```
 
 **Permanently add to PATH** (add to shell config file):
@@ -138,12 +138,12 @@ source ~/.bashrc
 make build
 
 # Run (without PATH)
-./bin/curo-prompt --help
+./bin/curompt --help
 
 # Or manually add to PATH
-sudo cp ./bin/curo-prompt /usr/local/bin/
+sudo cp ./bin/curompt /usr/local/bin/
 # Or
-cp ./bin/curo-prompt ~/bin/
+cp ./bin/curompt ~/bin/
 export PATH="$PATH:~/bin"
 ```
 
@@ -151,13 +151,13 @@ export PATH="$PATH:~/bin"
 
 ```bash
 # Check version
-curo-prompt --version
+curompt --version
 
 # Check help
-curo-prompt --help
+curompt --help
 
 # Basic test (rich summary)
-curo-prompt scan --top 5
+curompt scan --top 5
 ```
 
 > **📖 Detailed installation guide**: See [Installation Guide](./docs/public/INSTALLATION.md) (PATH setup, troubleshooting included)
@@ -196,7 +196,7 @@ make check
 
 - **Local-first**: Runs locally by default, no external transmission
 - **Auto masking**: Automatic masking of API keys/tokens/emails/URL queries/.env references
-- **Local storage**: SQLite storage only (`~/.curo-prompt/db.sqlite`)
+- **Local storage**: SQLite storage only (`~/.curompt/db.sqlite`)
 
 For details, see [SECURITY.md](./docs/public/SECURITY.md).
 

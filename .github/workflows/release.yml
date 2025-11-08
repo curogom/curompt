@@ -37,25 +37,25 @@ jobs:
       - name: Create source tarball
         run: |
           VERSION=${{ steps.tag.outputs.version }}
-          git archive --format=tar.gz --prefix=curo-prompt-${{ steps.tag.outputs.version_num }}/ \
-            -o curo-prompt-${{ steps.tag.outputs.version_num }}.tar.gz ${{ steps.tag.outputs.version }}
+          git archive --format=tar.gz --prefix=curompt-${{ steps.tag.outputs.version_num }}/ \
+            -o curompt-${{ steps.tag.outputs.version_num }}.tar.gz ${{ steps.tag.outputs.version }}
       
       - name: Calculate SHA256
         id: sha256
         run: |
-          SHA256=$(shasum -a 256 curo-prompt-${{ steps.tag.outputs.version_num }}.tar.gz | awk '{print $1}')
+          SHA256=$(shasum -a 256 curompt-${{ steps.tag.outputs.version_num }}.tar.gz | awk '{print $1}')
           echo "sha256=$SHA256" >> $GITHUB_OUTPUT
           echo "✅ SHA256 for Homebrew: $SHA256"
           echo ""
-          echo "Update Formula/curo-prompt.rb with:"
-          echo "  url \"https://github.com/curogom/curo-prompt/archive/refs/tags/${{ steps.tag.outputs.version }}.tar.gz\""
+          echo "Update Formula/curompt.rb with:"
+          echo "  url \"https://github.com/curogom/curompt/archive/refs/tags/${{ steps.tag.outputs.version }}.tar.gz\""
           echo "  sha256 \"$SHA256\""
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            curo-prompt-${{ steps.tag.outputs.version_num }}.tar.gz
+            curompt-${{ steps.tag.outputs.version_num }}.tar.gz
           generate_release_notes: true
           draft: false
           prerelease: false
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout Tap repository
         uses: actions/checkout@v4
         with:
-          repository: curogom/homebrew-curo-prompt
+          repository: curogom/homebrew-curompt
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: tap-repo
           fetch-depth: 0
@@ -73,13 +73,13 @@ jobs:
       - name: Update Homebrew Tap Formula
         working-directory: tap-repo
         env:
-          TARBALL_URL: https://github.com/curogom/curo-prompt/archive/refs/tags/${{ steps.tag.outputs.version }}.tar.gz
+          TARBALL_URL: https://github.com/curogom/curompt/archive/refs/tags/${{ steps.tag.outputs.version }}.tar.gz
           SHA256: ${{ steps.sha256.outputs.sha256 }}
           VERSION_NUM: ${{ steps.tag.outputs.version_num }}
         run: |
-          FORMULA_FILE="Formula/c/curo-prompt.rb"
+          FORMULA_FILE="Formula/c/curompt.rb"
           if [ ! -f "$FORMULA_FILE" ]; then
-            FORMULA_FILE="Formula/curo-prompt.rb"
+            FORMULA_FILE="Formula/curompt.rb"
           fi
 
           sed -i "s|url \".*\"|url \"${TARBALL_URL}\"|" "$FORMULA_FILE"
@@ -89,10 +89,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add "$FORMULA_FILE"
-          git commit -m "Update curo-prompt to ${{ steps.tag.outputs.version }}" || exit 0
+          git commit -m "Update curompt to ${{ steps.tag.outputs.version }}" || exit 0
           # Ensure remote uses token
           git config --global --unset-all http.https://github.com/.extraheader || true
-          git remote set-url origin "https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/curogom/homebrew-curo-prompt.git"
+          git remote set-url origin "https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/curogom/homebrew-curompt.git"
           git push origin main
 
   build:
@@ -106,9 +106,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            asset_name: curo-prompt-linux-amd64
+            asset_name: curompt-linux-amd64
           - os: macos-latest
-            asset_name: curo-prompt-darwin-amd64
+            asset_name: curompt-darwin-amd64
     
     steps:
       - name: Checkout code
@@ -124,7 +124,7 @@ jobs:
         run: make build
       
       - name: Rename binary
-        run: mv ./bin/curo-prompt ./bin/${{ matrix.asset_name }}
+        run: mv ./bin/curompt ./bin/${{ matrix.asset_name }}
       
       - name: Upload release asset
         uses: softprops/action-gh-release@v1

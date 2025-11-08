@@ -14,10 +14,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/reporter"
-	"github.com/curogom/curo-prompt/internal/repository"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/reporter"
+	"github.com/curogom/curompt/internal/repository"
 )
 
 // newScanCmd creates the scan command
@@ -28,8 +28,8 @@ func newScanCmd() *cobra.Command {
 		Long: `레포지토리 내 프롬프트 파일을 찾아 분석하고 리포트를 생성합니다.
 
 예시:
-  curo-prompt scan --repo .
-  curo-prompt scan --repo ./prompts --output reports/`,
+  curompt scan --repo .
+  curompt scan --repo ./prompts --output reports/`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			repoPath, _ := cmd.Flags().GetString("repo")           //nolint:errcheck
 			outputDir, _ := cmd.Flags().GetString("output")        //nolint:errcheck
@@ -80,7 +80,7 @@ func newScanCmd() *cobra.Command {
 			cmd.Printf("발견된 프롬프트 파일: %d개\n\n", len(files))
 
 			// 저장소 초기화 (선택적)
-			dbPath := filepath.Join(os.Getenv("HOME"), ".curo-prompt", "db.sqlite")
+			dbPath := filepath.Join(os.Getenv("HOME"), ".curompt", "db.sqlite")
 			if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
 				cmd.Printf("Warning: failed to create db directory: %v\n", err)
 				dbPath = "" // 저장소 없이 진행

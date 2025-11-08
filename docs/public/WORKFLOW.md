@@ -4,20 +4,20 @@
 
 ## Overview
 
-This document explains how `curo-prompt` collects, stores, and manages prompts.
+This document explains how `curompt` collects, stores, and manages prompts.
 
 ## Current Workflow
 
 ### 1. Initial Setup
 
-When you first run `curo-prompt`, the database is automatically initialized:
+When you first run `curompt`, the database is automatically initialized:
 
 ```bash
-# First run - DB will be created at ~/.curo-prompt/db.sqlite
-curo-prompt scan --repo .
+# First run - DB will be created at ~/.curompt/db.sqlite
+curompt scan --repo .
 ```
 
-The database is created at: `~/.curo-prompt/db.sqlite`
+The database is created at: `~/.curompt/db.sqlite`
 
 ### 2. Prompt Collection Methods (Scan-first)
 
@@ -27,13 +27,13 @@ Scan existing prompt files in your repository:
 
 ```bash
 # Scan current directory for prompt files
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # Scan specific directory
-curo-prompt scan --repo ./prompts
+curompt scan --repo ./prompts
 
 # Custom file patterns
-curo-prompt scan --repo . --patterns "*.md" --patterns "*.txt"
+curompt scan --repo . --patterns "*.md" --patterns "*.txt"
 ```
 
 **What happens by default (all in one):**
@@ -55,20 +55,20 @@ Collect prompts from tool history/log files:
 ```bash
 # Collect from Claude Code (current project only)
 cd /path/to/project
-curo-prompt collect --from claude
+curompt collect --from claude
 
 # Collect from all projects
-curo-prompt collect --from claude --all
+curompt collect --from claude --all
 
 # Collect from Codex (current directory as project)
 cd /path/to/project
-curo-prompt collect --from codex
+curompt collect --from codex
 
 # Collect from all Codex prompts
-curo-prompt collect --from codex --all
+curompt collect --from codex --all
 
 # Collect and auto-evaluate
-curo-prompt collect --from claude --eval
+curompt collect --from claude --eval
 ```
 
 **How it works:**
@@ -96,17 +96,17 @@ curo-prompt collect --from claude --eval
 ```bash
 # Claude Code: Project-specific collection
 cd ~/projects/my-app  # Must have CLAUDE.md
-curo-prompt collect --from claude
+curompt collect --from claude
 # → Collects only prompts from ~/projects/my-app
 
 # Codex: Project-specific collection
 cd ~/projects/my-app  # No CLAUDE.md needed
-curo-prompt collect --from codex
+curompt collect --from codex
 # → Collects only prompts from ~/projects/my-app
 
 # Collect from all projects
-curo-prompt collect --from claude --all
-curo-prompt collect --from codex --all
+curompt collect --from claude --all
+curompt collect --from codex --all
 # → Collects from all projects in history
 ```
 
@@ -119,9 +119,9 @@ Wrap external CLI tools to capture prompts:
 
 ```bash
 # Wrap one-shot CLI commands
-curo-prompt wrap claude --print "Your prompt"
-curo-prompt wrap codex exec "TASK: Add feature"
-curo-prompt wrap cursor chat "Implement login"
+curompt wrap claude --print "Your prompt"
+curompt wrap codex exec "TASK: Add feature"
+curompt wrap cursor chat "Implement login"
 ```
 
 **How it works:**
@@ -147,17 +147,17 @@ Use the `list` command to view stored prompts:
 
 ```bash
 # List recent 10 prompts
-curo-prompt list
+curompt list
 
 # List more prompts
-curo-prompt list --limit 20
+curompt list --limit 20
 
 # List prompts from specific tool
-curo-prompt list --tool scan
-curo-prompt list --tool codex
+curompt list --tool scan
+curompt list --tool codex
 
 # List and re-evaluate
-curo-prompt list --eval
+curompt list --eval
 ```
 
 **Output example:**
@@ -178,10 +178,10 @@ Re-evaluate prompts stored in the database:
 
 ```bash
 # List and evaluate all recent prompts
-curo-prompt list --eval --limit 10
+curompt list --eval --limit 10
 
 # Evaluate specific tool's prompts
-curo-prompt list --tool scan --eval --output reports/
+curompt list --tool scan --eval --output reports/
 ```
 
 ## Database Schema
@@ -241,13 +241,13 @@ Stored information:
 1. **Initial Setup**
    ```bash
    # Scan your existing prompt files
-   curo-prompt scan --repo ./prompts
+   curompt scan --repo ./prompts
    ```
 
 2. **View Collected Prompts**
    ```bash
    # See what was collected
-   curo-prompt list
+   curompt list
    ```
 
 3. **Review Reports**
@@ -262,19 +262,19 @@ Stored information:
 1. **After Creating New Prompts**
    ```bash
    # Scan new prompts
-   curo-prompt scan --repo ./prompts
+   curompt scan --repo ./prompts
    ```
 
 2. **Quick Evaluation (Without Saving)**
    ```bash
    # Just evaluate without saving
-   curo-prompt eval --file new_prompt.md
+   curompt eval --file new_prompt.md
    ```
 
 3. **Re-evaluate Stored Prompts**
    ```bash
    # Re-evaluate all recent prompts
-   curo-prompt list --eval
+   curompt list --eval
    ```
 
 ## Future Improvements (M2+)

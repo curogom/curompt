@@ -1,7 +1,7 @@
 package analyzer
 
 import (
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 // staticAnalyzer implements Analyzer interface

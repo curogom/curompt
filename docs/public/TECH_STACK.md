@@ -39,7 +39,7 @@
 
 #### ✅ YAML Parser
 - **Package**: `gopkg.in/yaml.v3`
-- **Purpose**: Parsing `curo-prompt.yaml` configuration file
+- **Purpose**: Parsing `curompt.yaml` configuration file
 - **Selection Reasons**:
   - Most widely used YAML library in Go
   - Stable and well-documented
@@ -62,7 +62,7 @@
 
 #### ✅ SQLite
 - **Package**: `modernc.org/sqlite` (pure Go implementation)
-- **Purpose**: Store prompt analysis results (`~/.curo-prompt/db.sqlite`)
+- **Purpose**: Store prompt analysis results (`~/.curompt/db.sqlite`)
 - **Selection Reasons**:
   - File-based, no setup required
   - Pure Go implementation without CGO dependency
@@ -142,9 +142,9 @@
 ## Project Structure
 
 ```
-curo-prompt/
+curompt/
 ├── cmd/
-│   └── curo-prompt/          # CLI entry point
+│   └── curompt/          # CLI entry point
 │       └── main.go
 ├── internal/                 # Internal packages (no external access)
 │   ├── analyzer/             # Static/dynamic analysis
@@ -178,7 +178,7 @@ curo-prompt/
 ## Dependency List (Expected go.mod)
 
 ```go
-module github.com/curogom/curo-prompt
+module github.com/curogom/curompt
 
 go 1.23
 

@@ -2,7 +2,7 @@
 
 > 🇰🇷 **Korean**: [한국어 버전](./CONFIG.ko.md)
 
-Default path: `curo-prompt.yaml`
+Default path: `curompt.yaml`
 
 ```yaml
 provider:

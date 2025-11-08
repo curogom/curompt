@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
 )
 
 // TestCLI_EvalCommand tests the eval command end-to-end
@@ -20,7 +20,7 @@ func TestCLI_EvalCommand(t *testing.T) {
 	// Skip if binary not found
 	binaryPath := findBinary(t)
 	if binaryPath == "" {
-		t.Skip("curo-prompt binary not found, skipping E2E test")
+		t.Skip("curompt binary not found, skipping E2E test")
 	}
 
 	tmpDir := t.TempDir()
@@ -60,7 +60,7 @@ JSON`
 func TestCLI_ScanCommand(t *testing.T) {
 	binaryPath := findBinary(t)
 	if binaryPath == "" {
-		t.Skip("curo-prompt binary not found, skipping E2E test")
+		t.Skip("curompt binary not found, skipping E2E test")
 	}
 
 	tmpDir := t.TempDir()
@@ -108,7 +108,7 @@ Designer
 func TestCLI_SuggestCommand(t *testing.T) {
 	binaryPath := findBinary(t)
 	if binaryPath == "" {
-		t.Skip("curo-prompt binary not found, skipping E2E test")
+		t.Skip("curompt binary not found, skipping E2E test")
 	}
 
 	tmpDir := t.TempDir()
@@ -137,7 +137,7 @@ Engineer`
 func TestCLI_StdinInput(t *testing.T) {
 	binaryPath := findBinary(t)
 	if binaryPath == "" {
-		t.Skip("curo-prompt binary not found, skipping E2E test")
+		t.Skip("curompt binary not found, skipping E2E test")
 	}
 
 	// Create test prompt
@@ -193,13 +193,13 @@ func TestWorkflow_EvaluatorIntegration(t *testing.T) {
 	assert.True(t, result.Analysis.HasOutputFormat)
 }
 
-// findBinary finds the curo-prompt binary
+// findBinary finds the curompt binary
 func findBinary(t *testing.T) string {
 	// Try common locations
 	locations := []string{
-		"./bin/curo-prompt",
-		"../bin/curo-prompt",
-		"../../bin/curo-prompt",
+		"./bin/curompt",
+		"../bin/curompt",
+		"../../bin/curompt",
 	}
 
 	for _, loc := range locations {
@@ -212,7 +212,7 @@ func findBinary(t *testing.T) string {
 	}
 
 	// Try to find in PATH
-	path, err := exec.LookPath("curo-prompt")
+	path, err := exec.LookPath("curompt")
 	if err == nil {
 		return path
 	}

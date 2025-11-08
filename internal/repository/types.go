@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curompt/internal/model"
 )
 
 // PromptRepository handles prompt data persistence

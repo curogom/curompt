@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/curogom/curo-prompt/internal/repository"
+	"github.com/curogom/curompt/internal/repository"
 )
 
 func TestCLIWrapperCollector_WrapCommand(t *testing.T) {

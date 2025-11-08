@@ -21,10 +21,11 @@ jobs:
       - name: Checkout tap repository
         uses: actions/checkout@v4
         with:
-          repository: curogom/homebrew-curo-prompt
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: curogom/homebrew-curompt
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: tap-repo
           fetch-depth: 0
+          persist-credentials: false
       
       - name: Get version
         id: version
@@ -47,7 +48,7 @@ jobs:
       - name: Download tarball and calculate SHA256
         id: sha256
         run: |
-          TARBALL_URL="https://github.com/curogom/curo-prompt/archive/refs/tags/${{ steps.version.outputs.version }}.tar.gz"
+          TARBALL_URL="https://github.com/curogom/curompt/archive/refs/tags/${{ steps.version.outputs.version }}.tar.gz"
           SHA256=$(curl -sL "$TARBALL_URL" | shasum -a 256 | awk '{print $1}')
           echo "sha256=$SHA256" >> $GITHUB_OUTPUT
           echo "SHA256: $SHA256"
@@ -55,12 +56,12 @@ jobs:
       - name: Update Formula
         working-directory: tap-repo
         run: |
-          FORMULA_FILE="Formula/c/curo-prompt.rb"
+          FORMULA_FILE="Formula/c/curompt.rb"
           if [ ! -f "$FORMULA_FILE" ]; then
-            FORMULA_FILE="Formula/curo-prompt.rb"
+            FORMULA_FILE="Formula/curompt.rb"
           fi
           
-          TARBALL_URL="https://github.com/curogom/curo-prompt/archive/refs/tags/${{ steps.version.outputs.version }}.tar.gz"
+          TARBALL_URL="https://github.com/curogom/curompt/archive/refs/tags/${{ steps.version.outputs.version }}.tar.gz"
           VERSION_NUM="${{ steps.version.outputs.version_num }}"
           
           # Update URL
@@ -81,6 +82,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Formula/
-          git commit -m "Update curo-prompt to ${{ steps.version.outputs.version }}" || exit 0
+          git commit -m "Update curompt to ${{ steps.version.outputs.version }}" || exit 0
+          git config --global --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin "https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/curogom/homebrew-curompt.git"
           git push origin main
-

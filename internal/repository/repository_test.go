@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 func TestPromptRepository_SaveAndFind(t *testing.T) {

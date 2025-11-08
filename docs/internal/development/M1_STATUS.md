@@ -83,34 +83,34 @@
 ### 1. 프롬프트 평가
 ```bash
 # 파일 평가
-curo-prompt eval --file prompt.md
+curompt eval --file prompt.md
 
 # 표준 입력 평가
-cat prompt.md | curo-prompt eval
+cat prompt.md | curompt eval
 
 # 리포트 파일 저장
-curo-prompt eval --file prompt.md --output report.md
+curompt eval --file prompt.md --output report.md
 ```
 
 ### 2. 레포지토리 스캔
 ```bash
 # 현재 디렉토리 스캔
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 특정 디렉토리 스캔
-curo-prompt scan --repo ./prompts --output reports/
+curompt scan --repo ./prompts --output reports/
 
 # 커스텀 패턴
-curo-prompt scan --repo . --patterns "*.md" "*.txt"
+curompt scan --repo . --patterns "*.md" "*.txt"
 ```
 
 ### 3. 개선 제안
 ```bash
 # 제안 확인
-curo-prompt suggest --file prompt.md
+curompt suggest --file prompt.md
 
 # 표준 입력
-cat prompt.md | curo-prompt suggest
+cat prompt.md | curompt suggest
 ```
 
 ---

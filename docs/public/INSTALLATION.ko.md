@@ -2,47 +2,47 @@
 
 ## 개요
 
-`curo-prompt`를 시스템에 설치하여 어디서든 `curo-prompt` 명령으로 실행할 수 있도록 설정합니다.
+`curompt`를 시스템에 설치하여 어디서든 `curompt` 명령으로 실행할 수 있도록 설정합니다.
 
 ## 설치 방법
 
 ### 방법 1: Homebrew (macOS 권장) ⭐
 
-macOS에서 `curo-prompt`를 설치하는 가장 쉬운 방법입니다. Tap 레포지토리가 준비되어 바로 사용 가능합니다!
+macOS에서 `curompt`를 설치하는 가장 쉬운 방법입니다. Tap 레포지토리가 준비되어 바로 사용 가능합니다!
 
 #### 1단계: Tap 추가
 
 ```bash
-brew tap curogom/curo-prompt
+brew tap curogom/curompt
 ```
 
 #### 2단계: 설치
 
 ```bash
-brew install curo-prompt
+brew install curompt
 ```
 
 #### 3단계: 설치 확인
 
 ```bash
 # 버전 확인
-curo-prompt --version
+curompt --version
 
 # 도움말 확인
-curo-prompt --help
+curompt --help
 ```
 
 #### 업데이트
 
 ```bash
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 
 #### 제거
 
 ```bash
-brew uninstall curo-prompt
-brew untap curogom/curo-prompt  # 선택사항: Tap 제거
+brew uninstall curompt
+brew untap curogom/curompt  # 선택사항: Tap 제거
 ```
 
 > **✅ 사용 가능**: Homebrew tap이 준비되었습니다. 위 명령어로 바로 설치할 수 있습니다!
@@ -57,16 +57,16 @@ brew untap curogom/curo-prompt  # 선택사항: Tap 제거
 
 ```bash
 # 방법 A: Makefile 사용
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 make install
 
 # 방법 B: go install 직접 사용
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 ```
 
 설치 위치:
-- `$GOPATH/bin/curo-prompt` (기본값: `~/go/bin/curo-prompt`)
+- `$GOPATH/bin/curompt` (기본값: `~/go/bin/curompt`)
 
 #### 2단계: PATH 확인
 
@@ -105,14 +105,14 @@ set -gx PATH $PATH (go env GOPATH)/bin
 
 ```bash
 # 명령어 확인
-which curo-prompt
-# 출력: /Users/username/go/bin/curo-prompt
+which curompt
+# 출력: /Users/username/go/bin/curompt
 
 # 버전 확인
-curo-prompt --version
+curompt --version
 
 # 도움말 확인
-curo-prompt --help
+curompt --help
 ```
 
 ---
@@ -124,12 +124,12 @@ curo-prompt --help
 #### 1단계: 빌드
 
 ```bash
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 make build
 ```
 
-바이너리 위치: `./bin/curo-prompt`
+바이너리 위치: `./bin/curompt`
 
 #### 2단계: 시스템 경로에 복사
 
@@ -137,11 +137,11 @@ make build
 
 ```bash
 # macOS/Linux
-sudo cp ./bin/curo-prompt /usr/local/bin/
-sudo chmod +x /usr/local/bin/curo-prompt
+sudo cp ./bin/curompt /usr/local/bin/
+sudo chmod +x /usr/local/bin/curompt
 
 # 확인
-/usr/local/bin/curo-prompt --version
+/usr/local/bin/curompt --version
 ```
 
 **옵션 B: 사용자 로컬 설치**
@@ -151,14 +151,14 @@ sudo chmod +x /usr/local/bin/curo-prompt
 mkdir -p ~/bin
 
 # 복사
-cp ./bin/curo-prompt ~/bin/
+cp ./bin/curompt ~/bin/
 
 # PATH에 추가 (셸 설정 파일에)
 echo 'export PATH="$PATH:$HOME/bin"' >> ~/.zshrc  # 또는 ~/.bashrc
 source ~/.zshrc
 
 # 확인
-which curo-prompt
+which curompt
 ```
 
 ---
@@ -169,23 +169,23 @@ which curo-prompt
 
 ```bash
 # 다운로드 (예시)
-wget https://github.com/curogom/curo-prompt/releases/download/v1.0.0/curo-prompt-linux-amd64
+wget https://github.com/curogom/curompt/releases/download/v1.0.0/curompt-linux-amd64
 
 # 실행 권한 부여
-chmod +x curo-prompt-linux-amd64
+chmod +x curompt-linux-amd64
 
 # 시스템 경로로 이동
-sudo mv curo-prompt-linux-amd64 /usr/local/bin/curo-prompt
+sudo mv curompt-linux-amd64 /usr/local/bin/curompt
 
 # 확인
-curo-prompt --version
+curompt --version
 ```
 
 ---
 
 ## PATH 문제 해결
 
-### 문제: `command not found: curo-prompt`
+### 문제: `command not found: curompt`
 
 #### 해결 1: PATH 확인
 
@@ -199,7 +199,7 @@ go env GOPATH
 
 # 수동으로 경로 추가하여 테스트
 export PATH="$PATH:$(go env GOPATH)/bin"
-curo-prompt --help  # 이제 작동해야 함
+curompt --help  # 이제 작동해야 함
 ```
 
 #### 해결 2: 셸 설정 파일 수정
@@ -228,10 +228,10 @@ source ~/.bashrc
 
 ```bash
 # 직접 경로로 실행
-$(go env GOPATH)/bin/curo-prompt --help
+$(go env GOPATH)/bin/curompt --help
 
 # 또는 alias 설정
-echo 'alias curo-prompt="$(go env GOPATH)/bin/curo-prompt"' >> ~/.zshrc
+echo 'alias curompt="$(go env GOPATH)/bin/curompt"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -241,13 +241,13 @@ source ~/.zshrc
 
 ```bash
 # Go install로 설치한 경우
-which curo-prompt
-# 출력: /Users/username/go/bin/curo-prompt
+which curompt
+# 출력: /Users/username/go/bin/curompt
 
 # 또는
 go env GOPATH
 # 출력: /Users/username/go
-# 실제 위치: /Users/username/go/bin/curo-prompt
+# 실제 위치: /Users/username/go/bin/curompt
 ```
 
 ---
@@ -258,7 +258,7 @@ go env GOPATH
 
 ```bash
 # 최신 버전으로 업데이트
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 
 # 또는 저장소를 업데이트 후
 git pull
@@ -273,7 +273,7 @@ git pull
 
 # 다시 빌드 및 설치
 make build
-sudo cp ./bin/curo-prompt /usr/local/bin/  # 또는 ~/bin/
+sudo cp ./bin/curompt /usr/local/bin/  # 또는 ~/bin/
 ```
 
 ---
@@ -283,25 +283,25 @@ sudo cp ./bin/curo-prompt /usr/local/bin/  # 또는 ~/bin/
 ### Go install로 설치한 경우
 
 ```bash
-rm $(go env GOPATH)/bin/curo-prompt
+rm $(go env GOPATH)/bin/curompt
 ```
 
 ### 수동 설치한 경우
 
 ```bash
 # 시스템 경로에서 제거
-sudo rm /usr/local/bin/curo-prompt
+sudo rm /usr/local/bin/curompt
 
 # 또는 사용자 로컬에서 제거
-rm ~/bin/curo-prompt
+rm ~/bin/curompt
 ```
 
 ---
 
 ## 설치 확인 체크리스트
 
-- [ ] `curo-prompt --version` 명령이 작동함
-- [ ] `which curo-prompt`로 경로 확인 가능
+- [ ] `curompt --version` 명령이 작동함
+- [ ] `which curompt`로 경로 확인 가능
 - [ ] PATH에 올바른 경로가 포함됨
 - [ ] 새 터미널에서도 작동함 (셸 재시작 후 확인)
 

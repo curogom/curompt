@@ -15,9 +15,9 @@ import (
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/reporter"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/reporter"
 )
 
 // newEvalCmd creates the eval command
@@ -30,9 +30,9 @@ func newEvalCmd() *cobra.Command {
 입력은 파일 경로 또는 표준 입력으로 받을 수 있습니다.
 
 예시:
-  curo-prompt eval --file prompts/dev_contract_v2.md
-  cat prompts/dev_contract_v2.md | curo-prompt eval
-  curo-prompt eval --provider claude --file prompt.md`,
+  curompt eval --file prompts/dev_contract_v2.md
+  cat prompts/dev_contract_v2.md | curompt eval
+  curompt eval --provider claude --file prompt.md`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck
 			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck

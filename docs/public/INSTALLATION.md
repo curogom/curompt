@@ -4,50 +4,50 @@
 
 ## Overview
 
-This guide helps you install `curo-prompt` on your system so you can run the `curo-prompt` command from anywhere.
+This guide helps you install `curompt` on your system so you can run the `curompt` command from anywhere.
 
 ## Installation Methods
 
 ### Method 1: Homebrew (Recommended for macOS) ⭐
 
-The easiest way to install `curo-prompt` on macOS. The tap repository is ready and available now!
+The easiest way to install `curompt` on macOS. The tap repository is ready and available now!
 
 #### Step 1: Add Tap
 
 ```bash
-brew tap curogom/curo-prompt
+brew tap curogom/curompt
 ```
 
 #### Step 2: Install
 
 ```bash
-brew install curo-prompt
+brew install curompt
 ```
 
 #### Step 3: Verify Installation
 
 ```bash
 # Check version
-curo-prompt --version
+curompt --version
 
 # Check help
-curo-prompt --help
+curompt --help
 ```
 
 #### Update
 
 ```bash
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 
 #### Uninstall
 
 ```bash
-brew uninstall curo-prompt
-brew untap curogom/curo-prompt  # Optional: Remove tap
+brew uninstall curompt
+brew untap curogom/curompt  # Optional: Remove tap
 ```
 
-> **✅ Available now**: The Homebrew tap is ready. You can install `curo-prompt` using the commands above!
+> **✅ Available now**: The Homebrew tap is ready. You can install `curompt` using the commands above!
 
 ---
 
@@ -59,16 +59,16 @@ The simplest and standard method.
 
 ```bash
 # Method A: Using Makefile
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 make install
 
 # Method B: Direct go install
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 ```
 
 Installation location:
-- `$GOPATH/bin/curo-prompt` (default: `~/go/bin/curo-prompt`)
+- `$GOPATH/bin/curompt` (default: `~/go/bin/curompt`)
 
 #### Step 2: PATH Verification
 
@@ -107,14 +107,14 @@ set -gx PATH $PATH (go env GOPATH)/bin
 
 ```bash
 # Check command
-which curo-prompt
-# Output: /Users/username/go/bin/curo-prompt
+which curompt
+# Output: /Users/username/go/bin/curompt
 
 # Check version
-curo-prompt --version
+curompt --version
 
 # Check help
-curo-prompt --help
+curompt --help
 ```
 
 ---
@@ -126,12 +126,12 @@ For development or when you want a specific version:
 #### Step 1: Build
 
 ```bash
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 make build
 ```
 
-Binary location: `./bin/curo-prompt`
+Binary location: `./bin/curompt`
 
 #### Step 2: Copy to System Path
 
@@ -139,11 +139,11 @@ Binary location: `./bin/curo-prompt`
 
 ```bash
 # macOS/Linux
-sudo cp ./bin/curo-prompt /usr/local/bin/
-sudo chmod +x /usr/local/bin/curo-prompt
+sudo cp ./bin/curompt /usr/local/bin/
+sudo chmod +x /usr/local/bin/curompt
 
 # Verify
-/usr/local/bin/curo-prompt --version
+/usr/local/bin/curompt --version
 ```
 
 **Option B: User-local installation**
@@ -153,14 +153,14 @@ sudo chmod +x /usr/local/bin/curo-prompt
 mkdir -p ~/bin
 
 # Copy
-cp ./bin/curo-prompt ~/bin/
+cp ./bin/curompt ~/bin/
 
 # Add to PATH (in shell config file)
 echo 'export PATH="$PATH:$HOME/bin"' >> ~/.zshrc  # or ~/.bashrc
 source ~/.zshrc
 
 # Verify
-which curo-prompt
+which curompt
 ```
 
 ---
@@ -171,23 +171,23 @@ When official releases are available:
 
 ```bash
 # Download (example)
-wget https://github.com/curogom/curo-prompt/releases/download/v1.0.0/curo-prompt-linux-amd64
+wget https://github.com/curogom/curompt/releases/download/v1.0.0/curompt-linux-amd64
 
 # Make executable
-chmod +x curo-prompt-linux-amd64
+chmod +x curompt-linux-amd64
 
 # Move to system path
-sudo mv curo-prompt-linux-amd64 /usr/local/bin/curo-prompt
+sudo mv curompt-linux-amd64 /usr/local/bin/curompt
 
 # Verify
-curo-prompt --version
+curompt --version
 ```
 
 ---
 
 ## PATH Troubleshooting
 
-### Issue: `command not found: curo-prompt`
+### Issue: `command not found: curompt`
 
 #### Solution 1: PATH Verification
 
@@ -201,7 +201,7 @@ go env GOPATH
 
 # Test by manually adding path
 export PATH="$PATH:$(go env GOPATH)/bin"
-curo-prompt --help  # Should work now
+curompt --help  # Should work now
 ```
 
 #### Solution 2: Modify Shell Config File
@@ -230,10 +230,10 @@ source ~/.bashrc
 
 ```bash
 # Run with direct path
-$(go env GOPATH)/bin/curo-prompt --help
+$(go env GOPATH)/bin/curompt --help
 
 # Or set alias
-echo 'alias curo-prompt="$(go env GOPATH)/bin/curo-prompt"' >> ~/.zshrc
+echo 'alias curompt="$(go env GOPATH)/bin/curompt"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -243,13 +243,13 @@ source ~/.zshrc
 
 ```bash
 # If installed via go install
-which curo-prompt
-# Output: /Users/username/go/bin/curo-prompt
+which curompt
+# Output: /Users/username/go/bin/curompt
 
 # Or
 go env GOPATH
 # Output: /Users/username/go
-# Actual location: /Users/username/go/bin/curo-prompt
+# Actual location: /Users/username/go/bin/curompt
 ```
 
 ---
@@ -260,7 +260,7 @@ go env GOPATH
 
 ```bash
 # Update to latest version
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 
 # Or update repository first
 git pull
@@ -275,7 +275,7 @@ git pull
 
 # Rebuild and install
 make build
-sudo cp ./bin/curo-prompt /usr/local/bin/  # or ~/bin/
+sudo cp ./bin/curompt /usr/local/bin/  # or ~/bin/
 ```
 
 ---
@@ -285,25 +285,25 @@ sudo cp ./bin/curo-prompt /usr/local/bin/  # or ~/bin/
 ### If Installed via Go install
 
 ```bash
-rm $(go env GOPATH)/bin/curo-prompt
+rm $(go env GOPATH)/bin/curompt
 ```
 
 ### If Manually Installed
 
 ```bash
 # Remove from system path
-sudo rm /usr/local/bin/curo-prompt
+sudo rm /usr/local/bin/curompt
 
 # Or remove from user local
-rm ~/bin/curo-prompt
+rm ~/bin/curompt
 ```
 
 ---
 
 ## Installation Verification Checklist
 
-- [ ] `curo-prompt --version` command works
-- [ ] `which curo-prompt` shows the path
+- [ ] `curompt --version` command works
+- [ ] `which curompt` shows the path
 - [ ] PATH contains the correct path
 - [ ] Works in new terminals (verify after shell restart)
 

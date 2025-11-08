@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/evaluator"
 )
 
 // markdownReporter implements Reporter for Markdown format

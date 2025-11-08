@@ -10,10 +10,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/reporter"
-	"github.com/curogom/curo-prompt/internal/repository"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/reporter"
+	"github.com/curogom/curompt/internal/repository"
 )
 
 // newListCmd creates the list command for viewing stored prompts
@@ -24,11 +24,11 @@ func newListCmd() *cobra.Command {
 		Long: `저장소에 저장된 프롬프트 목록을 조회합니다.
 
 예시:
-  curo-prompt list                    # 최근 프롬프트 10개
-  curo-prompt list --limit 20         # 최근 프롬프트 20개
-  curo-prompt list --tool codex       # codex로 수집된 프롬프트만
-  curo-prompt list --tool cursor      # cursor로 수집된 프롬프트만
-  curo-prompt list --eval             # 목록 조회 후 각각 평가 수행`,
+  curompt list                    # 최근 프롬프트 10개
+  curompt list --limit 20         # 최근 프롬프트 20개
+  curompt list --tool codex       # codex로 수집된 프롬프트만
+  curompt list --tool cursor      # cursor로 수집된 프롬프트만
+  curompt list --eval             # 목록 조회 후 각각 평가 수행`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			limit, _ := cmd.Flags().GetInt("limit")          //nolint:errcheck
 			tool, _ := cmd.Flags().GetString("tool")         //nolint:errcheck
@@ -41,7 +41,7 @@ func newListCmd() *cobra.Command {
 			}
 
 			// 저장소 초기화
-			dbPath := filepath.Join(os.Getenv("HOME"), ".curo-prompt", "db.sqlite")
+			dbPath := filepath.Join(os.Getenv("HOME"), ".curompt", "db.sqlite")
 			if _, err := os.Stat(dbPath); os.IsNotExist(err) {
 				return fmt.Errorf("저장소가 초기화되지 않았습니다. 먼저 프롬프트를 수집하거나 스캔해주세요")
 			}
@@ -81,8 +81,8 @@ func newListCmd() *cobra.Command {
 			if len(prompts) == 0 {
 				cmd.Printf("저장된 프롬프트가 없습니다.\n")
 				cmd.Printf("\n프롬프트를 수집하려면:\n")
-				cmd.Printf("  - scan 명령으로 파일 스캔: curo-prompt scan --repo .\n")
-				cmd.Printf("  - eval 명령으로 평가 및 저장: curo-prompt eval --file prompt.md\n")
+				cmd.Printf("  - scan 명령으로 파일 스캔: curompt scan --repo .\n")
+				cmd.Printf("  - eval 명령으로 평가 및 저장: curompt eval --file prompt.md\n")
 				return nil
 			}
 

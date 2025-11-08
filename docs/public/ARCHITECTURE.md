@@ -4,7 +4,7 @@
 
 ## Overview
 
-`curo-prompt` is a CLI-based tool for analyzing, evaluating, and optimizing LLM prompts. It uses a modular architecture to ensure scalability and maintainability.
+`curompt` is a CLI-based tool for analyzing, evaluating, and optimizing LLM prompts. It uses a modular architecture to ensure scalability and maintainability.
 
 ## Module Structure
 
@@ -199,7 +199,7 @@ type PromptRepository interface {
 
 #### Implementation
 - **SQLiteRepository**: SQLite database implementation
-- Storage location: `~/.curo-prompt/db.sqlite`
+- Storage location: `~/.curompt/db.sqlite`
 
 ---
 
@@ -376,8 +376,8 @@ func NewEvaluator(provider string) *Evaluator {
 ## Repository Structure
 
 ```
-curo-prompt/
-├── cmd/curo-prompt/       # CLI entry point
+curompt/
+├── cmd/curompt/       # CLI entry point
 ├── internal/
 │   ├── cli/               # CLI command implementation
 │   ├── collector/         # Prompt collection
@@ -411,7 +411,7 @@ curo-prompt/
 
 ### Data Storage
 - SQLite local storage
-- User home directory (`~/.curo-prompt/`)
+- User home directory (`~/.curompt/`)
 - No remote transmission
 
 ---

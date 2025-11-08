@@ -64,7 +64,7 @@
 
 ### 1. Git 초기화 (아직 안 했다면)
 ```bash
-cd /Users/curogom/dev/curo-prompt
+cd /Users/curogom/dev/curompt
 git init
 git branch -M main  # 또는 develop
 ```
@@ -105,7 +105,7 @@ git commit -m "feat: M1 MVP 초기 구현
 License: Apache License 2.0"
 
 # 원격 저장소 연결 (GitHub)
-git remote add origin https://github.com/curogom/curo-prompt.git
+git remote add origin https://github.com/curogom/curompt.git
 
 # 첫 푸시
 git push -u origin main

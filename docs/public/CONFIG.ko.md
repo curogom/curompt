@@ -1,6 +1,6 @@
 # Config
 
-기본 경로: `curo-prompt.yaml`
+기본 경로: `curompt.yaml`
 
 ```yaml
 provider:

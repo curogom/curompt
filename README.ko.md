@@ -1,4 +1,4 @@
-# curo-prompt
+# curompt
 
 CLI 기반 개발자의 LLM 프롬프트를 **분석·평가·최적화**하는 도구.
 
@@ -19,23 +19,23 @@ CLI 기반 개발자의 LLM 프롬프트를 **분석·평가·최적화**하는 
 ### 1. 빌드
 ```bash
 make build
-./bin/curo-prompt --help
+./bin/curompt --help
 ```
 
 ### 2. 기본 테스트
 
 ```bash
 # 샘플 프롬프트 평가
-echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
+echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 
 # 파일로 평가
-./bin/curo-prompt eval --file prompts/dev_contract_v2.md
+./bin/curompt eval --file prompts/dev_contract_v2.md
 
 # 일괄 스캔
-./bin/curo-prompt scan --repo prompts/
+./bin/curompt scan --repo prompts/
 
 # 개선 제안 확인
-./bin/curo-prompt suggest --file prompts/dev_contract_v2.md
+./bin/curompt suggest --file prompts/dev_contract_v2.md
 ```
 
 ### 3. 빠른 테스트 스크립트
@@ -64,25 +64,25 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 
 #### 방법 1: Homebrew (macOS 권장) ⭐
 
-macOS에서 `curo-prompt`를 설치하는 가장 쉬운 방법:
+macOS에서 `curompt`를 설치하는 가장 쉬운 방법:
 
 ```bash
 # Tap 추가
-brew tap curogom/curo-prompt
+brew tap curogom/curompt
 
 # 설치
-brew install curo-prompt
+brew install curompt
 
 # 설치 확인
-curo-prompt --version
+curompt --version
 ```
 
 **업데이트**:
 ```bash
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 
-> **✅ 사용 가능**: Homebrew tap이 준비되었습니다! 위 명령어로 `curo-prompt`를 설치할 수 있습니다.
+> **✅ 사용 가능**: Homebrew tap이 준비되었습니다! 위 명령어로 `curompt`를 설치할 수 있습니다.
 
 #### 방법 2: Go install
 
@@ -90,13 +90,13 @@ Go 모듈을 직접 설치하여 `$GOPATH/bin` 또는 `~/go/bin`에 설치합니
 
 ```bash
 # 저장소 클론 (또는 이미 클론한 경우)
-git clone https://github.com/curogom/curo-prompt.git
-cd curo-prompt
+git clone https://github.com/curogom/curompt.git
+cd curompt
 
 # 설치
 make install
 # 또는 직접 설치
-go install github.com/curogom/curo-prompt/cmd/curo-prompt@latest
+go install github.com/curogom/curompt/cmd/curompt@latest
 ```
 
 **PATH 확인 및 설정**:
@@ -109,8 +109,8 @@ go env GOPATH
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 # 확인
-which curo-prompt
-curo-prompt --help
+which curompt
+curompt --help
 ```
 
 **영구적으로 PATH 추가** (셸 설정 파일에 추가):
@@ -131,12 +131,12 @@ source ~/.bashrc
 make build
 
 # 실행 (PATH 없이)
-./bin/curo-prompt --help
+./bin/curompt --help
 
 # 또는 수동으로 PATH에 추가
-sudo cp ./bin/curo-prompt /usr/local/bin/
+sudo cp ./bin/curompt /usr/local/bin/
 # 또는
-cp ./bin/curo-prompt ~/bin/
+cp ./bin/curompt ~/bin/
 export PATH="$PATH:~/bin"
 ```
 
@@ -144,13 +144,13 @@ export PATH="$PATH:~/bin"
 
 ```bash
 # 버전 확인
-curo-prompt --version
+curompt --version
 
 # 도움말 확인
-curo-prompt --help
+curompt --help
 
 # 기본 테스트
-echo "# ROLE\nEngineer" | curo-prompt eval
+echo "# ROLE\nEngineer" | curompt eval
 ```
 
 > **📖 상세 설치 가이드**: [설치 가이드](./docs/public/INSTALLATION.md) 참조 (PATH 설정, 문제 해결 포함)
@@ -189,7 +189,7 @@ make check
 
 - **로컬 우선**: 기본적으로 로컬에서만 실행, 외부 전송 없음
 - **자동 마스킹**: API 키/토큰/이메일/URL 쿼리/.env 참조 자동 마스킹
-- **로컬 저장소**: SQLite로 로컬에만 저장 (`~/.curo-prompt/db.sqlite`)
+- **로컬 저장소**: SQLite로 로컬에만 저장 (`~/.curompt/db.sqlite`)
 
 상세 내용은 [SECURITY.md](./docs/public/SECURITY.md) 참조.
 

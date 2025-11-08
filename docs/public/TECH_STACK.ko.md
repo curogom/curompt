@@ -37,7 +37,7 @@
 
 #### ✅ YAML 파서
 - **패키지**: `gopkg.in/yaml.v3`
-- **용도**: `curo-prompt.yaml` 설정 파일 파싱
+- **용도**: `curompt.yaml` 설정 파일 파싱
 - **선택 이유**:
   - Go에서 가장 널리 사용되는 YAML 라이브러리
   - 안정적이고 문서화가 잘 됨
@@ -60,7 +60,7 @@
 
 #### ✅ SQLite
 - **패키지**: `modernc.org/sqlite` (순수 Go 구현)
-- **용도**: 프롬프트 분석 결과 저장 (`~/.curo-prompt/db.sqlite`)
+- **용도**: 프롬프트 분석 결과 저장 (`~/.curompt/db.sqlite`)
 - **선택 이유**:
   - 파일 기반, 설정 불필요
   - CGO 의존성 없는 순수 Go 구현
@@ -139,7 +139,7 @@
 .PHONY: build test lint clean
 
 build:
-	go build -o bin/curo-prompt ./cmd/curo-prompt
+	go build -o bin/curompt ./cmd/curompt
 
 test:
 	go test -v -cover ./...
@@ -156,9 +156,9 @@ clean:
 ## 프로젝트 구조
 
 ```
-curo-prompt/
+curompt/
 ├── cmd/
-│   └── curo-prompt/          # CLI 진입점
+│   └── curompt/          # CLI 진입점
 │       └── main.go
 ├── internal/                 # 내부 패키지 (외부 접근 불가)
 │   ├── analyzer/             # 정적/동적 분석
@@ -192,7 +192,7 @@ curo-prompt/
 ## 의존성 목록 (go.mod 예상)
 
 ```go
-module github.com/curogom/curo-prompt
+module github.com/curogom/curompt
 
 go 1.23
 

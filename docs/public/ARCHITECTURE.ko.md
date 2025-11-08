@@ -2,7 +2,7 @@
 
 ## 개요
 
-`curo-prompt`는 CLI 기반 LLM 프롬프트 분석·평가·최적화 도구입니다. 모듈화된 아키텍처를 통해 확장성과 유지보수성을 확보했습니다.
+`curompt`는 CLI 기반 LLM 프롬프트 분석·평가·최적화 도구입니다. 모듈화된 아키텍처를 통해 확장성과 유지보수성을 확보했습니다.
 
 ## 모듈 구성
 
@@ -197,7 +197,7 @@ type PromptRepository interface {
 
 #### 구현
 - **SQLiteRepository**: SQLite 데이터베이스 구현
-- 저장 위치: `~/.curo-prompt/db.sqlite`
+- 저장 위치: `~/.curompt/db.sqlite`
 
 ---
 
@@ -374,8 +374,8 @@ func NewEvaluator(provider string) *Evaluator {
 ## 저장소 구조
 
 ```
-curo-prompt/
-├── cmd/curo-prompt/       # CLI 진입점
+curompt/
+├── cmd/curompt/       # CLI 진입점
 ├── internal/
 │   ├── cli/               # CLI 명령어 구현
 │   ├── collector/         # 프롬프트 수집
@@ -409,7 +409,7 @@ curo-prompt/
 
 ### 데이터 저장
 - SQLite 로컬 저장
-- 사용자 홈 디렉토리 (`~/.curo-prompt/`)
+- 사용자 홈 디렉토리 (`~/.curompt/`)
 - 원격 전송 없음
 
 ---

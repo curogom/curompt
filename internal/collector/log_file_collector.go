@@ -11,9 +11,9 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
-	"github.com/curogom/curo-prompt/internal/repository"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/parser"
+	"github.com/curogom/curompt/internal/repository"
 )
 
 // LogFileCollector collects prompts from log files

@@ -1,7 +1,7 @@
 # Security & Privacy
 
 - 기본 동작은 **로컬 전용**. 외부 네트워크 전송 없음.
-- 캡처 데이터는 `~/.curo-prompt`에 저장. 필요 시 `--no-store`.
+- 캡처 데이터는 `~/.curompt`에 저장. 필요 시 `--no-store`.
 - 비밀값 마스킹: 정규식 기반 식별 → `[REDACTED]` 치환.
 - 동적 평가 시(옵션) 샘플 출력 저장 금지 플래그 제공: `--no-samples-store`.
 - 로그 레벨 기본 `info`. 비밀 로그 금지.

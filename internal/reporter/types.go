@@ -1,6 +1,6 @@
 package reporter
 
-import "github.com/curogom/curo-prompt/internal/evaluator"
+import "github.com/curogom/curompt/internal/evaluator"
 
 // Reporter generates reports from evaluation results
 type Reporter interface {

@@ -1,9 +1,9 @@
 .PHONY: build test lint clean install run help ci coverage
 
 # 변수
-BINARY_NAME=curo-prompt
+BINARY_NAME=curompt
 BINARY_PATH=./bin/$(BINARY_NAME)
-MAIN_PATH=./cmd/curo-prompt
+MAIN_PATH=./cmd/curompt
 VERSION?=dev
 BUILD_TIME=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 GIT_COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")

@@ -19,13 +19,13 @@
 
 ```bash
 # 특정 프로젝트만 수집
-curo-prompt collect --from claude --project /Users/curogom/dev/danggroom
+curompt collect --from claude --project /Users/curogom/dev/danggroom
 
 # 특정 레포만 수집 (경로 패턴)
-curo-prompt collect --from claude --repo /Users/curogom/dev/*
+curompt collect --from claude --repo /Users/curogom/dev/*
 
 # 제외 옵션
-curo-prompt collect --from claude --exclude /Users/curogom/dev/devrock
+curompt collect --from claude --exclude /Users/curogom/dev/devrock
 ```
 
 ### 옵션 2: 프로젝트별 히스토리 파일 지원
@@ -38,10 +38,10 @@ Claude Code는 프로젝트별 히스토리도 저장함:
 
 ```bash
 # 모든 프로젝트 수집 후
-curo-prompt collect --from claude
+curompt collect --from claude
 
 # 특정 프로젝트만 조회
-curo-prompt list --tool claude --project /Users/curogom/dev/danggroom
+curompt list --tool claude --project /Users/curogom/dev/danggroom
 ```
 
 ## 구현 계획

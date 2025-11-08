@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 가이드는 Claude Code, Codex CLI, Cursor CLI 같은 외부 도구를 사용할 때 `curo-prompt`가 프롬프트를 성공적으로 수집하는지 테스트하는 방법을 안내합니다.
+이 가이드는 Claude Code, Codex CLI, Cursor CLI 같은 외부 도구를 사용할 때 `curompt`가 프롬프트를 성공적으로 수집하는지 테스트하는 방법을 안내합니다.
 
 ## 중요 사항
 
@@ -38,10 +38,10 @@ JSON format
 EOF
 
 # 2. 스캔 및 수집
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 3. 수집 확인
-curo-prompt list
+curompt list
 ```
 
 **예상 결과:**
@@ -55,10 +55,10 @@ Codex CLI나 Cursor CLI 같은 명령줄 도구용:
 
 ```bash
 # CLI 명령 래핑
-curo-prompt wrap codex exec "TASK: 인증 기능 추가"
+curompt wrap codex exec "TASK: 인증 기능 추가"
 
 # 수집 확인
-curo-prompt list --tool codex
+curompt list --tool codex
 ```
 
 **제한사항:**
@@ -72,13 +72,13 @@ Claude Code CLI용:
 
 ```bash
 # Claude Code CLI 명령 래핑
-curo-prompt wrap claude-code exec "TASK: 인증 기능 추가"
+curompt wrap claude-code exec "TASK: 인증 기능 추가"
 
 # 또는 다른 Claude Code 명령
-curo-prompt wrap claude-code chat "로그인 구현"
+curompt wrap claude-code chat "로그인 구현"
 
 # 수집 확인
-curo-prompt list --tool claude-code
+curompt list --tool claude-code
 ```
 
 **작동 방식:**
@@ -93,16 +93,16 @@ curo-prompt list --tool claude-code
 
 ```bash
 # 1. 기존 데이터 삭제 (선택 사항)
-rm -rf ~/.curo-prompt/db.sqlite
+rm -rf ~/.curompt/db.sqlite
 
 # 2. 테스트 프롬프트 생성
 echo "# ROLE\nEngineer" > test.md
 
 # 3. 스캔 및 수집
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 4. 저장 확인
-curo-prompt list
+curompt list
 
 # 예상: 1개의 프롬프트가 표시되어야 함
 ```
@@ -116,10 +116,10 @@ echo "# ROLE\nEngineer1" > test-prompts/p1.md
 echo "# ROLE\nEngineer2" > test-prompts/p2.md
 
 # 2. 모두 스캔
-curo-prompt scan --repo test-prompts
+curompt scan --repo test-prompts
 
 # 3. 개수 확인
-curo-prompt list --limit 10
+curompt list --limit 10
 
 # 예상: 2개의 프롬프트가 표시되어야 함
 ```
@@ -132,20 +132,20 @@ curo-prompt list --limit 10
 
 # 2. Claude Code 사용 후 수집 시도:
 # 옵션 A: 로그 파싱이 구현되어 있다면
-curo-prompt collect --from claude-code
+curompt collect --from claude-code
 
 # 옵션 B: 프롬프트를 파일로 저장했다면
-curo-prompt scan --repo ./my-prompts
+curompt scan --repo ./my-prompts
 
 # 3. 수집 확인
-curo-prompt list
+curompt list
 ```
 
 ## 확인 체크리스트
 
 수집 실행 후:
 
-- [ ] 데이터베이스 파일 존재: `~/.curo-prompt/db.sqlite`
+- [ ] 데이터베이스 파일 존재: `~/.curompt/db.sqlite`
 - [ ] `list` 명령이 수집된 프롬프트 표시
 - [ ] 프롬프트에 올바른 도구 식별자 포함
 - [ ] 타임스탬프 정확
@@ -156,15 +156,15 @@ curo-prompt list
 ### 문제: 프롬프트가 수집되지 않음
 
 **확인:**
-1. 데이터베이스 존재: `ls -la ~/.curo-prompt/db.sqlite`
-2. 도구 식별자 확인: `curo-prompt list --tool scan`
+1. 데이터베이스 존재: `ls -la ~/.curompt/db.sqlite`
+2. 도구 식별자 확인: `curompt list --tool scan`
 3. scan 명령의 파일 경로 확인
 
 **해결:**
 ```bash
 # 상세 출력과 함께 재스캔
-curo-prompt scan --repo . --patterns "*.md"
-curo-prompt list
+curompt scan --repo . --patterns "*.md"
+curompt list
 ```
 
 ### 문제: 래퍼가 프롬프트를 캡처하지 않음
@@ -172,7 +172,7 @@ curo-prompt list
 **CLI 도구의 경우:**
 - 명령 형식 확인
 - 도구별 파서 필요 여부 확인
-- 따옴표로 감싼 프롬프트로 시도: `curo-prompt wrap codex exec "PROMPT: ..."`
+- 따옴표로 감싼 프롬프트로 시도: `curompt wrap codex exec "PROMPT: ..."`
 
 ### 문제: Claude Code 프롬프트가 수집되지 않음
 

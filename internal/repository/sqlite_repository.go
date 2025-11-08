@@ -9,8 +9,8 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 // sqliteRepository implements PromptRepository using SQLite

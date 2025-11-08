@@ -3,10 +3,10 @@ package evaluator
 import (
 	"context"
 
-	"github.com/curogom/curo-prompt/internal/analyzer"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
-	"github.com/curogom/curo-prompt/internal/scorer"
+	"github.com/curogom/curompt/internal/analyzer"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/parser"
+	"github.com/curogom/curompt/internal/scorer"
 )
 
 // EvaluationResult contains the complete evaluation result

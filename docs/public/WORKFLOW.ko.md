@@ -4,20 +4,20 @@
 
 ## 개요
 
-이 문서는 `curo-prompt`가 프롬프트를 수집, 저장, 관리하는 방법을 설명합니다.
+이 문서는 `curompt`가 프롬프트를 수집, 저장, 관리하는 방법을 설명합니다.
 
 ## 현재 워크플로우
 
 ### 1. 초기 설정
 
-처음 `curo-prompt`를 실행하면 데이터베이스가 자동으로 초기화됩니다:
+처음 `curompt`를 실행하면 데이터베이스가 자동으로 초기화됩니다:
 
 ```bash
-# 첫 실행 - ~/.curo-prompt/db.sqlite에 DB 생성됨
-curo-prompt scan --repo .
+# 첫 실행 - ~/.curompt/db.sqlite에 DB 생성됨
+curompt scan --repo .
 ```
 
-데이터베이스 위치: `~/.curo-prompt/db.sqlite`
+데이터베이스 위치: `~/.curompt/db.sqlite`
 
 ### 2. 프롬프트 수집 방법
 
@@ -27,20 +27,20 @@ curo-prompt scan --repo .
 
 ```bash
 # 현재 디렉토리에서 프롬프트 파일 스캔
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 특정 디렉토리 스캔
-curo-prompt scan --repo ./prompts
+curompt scan --repo ./prompts
 
 # 커스텀 파일 패턴
-curo-prompt scan --repo . --patterns "*.md" --patterns "*.txt"
+curompt scan --repo . --patterns "*.md" --patterns "*.txt"
 ```
 
 **작동 방식 (한 번에 모든 작업 수행):**
 1. 패턴에 맞는 모든 프롬프트 파일 찾기
 2. **수집**: 각 프롬프트를 CollectedPrompt로 생성
 3. **평가**: 각 프롬프트 평가 (Evaluate 호출)
-4. **저장**: 데이터베이스에 저장 (`~/.curo-prompt/db.sqlite`)
+4. **저장**: 데이터베이스에 저장 (`~/.curompt/db.sqlite`)
 5. **리포트 생성**: `reports/` 디렉토리에 리포트 생성
 
 **참고**: `scan` 명령은 한 번에 모든 작업을 수행합니다: 수집 → 평가 → 저장 → 리포트 생성
@@ -51,10 +51,10 @@ curo-prompt scan --repo . --patterns "*.md" --patterns "*.txt"
 
 ```bash
 # 저장 없이 평가
-curo-prompt eval --file prompt.md
+curompt eval --file prompt.md
 
 # 평가 후 리포트 저장
-curo-prompt eval --file prompt.md --output reports/
+curompt eval --file prompt.md --output reports/
 ```
 
 **참고**: `eval` 명령은 현재 **데이터베이스에 저장하지 않습니다**. 저장하려면 `scan` 명령을 사용하세요.
@@ -66,20 +66,20 @@ curo-prompt eval --file prompt.md --output reports/
 ```bash
 # Claude Code에서 수집 (현재 프로젝트만)
 cd /path/to/project
-curo-prompt collect --from claude
+curompt collect --from claude
 
 # 모든 프로젝트의 프롬프트 수집
-curo-prompt collect --from claude --all
+curompt collect --from claude --all
 
 # Codex에서 수집 (현재 디렉토리를 프로젝트로 사용)
 cd /path/to/project
-curo-prompt collect --from codex
+curompt collect --from codex
 
 # 모든 Codex 프롬프트 수집
-curo-prompt collect --from codex --all
+curompt collect --from codex --all
 
 # 수집 후 자동 평가
-curo-prompt collect --from claude --eval
+curompt collect --from claude --eval
 ```
 
 **작동 방식:**
@@ -107,17 +107,17 @@ curo-prompt collect --from claude --eval
 ```bash
 # Claude Code: 프로젝트별 수집
 cd ~/projects/my-app  # CLAUDE.md 파일 필요
-curo-prompt collect --from claude
+curompt collect --from claude
 # → ~/projects/my-app 프로젝트 프롬프트만 수집
 
 # Codex: 프로젝트별 수집
 cd ~/projects/my-app  # CLAUDE.md 불필요
-curo-prompt collect --from codex
+curompt collect --from codex
 # → ~/projects/my-app 프로젝트 프롬프트만 수집
 
 # 모든 프로젝트 수집
-curo-prompt collect --from claude --all
-curo-prompt collect --from codex --all
+curompt collect --from claude --all
+curompt collect --from codex --all
 # → 히스토리의 모든 프로젝트 프롬프트 수집
 ```
 
@@ -127,8 +127,8 @@ curo-prompt collect --from codex --all
 
 ```bash
 # codex/cursor 명령에서 프롬프트 캡처
-curo-prompt wrap codex exec "TASK: 기능 추가"
-curo-prompt wrap cursor chat "로그인 구현"
+curompt wrap codex exec "TASK: 기능 추가"
+curompt wrap cursor chat "로그인 구현"
 ```
 
 **상태**: Collector 인프라는 있으나 도구별 파싱 구현이 필요함.
@@ -139,17 +139,17 @@ curo-prompt wrap cursor chat "로그인 구현"
 
 ```bash
 # 최근 프롬프트 10개 조회
-curo-prompt list
+curompt list
 
 # 더 많이 조회
-curo-prompt list --limit 20
+curompt list --limit 20
 
 # 특정 도구로 수집된 프롬프트만 조회
-curo-prompt list --tool scan
-curo-prompt list --tool codex
+curompt list --tool scan
+curompt list --tool codex
 
 # 조회 후 재평가
-curo-prompt list --eval
+curompt list --eval
 ```
 
 **출력 예시:**
@@ -170,10 +170,10 @@ curo-prompt list --eval
 
 ```bash
 # 최근 프롬프트 모두 조회 후 평가
-curo-prompt list --eval --limit 10
+curompt list --eval --limit 10
 
 # 특정 도구의 프롬프트 평가
-curo-prompt list --tool scan --eval --output reports/
+curompt list --tool scan --eval --output reports/
 ```
 
 ## 데이터베이스 스키마
@@ -233,13 +233,13 @@ curo-prompt list --tool scan --eval --output reports/
 1. **초기 설정**
    ```bash
    # 기존 프롬프트 파일 스캔
-   curo-prompt scan --repo ./prompts
+   curompt scan --repo ./prompts
    ```
 
 2. **수집된 프롬프트 확인**
    ```bash
    # 수집된 내용 확인
-   curo-prompt list
+   curompt list
    ```
 
 3. **리포트 검토**
@@ -254,19 +254,19 @@ curo-prompt list --tool scan --eval --output reports/
 1. **새 프롬프트 작성 후**
    ```bash
    # 새 프롬프트 스캔
-   curo-prompt scan --repo ./prompts
+   curompt scan --repo ./prompts
    ```
 
 2. **빠른 평가 (저장 없이)**
    ```bash
    # 저장 없이 평가만
-   curo-prompt eval --file new_prompt.md
+   curompt eval --file new_prompt.md
    ```
 
 3. **저장된 프롬프트 재평가**
    ```bash
    # 최근 프롬프트 모두 재평가
-   curo-prompt list --eval
+   curompt list --eval
    ```
 
 ## 향후 개선 사항 (M2+)

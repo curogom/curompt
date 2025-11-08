@@ -4,7 +4,7 @@
 
 ## Overview
 
-This guide helps you test whether `curo-prompt` successfully collects prompts when you use external tools like Claude Code, Codex CLI, or Cursor CLI.
+This guide helps you test whether `curompt` successfully collects prompts when you use external tools like Claude Code, Codex CLI, or Cursor CLI.
 
 ## Important Notes
 
@@ -38,10 +38,10 @@ JSON format
 EOF
 
 # 2. Scan and collect
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 3. Verify collection
-curo-prompt list
+curompt list
 ```
 
 **Expected Result:**
@@ -55,10 +55,10 @@ For command-line tools like Codex CLI or Cursor CLI:
 
 ```bash
 # Wrap a CLI command
-curo-prompt wrap codex exec "TASK: Add authentication feature"
+curompt wrap codex exec "TASK: Add authentication feature"
 
 # Verify collection
-curo-prompt list --tool codex
+curompt list --tool codex
 ```
 
 **Limitations:**
@@ -72,13 +72,13 @@ For Claude Code CLI:
 
 ```bash
 # Wrap Claude Code CLI command
-curo-prompt wrap claude-code exec "TASK: Add authentication feature"
+curompt wrap claude-code exec "TASK: Add authentication feature"
 
 # Or with other Claude Code commands
-curo-prompt wrap claude-code chat "Implement login"
+curompt wrap claude-code chat "Implement login"
 
 # Verify collection
-curo-prompt list --tool claude-code
+curompt list --tool claude-code
 ```
 
 **How it works:**
@@ -93,16 +93,16 @@ curo-prompt list --tool claude-code
 
 ```bash
 # 1. Clear existing data (optional)
-rm -rf ~/.curo-prompt/db.sqlite
+rm -rf ~/.curompt/db.sqlite
 
 # 2. Create test prompt
 echo "# ROLE\nEngineer" > test.md
 
 # 3. Scan and collect
-curo-prompt scan --repo .
+curompt scan --repo .
 
 # 4. Check if saved
-curo-prompt list
+curompt list
 
 # Expected: Should show 1 prompt
 ```
@@ -116,10 +116,10 @@ echo "# ROLE\nEngineer1" > test-prompts/p1.md
 echo "# ROLE\nEngineer2" > test-prompts/p2.md
 
 # 2. Scan all
-curo-prompt scan --repo test-prompts
+curompt scan --repo test-prompts
 
 # 3. Verify count
-curo-prompt list --limit 10
+curompt list --limit 10
 
 # Expected: Should show 2 prompts
 ```
@@ -132,20 +132,20 @@ curo-prompt list --limit 10
 
 # 2. After using Claude Code, try to collect:
 # Option A: If log parsing implemented
-curo-prompt collect --from claude-code
+curompt collect --from claude-code
 
 # Option B: If you saved prompts as files
-curo-prompt scan --repo ./my-prompts
+curompt scan --repo ./my-prompts
 
 # 3. Check collection
-curo-prompt list
+curompt list
 ```
 
 ## Verification Checklist
 
 After running collection:
 
-- [ ] Database file exists: `~/.curo-prompt/db.sqlite`
+- [ ] Database file exists: `~/.curompt/db.sqlite`
 - [ ] `list` command shows collected prompts
 - [ ] Prompts have correct tool identifier
 - [ ] Timestamps are correct
@@ -156,15 +156,15 @@ After running collection:
 ### Issue: No prompts collected
 
 **Check:**
-1. Database exists: `ls -la ~/.curo-prompt/db.sqlite`
-2. Check tool identifier: `curo-prompt list --tool scan`
+1. Database exists: `ls -la ~/.curompt/db.sqlite`
+2. Check tool identifier: `curompt list --tool scan`
 3. Verify file paths in scan command
 
 **Solution:**
 ```bash
 # Re-scan with verbose output
-curo-prompt scan --repo . --patterns "*.md"
-curo-prompt list
+curompt scan --repo . --patterns "*.md"
+curompt list
 ```
 
 ### Issue: Wrapper doesn't capture prompts
@@ -172,13 +172,13 @@ curo-prompt list
 **For CLI Tools:**
 - Verify command format
 - Check if tool-specific parser needed
-- Try with quoted prompts: `curo-prompt wrap codex exec "PROMPT: ..."`
+- Try with quoted prompts: `curompt wrap codex exec "PROMPT: ..."`
 
 ### Issue: Claude Code prompts not collected
 
 **For CLI Tools:**
 - Use `wrap` command to wrap Claude Code CLI
-- Check command format: `curo-prompt wrap claude-code [your-command]`
+- Check command format: `curompt wrap claude-code [your-command]`
 - Verify prompt extraction logic matches your command format
 
 **If wrap doesn't work:**

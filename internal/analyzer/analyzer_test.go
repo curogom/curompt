@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 func TestAnalyzer_DetectsRoleSection(t *testing.T) {

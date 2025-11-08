@@ -1,6 +1,6 @@
 package model
 
-import "github.com/curogom/curo-prompt/internal/parser"
+import "github.com/curogom/curompt/internal/parser"
 
 // CollectedPrompt represents a collected prompt with metadata
 type CollectedPrompt struct {

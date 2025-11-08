@@ -3,7 +3,7 @@
 
 set -e
 
-TAP_NAME="homebrew-curo-prompt"
+TAP_NAME="homebrew-curompt"
 GITHUB_USER="curogom"
 
 echo "=== Homebrew Tap 설정 ==="
@@ -47,29 +47,29 @@ mkdir -p Formula/c
 # 4. Formula 파일 복사
 echo ""
 echo "3. Formula 파일 준비..."
-if [ -f "../Formula/curo-prompt.rb" ]; then
-    cp "../Formula/curo-prompt.rb" "Formula/c/curo-prompt.rb"
+if [ -f "../Formula/curompt.rb" ]; then
+    cp "../Formula/curompt.rb" "Formula/c/curompt.rb"
     echo "   ✅ Formula 파일 복사 완료"
 else
     echo "   ⚠️  Formula 파일을 찾을 수 없습니다."
-    echo "   ../Formula/curo-prompt.rb 파일을 먼저 생성하세요."
+    echo "   ../Formula/curompt.rb 파일을 먼저 생성하세요."
 fi
 
 # 5. README 생성
 cat > README.md << 'EOF'
-# Homebrew Tap for curo-prompt
+# Homebrew Tap for curompt
 
-Install curo-prompt using Homebrew:
+Install curompt using Homebrew:
 
 ```bash
-brew tap curogom/curo-prompt
-brew install curo-prompt
+brew tap curogom/curompt
+brew install curompt
 ```
 
 ## Update
 
 ```bash
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 EOF
 
@@ -86,7 +86,7 @@ else
     echo ""
     echo "다음 명령어로 커밋하고 푸시하세요:"
     echo "  cd $TAP_NAME"
-    echo "  git commit -m 'Add curo-prompt formula'"
+    echo "  git commit -m 'Add curompt formula'"
     echo "  git push -u origin main"
 fi
 
@@ -95,7 +95,7 @@ echo "=== 완료 ==="
 echo ""
 echo "다음 단계:"
 echo "1. Formula 파일의 SHA256을 실제 Release 값으로 업데이트"
-echo "2. cd $TAP_NAME && git add . && git commit -m 'Add curo-prompt formula'"
+echo "2. cd $TAP_NAME && git add . && git commit -m 'Add curompt formula'"
 echo "3. git push -u origin main"
-echo "4. 설치 테스트: brew tap $GITHUB_USER/curo-prompt && brew install curo-prompt"
+echo "4. 설치 테스트: brew tap $GITHUB_USER/curompt && brew install curompt"
 

@@ -44,7 +44,7 @@ Reporter (리포트 생성)
 codex -C . exec "TASK: SSE 추가"
 
 # Collector가 래핑
-curo-prompt wrap codex -C . exec "TASK: SSE 추가"
+curompt wrap codex -C . exec "TASK: SSE 추가"
 # → codex 실행하면서 프롬프트 캡처
 # → SQLite에 저장
 # → 분석 및 리포트 생성
@@ -56,7 +56,7 @@ curo-prompt wrap codex -C . exec "TASK: SSE 추가"
 
 ### 3. 표준 입력/출력 캡처
 - 파이프라인 통합
-- `codex ... | curo-prompt capture`
+- `codex ... | curompt capture`
 
 ### 4. Git Hook
 - 프롬프트 파일이 커밋될 때 자동 분석

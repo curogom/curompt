@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/curogom/curo-prompt/internal/cli"
+	"github.com/curogom/curompt/internal/cli"
 )
 
 var (

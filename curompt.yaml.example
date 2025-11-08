@@ -1,5 +1,5 @@
-# curo-prompt 설정 파일 예시
-# 이 파일을 curo-prompt.yaml로 복사하여 사용하세요
+# curompt 설정 파일 예시
+# 이 파일을 curompt.yaml로 복사하여 사용하세요
 
 provider:
   name: claude   # 또는 openai|gemini|cursor|codex|ollama
@@ -42,4 +42,3 @@ integrations:
     detect_output_style: true
   codex:
     detect_agents_md: true
-

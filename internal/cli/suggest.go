@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curo-prompt/internal/evaluator"
-	"github.com/curogom/curo-prompt/internal/model"
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/evaluator"
+	"github.com/curogom/curompt/internal/model"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 // newSuggestCmd creates the suggest command
@@ -24,8 +24,8 @@ func newSuggestCmd() *cobra.Command {
 		Long: `프롬프트를 분석하고 개선 제안을 제공합니다.
 
 예시:
-  curo-prompt suggest --file prompts/dev_contract_v2.md
-  cat prompt.md | curo-prompt suggest`,
+  curompt suggest --file prompts/dev_contract_v2.md
+  cat prompt.md | curompt suggest`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
 			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck

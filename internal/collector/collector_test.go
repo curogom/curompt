@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/curogom/curo-prompt/internal/model"
+	"github.com/curogom/curompt/internal/model"
 )
 
 func TestCollector_Interface(t *testing.T) {

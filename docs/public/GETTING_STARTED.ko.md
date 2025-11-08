@@ -1,6 +1,6 @@
 # 시작하기 가이드
 
-이 문서는 `curo-prompt`를 처음 사용하는 사용자를 위한 실습 가이드입니다.
+이 문서는 `curompt`를 처음 사용하는 사용자를 위한 실습 가이드입니다.
 
 ## 전제 조건
 
@@ -12,21 +12,21 @@
 
 ```bash
 # 프로젝트 디렉토리로 이동
-cd /Users/curogom/dev/curo-prompt
+cd /Users/curogom/dev/curompt
 
 # 빌드
 make build
 
 # 바이너리 확인
-./bin/curo-prompt --help
+./bin/curompt --help
 ```
 
 예상 출력:
 ```
-curo-prompt는 CLI 기반 개발자의 LLM 프롬프트를 분석·평가·최적화하는 도구입니다.
+curompt는 CLI 기반 개발자의 LLM 프롬프트를 분석·평가·최적화하는 도구입니다.
 
 Usage:
-  curo-prompt [command]
+  curompt [command]
 
 Available Commands:
   eval        프롬프트 평가 및 점수화
@@ -94,7 +94,7 @@ EOF
 ### 3.1 파일에서 평가
 
 ```bash
-./bin/curo-prompt eval --file test-prompts/sample.md
+./bin/curompt eval --file test-prompts/sample.md
 ```
 
 예상 출력:
@@ -107,19 +107,19 @@ EOF
 ### 3.2 표준 입력에서 평가
 
 ```bash
-cat test-prompts/sample.md | ./bin/curo-prompt eval
+cat test-prompts/sample.md | ./bin/curompt eval
 ```
 
 또는 직접 입력:
 
 ```bash
-echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
+echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 ```
 
 ### 3.3 리포트 파일로 저장
 
 ```bash
-./bin/curo-prompt eval --file test-prompts/sample.md --output reports/sample_report.md
+./bin/curompt eval --file test-prompts/sample.md --output reports/sample_report.md
 ```
 
 리포트 파일이 `reports/sample_report.md`에 저장됩니다.
@@ -128,10 +128,10 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 
 ```bash
 # Claude 사용 (기본값)
-./bin/curo-prompt eval --file test-prompts/sample.md --provider claude
+./bin/curompt eval --file test-prompts/sample.md --provider claude
 
 # OpenAI 사용
-./bin/curo-prompt eval --file test-prompts/sample.md --provider openai
+./bin/curompt eval --file test-prompts/sample.md --provider openai
 ```
 
 ## 4. 일괄 스캔: scan 명령
@@ -140,7 +140,7 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 
 ```bash
 # test-prompts 디렉토리 스캔
-./bin/curo-prompt scan --repo test-prompts
+./bin/curompt scan --repo test-prompts
 ```
 
 예상 출력:
@@ -160,17 +160,17 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 ### 4.2 커스텀 출력 디렉토리
 
 ```bash
-./bin/curo-prompt scan --repo test-prompts --output my-reports
+./bin/curompt scan --repo test-prompts --output my-reports
 ```
 
 ### 4.3 파일 패턴 지정
 
 ```bash
 # .md 파일만 스캔
-./bin/curo-prompt scan --repo test-prompts --patterns "*.md"
+./bin/curompt scan --repo test-prompts --patterns "*.md"
 
 # 여러 패턴
-./bin/curo-prompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
+./bin/curompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
 ```
 
 ## 5. 개선 제안: suggest 명령
@@ -178,7 +178,7 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curo-prompt eval
 ### 5.1 기본 제안 확인
 
 ```bash
-./bin/curo-prompt suggest --file test-prompts/sample.md
+./bin/curompt suggest --file test-prompts/sample.md
 ```
 
 예상 출력:
@@ -207,7 +207,7 @@ EOF
 이 파일로 제안 확인:
 
 ```bash
-./bin/curo-prompt suggest --file test-prompts/needs-improvement.md
+./bin/curompt suggest --file test-prompts/needs-improvement.md
 ```
 
 예상 출력:
@@ -228,7 +228,7 @@ EOF
 ### 5.3 표준 입력에서 제안 확인
 
 ```bash
-cat test-prompts/sample.md | ./bin/curo-prompt suggest
+cat test-prompts/sample.md | ./bin/curompt suggest
 ```
 
 ## 6. 실제 워크플로우 테스트
@@ -249,13 +249,13 @@ Code in Go
 EOF
 
 # 2. 평가 및 점수 확인
-./bin/curo-prompt eval --file my-prompt.md
+./bin/curompt eval --file my-prompt.md
 
 # 3. 개선 제안 확인
-./bin/curo-prompt suggest --file my-prompt.md
+./bin/curompt suggest --file my-prompt.md
 
 # 4. 리포트 저장
-./bin/curo-prompt eval --file my-prompt.md --output my-report.md
+./bin/curompt eval --file my-prompt.md --output my-report.md
 
 # 5. 리포트 확인
 cat my-report.md
@@ -269,7 +269,7 @@ mkdir -p prompts
 # ... 여러 프롬프트 파일 생성 ...
 
 # 일괄 스캔 및 분석
-./bin/curo-prompt scan --repo prompts --output reports
+./bin/curompt scan --repo prompts --output reports
 
 # 리포트 확인
 ls -la reports/
@@ -317,14 +317,14 @@ ls -la reports/
 make build
 
 # 바이너리 존재 확인
-ls -la ./bin/curo-prompt
+ls -la ./bin/curompt
 ```
 
 ### 8.2 파일을 읽을 수 없음
 
 ```bash
 # 파일 경로 확인 (절대 경로 사용)
-./bin/curo-prompt eval --file /full/path/to/prompt.md
+./bin/curompt eval --file /full/path/to/prompt.md
 
 # 파일 권한 확인
 ls -la test-prompts/sample.md
@@ -344,7 +344,7 @@ mkdir -p reports
 chmod 755 reports
 
 # 다시 시도
-./bin/curo-prompt scan --repo test-prompts --output reports
+./bin/curompt scan --repo test-prompts --output reports
 ```
 
 ## 9. 고급 사용법
@@ -354,9 +354,9 @@ chmod 755 reports
 ```bash
 # 프롬프트 생성 → 평가 → 제안
 echo "# ROLE\nEngineer" | \
-  ./bin/curo-prompt eval | \
+  ./bin/curompt eval | \
   tee eval-output.txt | \
-  ./bin/curo-prompt suggest
+  ./bin/curompt suggest
 ```
 
 ### 9.2 배치 처리 스크립트
@@ -367,7 +367,7 @@ echo "# ROLE\nEngineer" | \
 
 for file in prompts/*.md; do
     echo "Evaluating: $file"
-    ./bin/curo-prompt eval --file "$file" --output "reports/$(basename $file .md)_report.md"
+    ./bin/curompt eval --file "$file" --output "reports/$(basename $file .md)_report.md"
 done
 ```
 

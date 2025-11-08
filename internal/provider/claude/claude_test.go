@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/curogom/curo-prompt/internal/provider"
+	"github.com/curogom/curompt/internal/provider"
 )
 
 func TestClaudeProvider_Evaluate(t *testing.T) {

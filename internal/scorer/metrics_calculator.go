@@ -3,8 +3,8 @@ package scorer
 import (
 	"strings"
 
-	"github.com/curogom/curo-prompt/internal/analyzer"
-	"github.com/curogom/curo-prompt/internal/parser"
+	"github.com/curogom/curompt/internal/analyzer"
+	"github.com/curogom/curompt/internal/parser"
 )
 
 // StructureMetricCalculator calculates structure score

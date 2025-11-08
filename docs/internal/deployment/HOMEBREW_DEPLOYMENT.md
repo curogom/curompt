@@ -2,12 +2,12 @@
 
 ## 개요
 
-`curo-prompt`를 Homebrew를 통해 배포하는 방법입니다.
+`curompt`를 Homebrew를 통해 배포하는 방법입니다.
 
 ## 배포 방법 선택
 
 ### 방법 1: Homebrew Core (공식 레포) - 권장 ❌
-- **장점**: `brew install curo-prompt`로 바로 설치 가능
+- **장점**: `brew install curompt`로 바로 설치 가능
 - **단점**: 
   - 리뷰 프로세스가 까다로움
   - 유명도 필요 (GitHub Stars 100+ 등)
@@ -18,7 +18,7 @@
   - 빠른 배포
   - 완전한 제어권
   - 커스터마이징 가능
-- **단점**: 사용자는 `brew install {username}/curo-prompt/curo-prompt` 형식으로 설치
+- **단점**: 사용자는 `brew install {username}/curompt/curompt` 형식으로 설치
 
 ## 구현 단계 (Homebrew Tap 방식)
 
@@ -36,24 +36,24 @@ git push origin v0.1.0
 
 ### 2단계: Formula 파일 작성
 
-Formula 파일: `Formula/c/curo-prompt.rb`
+Formula 파일: `Formula/c/curompt.rb`
 
 ```ruby
 class CuroPrompt < Formula
   desc "CLI tool for analyzing, evaluating, and optimizing LLM prompts"
-  homepage "https://github.com/curogom/curo-prompt"
-  url "https://github.com/curogom/curo-prompt/archive/refs/tags/v0.1.0.tar.gz"
+  homepage "https://github.com/curogom/curompt"
+  url "https://github.com/curogom/curompt/archive/refs/tags/v0.1.0.tar.gz"
   sha256 "CHECKSUM_HERE"  # shasum -a 256 명령으로 계산
   license "Apache-2.0"
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", "-o", bin/"curo-prompt", "./cmd/curo-prompt"
+    system "go", "build", "-o", bin/"curompt", "./cmd/curompt"
   end
 
   test do
-    system "#{bin}/curo-prompt", "--version"
+    system "#{bin}/curompt", "--version"
   end
 end
 ```
@@ -61,10 +61,10 @@ end
 ### 3단계: Homebrew Tap 레포지토리 생성
 
 ```bash
-# 새로운 레포지토리 생성 (예: homebrew-curo-prompt)
-# Formula/c/curo-prompt.rb 파일 추가
-git add Formula/c/curo-prompt.rb
-git commit -m "Add curo-prompt formula"
+# 새로운 레포지토리 생성 (예: homebrew-curompt)
+# Formula/c/curompt.rb 파일 추가
+git add Formula/c/curompt.rb
+git commit -m "Add curompt formula"
 git push
 ```
 
@@ -72,7 +72,7 @@ git push
 
 ```bash
 # Release tarball 다운로드 후
-shasum -a 256 curo-prompt-0.1.0.tar.gz
+shasum -a 256 curompt-0.1.0.tar.gz
 # 결과를 Formula의 sha256에 입력
 ```
 
@@ -109,7 +109,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bin/curo-prompt
+            bin/curompt
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -122,11 +122,11 @@ jobs:
 ```bash
 #!/bin/bash
 VERSION=$1
-SHA256=$(curl -sL "https://github.com/curogom/curo-prompt/archive/refs/tags/v${VERSION}.tar.gz" | shasum -a 256 | awk '{print $1}')
+SHA256=$(curl -sL "https://github.com/curogom/curompt/archive/refs/tags/v${VERSION}.tar.gz" | shasum -a 256 | awk '{print $1}')
 
 # Formula 업데이트
-sed -i '' "s/url \".*\"/url \"https:\/\/github.com\/curogom\/curo-prompt\/archive\/refs\/tags\/v${VERSION}.tar.gz\"/" Formula/c/curo-prompt.rb
-sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Formula/c/curo-prompt.rb
+sed -i '' "s/url \".*\"/url \"https:\/\/github.com\/curogom\/curompt\/archive\/refs\/tags\/v${VERSION}.tar.gz\"/" Formula/c/curompt.rb
+sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Formula/c/curompt.rb
 ```
 
 ## 사용자 설치 방법
@@ -135,13 +135,13 @@ sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Formula/c/curo-prompt.rb
 
 ```bash
 # Tap 추가
-brew tap curogom/curo-prompt
+brew tap curogom/curompt
 
 # 설치
-brew install curo-prompt
+brew install curompt
 
 # 업데이트
-brew upgrade curo-prompt
+brew upgrade curompt
 ```
 
 ## 업데이트 프로세스
