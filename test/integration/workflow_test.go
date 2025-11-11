@@ -26,7 +26,9 @@ func TestWorkflow_CollectAnalyzeScoreReport(t *testing.T) {
 	// 1. 저장소 초기화
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 
@@ -67,7 +69,9 @@ func TestWorkflow_MultiplePrompts(t *testing.T) {
 
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 	eval := evaluator.NewEvaluator("claude")
@@ -117,7 +121,9 @@ func TestWorkflow_ScanEvaluateReport(t *testing.T) {
 	dbPath := filepath.Join(tmpDir, "test.db")
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 

@@ -85,11 +85,13 @@ func newScanCmd() *cobra.Command {
 				return fmt.Errorf("저장소 경로 생성 실패: %w", err)
 			}
 
-			repo, err := repository.NewSQLiteRepository(dbPath)
-			if err != nil {
-				return fmt.Errorf("저장소 초기화 실패: %w", err)
-			}
-			defer repo.Close()
+	repo, err := repository.NewSQLiteRepository(dbPath)
+	if err != nil {
+		return fmt.Errorf("저장소 초기화 실패: %w", err)
+	}
+	defer func() {
+		_ = repo.Close()
+	}()
 
 			ctx := context.Background()
 

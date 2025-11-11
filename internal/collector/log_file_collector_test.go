@@ -28,7 +28,9 @@ func TestLogFileCollector_Collect_ClaudeHistory(t *testing.T) {
 	tmpDB := filepath.Join(tmpDir, "test.db")
 	repo, err := repository.NewSQLiteRepository(tmpDB)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	// Create collector
 	collector := NewLogFileCollector(repo, "claude", logFile)
@@ -60,7 +62,9 @@ func TestLogFileCollector_Collect_CodexHistory(t *testing.T) {
 	tmpDB := filepath.Join(tmpDir, "test.db")
 	repo, err := repository.NewSQLiteRepository(tmpDB)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewLogFileCollector(repo, "codex", logFile)
 	ctx := context.Background()
@@ -84,7 +88,9 @@ func TestLogFileCollector_Collect_EmptyFile(t *testing.T) {
 	tmpDB := filepath.Join(tmpDir, "test.db")
 	repo, err := repository.NewSQLiteRepository(tmpDB)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewLogFileCollector(repo, "claude", logFile)
 	ctx := context.Background()
@@ -103,7 +109,9 @@ func TestLogFileCollector_Collect_InvalidJSON(t *testing.T) {
 	tmpDB := filepath.Join(tmpDir, "test.db")
 	repo, err := repository.NewSQLiteRepository(tmpDB)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewLogFileCollector(repo, "claude", logFile)
 	ctx := context.Background()

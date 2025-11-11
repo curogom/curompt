@@ -19,16 +19,16 @@ func TestStructureMetricCalculator_Calculate(t *testing.T) {
 		OutputFormat: []string{"format1"},
 	}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInputs:             true,
-		HasInvariants:         true,
-		HasOutputFormat:       true,
-		RoleConfidence:        1.0,
-		InputsConfidence:      1.0,
-		InvariantsConfidence:  1.0,
+		HasRole:                true,
+		HasInputs:              true,
+		HasInvariants:          true,
+		HasOutputFormat:        true,
+		RoleConfidence:         1.0,
+		InputsConfidence:       1.0,
+		InvariantsConfidence:   1.0,
 		OutputFormatConfidence: 1.0,
-		DuplicateRules:        []string{},
-		SectionCount:          4,
+		DuplicateRules:         []string{},
+		SectionCount:           4,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -60,12 +60,12 @@ func TestStructureMetricCalculator_WithDuplicates(t *testing.T) {
 		Invariants: []string{"rule1", "rule1"},
 	}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInvariants:         true,
-		RoleConfidence:        1.0,
-		InvariantsConfidence:  1.0,
-		DuplicateRules:        []string{"rule1"},
-		SectionCount:          2,
+		HasRole:              true,
+		HasInvariants:        true,
+		RoleConfidence:       1.0,
+		InvariantsConfidence: 1.0,
+		DuplicateRules:       []string{"rule1"},
+		SectionCount:         2,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -83,16 +83,16 @@ func TestStructureMetricCalculator_MaxScore(t *testing.T) {
 		OutputFormat: []string{"format1"},
 	}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInputs:             true,
-		HasInvariants:         true,
-		HasOutputFormat:       true,
-		RoleConfidence:        1.0,
-		InputsConfidence:      1.0,
-		InvariantsConfidence:  1.0,
+		HasRole:                true,
+		HasInputs:              true,
+		HasInvariants:          true,
+		HasOutputFormat:        true,
+		RoleConfidence:         1.0,
+		InputsConfidence:       1.0,
+		InvariantsConfidence:   1.0,
 		OutputFormatConfidence: 1.0,
-		DuplicateRules:        []string{},
-		SectionCount:          4,
+		DuplicateRules:         []string{},
+		SectionCount:           4,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -110,12 +110,12 @@ func TestStructureMetricCalculator_WithManyDuplicates(t *testing.T) {
 		Invariants: []string{"rule1", "rule1", "rule1", "rule1", "rule1"},
 	}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInvariants:         true,
-		RoleConfidence:        1.0,
-		InvariantsConfidence:  1.0,
-		DuplicateRules:        []string{"rule1"},
-		SectionCount:          2,
+		HasRole:              true,
+		HasInvariants:        true,
+		RoleConfidence:       1.0,
+		InvariantsConfidence: 1.0,
+		DuplicateRules:       []string{"rule1"},
+		SectionCount:         2,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -134,12 +134,12 @@ func TestStructureMetricCalculator_NegativeScoreClampedToZero(t *testing.T) {
 	}
 	// 20개 중복 = -100점, ROLE(50) + INVARIANTS(10) - 100 = -40점 -> 0점으로 클램핑
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInvariants:         true,
-		RoleConfidence:        1.0,
-		InvariantsConfidence:  1.0,
-		DuplicateRules:        []string{"rule1", "rule2", "rule3", "rule4", "rule5", "rule6", "rule7", "rule8", "rule9", "rule10", "rule11", "rule12", "rule13", "rule14", "rule15", "rule16", "rule17", "rule18", "rule19", "rule20"},
-		SectionCount:          2,
+		HasRole:              true,
+		HasInvariants:        true,
+		RoleConfidence:       1.0,
+		InvariantsConfidence: 1.0,
+		DuplicateRules:       []string{"rule1", "rule2", "rule3", "rule4", "rule5", "rule6", "rule7", "rule8", "rule9", "rule10", "rule11", "rule12", "rule13", "rule14", "rule15", "rule16", "rule17", "rule18", "rule19", "rule20"},
+		SectionCount:         2,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -158,16 +158,16 @@ func TestStructureMetricCalculator_ScoreCappedAt100(t *testing.T) {
 		OutputFormat: []string{"format1"},
 	}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInputs:             true,
-		HasInvariants:         true,
-		HasOutputFormat:       true,
-		RoleConfidence:        1.0,
-		InputsConfidence:      1.0,
-		InvariantsConfidence:  1.0,
+		HasRole:                true,
+		HasInputs:              true,
+		HasInvariants:          true,
+		HasOutputFormat:        true,
+		RoleConfidence:         1.0,
+		InputsConfidence:       1.0,
+		InvariantsConfidence:   1.0,
 		OutputFormatConfidence: 1.0,
-		DuplicateRules:        []string{},
-		SectionCount:          4,
+		DuplicateRules:         []string{},
+		SectionCount:           4,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 
@@ -180,14 +180,14 @@ func TestStructureMetricCalculator_ScoreCappedAt100(t *testing.T) {
 func TestStructureMetricCalculator_PartialConfidence(t *testing.T) {
 	prompt := &parser.Prompt{}
 	analysis := &analyzer.AnalysisResult{
-		HasRole:               true,
-		HasInputs:             true,
-		RoleConfidence:        0.6,
-		InputsConfidence:      0.5,
-		InvariantsConfidence:  0.0,
+		HasRole:                true,
+		HasInputs:              true,
+		RoleConfidence:         0.6,
+		InputsConfidence:       0.5,
+		InvariantsConfidence:   0.0,
 		OutputFormatConfidence: 0.0,
-		DuplicateRules:        []string{},
-		SectionCount:          2,
+		DuplicateRules:         []string{},
+		SectionCount:           2,
 	}
 	calculator := NewStructureMetricCalculator(prompt, analysis)
 

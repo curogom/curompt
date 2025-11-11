@@ -18,7 +18,9 @@ func TestCLIWrapperCollector_WrapCommand(t *testing.T) {
 
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewCLIWrapperCollector(repo, "codex")
 
@@ -37,7 +39,9 @@ func TestCLIWrapperCollector_ExtractPrompt(t *testing.T) {
 
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewCLIWrapperCollector(repo, "codex")
 
@@ -56,7 +60,9 @@ func TestCLIWrapperCollector_SavesPrompt(t *testing.T) {
 
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewCLIWrapperCollector(repo, "codex")
 
@@ -79,7 +85,9 @@ func TestCLIWrapperCollector_Name(t *testing.T) {
 
 	repo, err := repository.NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	collector := NewCLIWrapperCollector(repo, "cursor")
 

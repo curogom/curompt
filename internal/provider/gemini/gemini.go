@@ -13,6 +13,7 @@ import (
 	"github.com/curogom/curompt/internal/provider"
 )
 
+//revive:disable-next-line exported
 // GeminiProvider implements Provider for Google Gemini API
 type GeminiProvider struct {
 	apiKey     string
@@ -75,11 +76,13 @@ func (p *GeminiProvider) Evaluate(ctx context.Context, prompt string) (*provider
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := p.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to send request: %w", err)
-	}
-	defer resp.Body.Close()
+ resp, err := p.httpClient.Do(req)
+ if err != nil {
+  return nil, fmt.Errorf("failed to send request: %w", err)
+ }
+ defer func() {
+  _ = resp.Body.Close()
+ }()
 
 	if resp.StatusCode != http.StatusOK {
 		body, err := io.ReadAll(resp.Body)

@@ -39,11 +39,13 @@ Claude Code CLI를 래핑하여 프롬프트를 자동으로 수집합니다.`,
 				return fmt.Errorf("DB 디렉토리 생성 실패: %w", err)
 			}
 
-			repo, err := repository.NewSQLiteRepository(dbPath)
-			if err != nil {
-				return fmt.Errorf("저장소 초기화 실패: %w", err)
-			}
-			defer repo.Close()
+	repo, err := repository.NewSQLiteRepository(dbPath)
+	if err != nil {
+		return fmt.Errorf("저장소 초기화 실패: %w", err)
+	}
+	defer func() {
+		_ = repo.Close()
+	}()
 
 			// Collector 생성
 			collector := collector.NewCLIWrapperCollector(repo, tool)

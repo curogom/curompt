@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	_ "modernc.org/sqlite"
+	_ "modernc.org/sqlite" // sqlite driver
 
 	"github.com/curogom/curompt/internal/model"
 	"github.com/curogom/curompt/internal/parser"
@@ -38,7 +38,7 @@ func NewSQLiteRepository(dbPath string) (PromptRepository, error) {
 	repo := &sqliteRepository{db: db}
 
 	if err := repo.initSchema(); err != nil {
-		db.Close()
+		_ = db.Close()
 		return nil, fmt.Errorf("failed to initialize schema: %w", err)
 	}
 
@@ -221,7 +221,9 @@ func (r *sqliteRepository) FindByTool(ctx context.Context, tool string) ([]*mode
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	var prompts []*model.CollectedPrompt
 
@@ -292,7 +294,9 @@ func (r *sqliteRepository) FindRecent(ctx context.Context, limit int) ([]*model.
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	var prompts []*model.CollectedPrompt
 
@@ -363,7 +367,9 @@ func (r *sqliteRepository) FindAll(ctx context.Context) ([]*model.CollectedPromp
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	var prompts []*model.CollectedPrompt
 

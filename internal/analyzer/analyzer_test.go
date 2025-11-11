@@ -24,13 +24,13 @@ func TestAnalyzer_DetectsRoleSection(t *testing.T) {
 
 func TestAnalyzer_DetectsAllSections(t *testing.T) {
 	prompt := &parser.Prompt{
-		Role:                 "Engineer",
-		Inputs:               []string{"task: string"},
-		Invariants:           []string{"rule1"},
-		OutputFormat:         []string{"format1"},
-		RoleConfidence:       1.0,
-		InputsConfidence:     1.0,
-		InvariantsConfidence: 1.0,
+		Role:                   "Engineer",
+		Inputs:                 []string{"task: string"},
+		Invariants:             []string{"rule1"},
+		OutputFormat:           []string{"format1"},
+		RoleConfidence:         1.0,
+		InputsConfidence:       1.0,
+		InvariantsConfidence:   1.0,
 		OutputFormatConfidence: 1.0,
 	}
 	analyzer := NewAnalyzer()
@@ -123,13 +123,13 @@ func TestAnalyzer_NoDuplicatesWhenAllUnique(t *testing.T) {
 
 func TestAnalyzer_CountsSectionsCorrectly(t *testing.T) {
 	prompt := &parser.Prompt{
-		Role:                 "Engineer",
-		Inputs:               []string{"input1"},
-		Invariants:           []string{"rule1"},
-		OutputFormat:         []string{"format1"},
-		RoleConfidence:       1.0,
-		InputsConfidence:     1.0,
-		InvariantsConfidence: 1.0,
+		Role:                   "Engineer",
+		Inputs:                 []string{"input1"},
+		Invariants:             []string{"rule1"},
+		OutputFormat:           []string{"format1"},
+		RoleConfidence:         1.0,
+		InputsConfidence:       1.0,
+		InvariantsConfidence:   1.0,
 		OutputFormatConfidence: 1.0,
 	}
 	analyzer := NewAnalyzer()
@@ -141,12 +141,12 @@ func TestAnalyzer_CountsSectionsCorrectly(t *testing.T) {
 
 func TestAnalyzer_UsesConfidenceThresholds(t *testing.T) {
 	prompt := &parser.Prompt{
-		RoleConfidence:       0.6,
-		InputsConfidence:     0.55,
-		InvariantsConfidence: 0.2,
+		RoleConfidence:         0.6,
+		InputsConfidence:       0.55,
+		InvariantsConfidence:   0.2,
 		OutputFormatConfidence: 0.0,
-		Inputs:               []string{"stack_profile"},
-		Invariants:           []string{"rule"},
+		Inputs:                 []string{"stack_profile"},
+		Invariants:             []string{"rule"},
 	}
 	analyzer := NewAnalyzer()
 

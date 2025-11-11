@@ -91,11 +91,13 @@ func newCollectCmd() *cobra.Command {
 				return fmt.Errorf("DB 디렉토리 생성 실패: %w", err)
 			}
 
-			repo, err := repository.NewSQLiteRepository(dbPath)
-			if err != nil {
-				return fmt.Errorf("저장소 초기화 실패: %w", err)
-			}
-			defer repo.Close()
+	repo, err := repository.NewSQLiteRepository(dbPath)
+	if err != nil {
+		return fmt.Errorf("저장소 초기화 실패: %w", err)
+	}
+	defer func() {
+		_ = repo.Close()
+	}()
 
 			// 로그 파일 경로 결정
 			if filePath == "" {

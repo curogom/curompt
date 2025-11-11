@@ -142,12 +142,12 @@ func startSpinner(w io.Writer, message string) func(string) {
 
 	if !isTTY {
 		if message != "" {
-			fmt.Fprintf(w, "%s...\n", message)
+		_, _ = fmt.Fprintf(w, "%s...\n", message)
 		}
 		return func(final string) {
 			once.Do(func() {
 				if final != "" {
-					fmt.Fprintf(w, "%s\n", final)
+			_, _ = fmt.Fprintf(w, "%s\n", final)
 				}
 			})
 		}
@@ -162,21 +162,21 @@ func startSpinner(w io.Writer, message string) func(string) {
 		defer ticker.Stop()
 
 		idx := 0
-		fmt.Fprintf(w, "%s %c", message, spinnerChars[idx])
+	_, _ = fmt.Fprintf(w, "%s %c", message, spinnerChars[idx])
 		idx = (idx + 1) % len(spinnerChars)
 
 		for {
 			select {
 			case final := <-updates:
 				padding := strings.Repeat(" ", utf8.RuneCountInString(message)+2)
-				fmt.Fprintf(w, "\r%s\r", padding)
+		_, _ = fmt.Fprintf(w, "\r%s\r", padding)
 				if final != "" {
-					fmt.Fprintf(w, "%s\n", final)
+			_, _ = fmt.Fprintf(w, "%s\n", final)
 				}
 				close(done)
 				return
 			case <-ticker.C:
-				fmt.Fprintf(w, "\r%s %c", message, spinnerChars[idx])
+		_, _ = fmt.Fprintf(w, "\r%s %c", message, spinnerChars[idx])
 				idx = (idx + 1) % len(spinnerChars)
 			}
 		}

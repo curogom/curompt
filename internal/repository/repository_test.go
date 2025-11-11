@@ -21,7 +21,9 @@ func TestPromptRepository_SaveAndFind(t *testing.T) {
 
 	repo, err := NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 
@@ -55,7 +57,9 @@ func TestPromptRepository_FindByTool(t *testing.T) {
 
 	repo, err := NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 
@@ -89,7 +93,9 @@ func TestPromptRepository_FindRecent(t *testing.T) {
 
 	repo, err := NewSQLiteRepository(dbPath)
 	require.NoError(t, err)
-	defer repo.Close()
+	defer func() {
+		_ = repo.Close()
+	}()
 
 	ctx := context.Background()
 

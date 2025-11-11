@@ -51,7 +51,9 @@ func (c *LogFileCollector) Collect(ctx context.Context) ([]*model.CollectedPromp
 	if err != nil {
 		return nil, fmt.Errorf("failed to open log file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	var collectedPrompts []*model.CollectedPrompt
 
@@ -254,7 +256,9 @@ func (c *LogFileCollector) extractCwdFromSessionFile(sessionFile string) string 
 	if err != nil {
 		return ""
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
