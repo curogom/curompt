@@ -9,6 +9,8 @@ import (
 
 // NewRootCmd creates and returns the root command
 func NewRootCmd(version, buildTime, gitCommit string) *cobra.Command {
+	var showStructureConfidence bool
+
 	rootCmd := &cobra.Command{
 		Use:   "curompt",
 		Short: "CLI 기반 LLM 프롬프트 분석·평가·최적화 도구",
@@ -20,6 +22,12 @@ func NewRootCmd(version, buildTime, gitCommit string) *cobra.Command {
 - 점수화 (0-100 종합 점수)
 - 리팩터 제안 (토큰 절감, 규칙 분리, few-shot 축약)`,
 		Version: fmt.Sprintf("%s (built: %s, commit: %s)", version, buildTime, gitCommit),
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			// CLI 플래그를 환경변수로 반영하여 리포터에서 읽을 수 있게 한다
+			if showStructureConfidence {
+				_ = os.Setenv("CUROMPT_SHOW_STRUCTURE_CONFIDENCE", "true")
+			}
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			// 기본 동작: 도움말 출력
 			if err := cmd.Help(); err != nil {
@@ -28,6 +36,9 @@ func NewRootCmd(version, buildTime, gitCommit string) *cobra.Command {
 			}
 		},
 	}
+
+	// 글로벌 플래그
+	rootCmd.PersistentFlags().BoolVar(&showStructureConfidence, "show-structure-confidence", false, "구조 섹션 확신도(%)를 리포트에 표시")
 
 	// 서브커맨드 추가
 	rootCmd.AddCommand(newScanCmd())

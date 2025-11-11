@@ -17,6 +17,7 @@ func TestParsePrompt_DetectsROLESection(t *testing.T) {
 	result, err := parser.Parse(input)
 	require.NoError(t, err)
 	assert.Equal(t, "Senior engineer", result.Role)
+	assert.InDelta(t, 1.0, result.RoleConfidence, 0.0001)
 }
 
 func TestParsePrompt_DetectsINPUTSSection(t *testing.T) {
@@ -33,6 +34,7 @@ Engineer
 	assert.Equal(t, 2, len(result.Inputs))
 	assert.Contains(t, result.Inputs, "stack_profile: YAML")
 	assert.Contains(t, result.Inputs, "task: string")
+	assert.InDelta(t, 1.0, result.InputsConfidence, 0.0001)
 }
 
 func TestParsePrompt_DetectsINVARIANTSection(t *testing.T) {
@@ -49,6 +51,7 @@ Engineer
 	assert.Equal(t, 2, len(result.Invariants))
 	assert.Contains(t, result.Invariants, "계약 우선")
 	assert.Contains(t, result.Invariants, "allowed_packages 안에서만 선택")
+	assert.InDelta(t, 1.0, result.InvariantsConfidence, 0.0001)
 }
 
 func TestParsePrompt_DetectsOUTPUTFORMATSection(t *testing.T) {
@@ -64,6 +67,7 @@ Engineer
 	require.NoError(t, err)
 	assert.Equal(t, 2, len(result.OutputFormat))
 	assert.Contains(t, result.OutputFormat, "1) PLAN — 변경 요약")
+	assert.InDelta(t, 1.0, result.OutputFormatConfidence, 0.0001)
 }
 
 func TestParsePrompt_HandlesCompletePrompt(t *testing.T) {
@@ -94,6 +98,10 @@ Senior full-stack engineer. Framework-agnostic. 모르면 추정 금지.
 	assert.Equal(t, 2, len(result.Inputs))
 	assert.Equal(t, 3, len(result.Invariants))
 	assert.Equal(t, 5, len(result.OutputFormat))
+	assert.InDelta(t, 1.0, result.RoleConfidence, 0.0001)
+	assert.InDelta(t, 1.0, result.InputsConfidence, 0.0001)
+	assert.InDelta(t, 1.0, result.InvariantsConfidence, 0.0001)
+	assert.InDelta(t, 1.0, result.OutputFormatConfidence, 0.0001)
 }
 
 func TestParsePrompt_PreservesRawContent(t *testing.T) {
@@ -103,6 +111,58 @@ func TestParsePrompt_PreservesRawContent(t *testing.T) {
 	result, err := parser.Parse(input)
 	require.NoError(t, err)
 	assert.Equal(t, input, result.Raw)
+}
+
+func TestParsePrompt_FuzzyMatchesTypos(t *testing.T) {
+	input := `# ROEL
+Engineer
+
+# INVARIANTZ
+- keep safety rules
+
+# OUTPUT FORMTA
+1) Summary
+
+# INPTUS
+- task: string`
+
+	parser := NewParser()
+
+	result, err := parser.Parse(input)
+	require.NoError(t, err)
+
+	assert.InDelta(t, 0.9, result.RoleConfidence, 0.1)
+	assert.InDelta(t, 0.9, result.InputsConfidence, 0.1)
+	assert.InDelta(t, 0.9, result.InvariantsConfidence, 0.1)
+	assert.InDelta(t, 0.9, result.OutputFormatConfidence, 0.1)
+}
+
+func TestParsePrompt_DetectsKoreanAliasesWithoutHeaders(t *testing.T) {
+	input := `당신은 시니어 엔지니어입니다.
+
+입력:
+- stack_profile: YAML
+- task: string
+
+제약:
+- 외부 라이브러리 금지
+
+출력 형식:
+- plan: 한 줄 요약
+- diff: 변경 사항`
+
+	parser := NewParser()
+
+	result, err := parser.Parse(input)
+	require.NoError(t, err)
+
+	assert.True(t, result.RoleConfidence > 0.5)
+	assert.True(t, result.InputsConfidence > 0.5)
+	assert.True(t, result.InvariantsConfidence > 0.5)
+	assert.True(t, result.OutputFormatConfidence > 0.5)
+	assert.Contains(t, result.Inputs, "stack_profile: YAML")
+	assert.Contains(t, result.Invariants, "외부 라이브러리 금지")
+	assert.Len(t, result.OutputFormat, 2)
 }
 
 func TestParsePrompt_FromFile(t *testing.T) {

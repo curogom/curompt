@@ -86,3 +86,44 @@ func TestMarkdownReporter_WithMissingSections(t *testing.T) {
 	// MissingSections가 없어도 리포트는 생성되어야 함
 	assert.NotEmpty(t, report)
 }
+
+func TestMarkdownReporter_ShowsConfidenceWhenEnabled(t *testing.T) {
+	t.Setenv("CUROMPT_SHOW_STRUCTURE_CONFIDENCE", "true")
+
+	reporter := NewMarkdownReporter()
+
+	result := &evaluator.EvaluationResult{
+		Prompt: &model.CollectedPrompt{
+			ID:   "test-2",
+			Tool: "codex",
+		},
+		Analysis: &analyzer.AnalysisResult{
+			HasRole:               true,
+			HasInputs:             true,
+			HasInvariants:         false,
+			HasOutputFormat:       true,
+			RoleConfidence:        0.8,
+			InputsConfidence:      0.7,
+			InvariantsConfidence:  0.3,
+			OutputFormatConfidence: 0.9,
+		},
+		Score: &scorer.ScoreResult{
+			OverallScore: 80.0,
+			Metrics: scorer.Metrics{
+				Structure:            75.0,
+				Conciseness:          70.0,
+				InstructionFollowing: 90.0,
+				Risk:                 65.0,
+			},
+		},
+		TokenCount: 120,
+	}
+
+	report, err := reporter.Generate(result)
+	require.NoError(t, err)
+
+	assert.Contains(t, report, "ROLE 확신도")
+	assert.Contains(t, report, "INPUTS 확신도")
+	assert.Contains(t, report, "INVARIANTS 확신도")
+	assert.Contains(t, report, "OUTPUT FORMAT 확신도")
+}

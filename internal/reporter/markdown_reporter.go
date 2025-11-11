@@ -2,6 +2,8 @@ package reporter
 
 import (
 	"fmt"
+	"math"
+	"os"
 	"strings"
 	"time"
 
@@ -9,11 +11,15 @@ import (
 )
 
 // markdownReporter implements Reporter for Markdown format
-type markdownReporter struct{}
+type markdownReporter struct {
+	showStructureConfidence bool
+}
 
 // NewMarkdownReporter creates a new Markdown reporter
 func NewMarkdownReporter() Reporter {
-	return &markdownReporter{}
+	return &markdownReporter{
+		showStructureConfidence: envBool("CUROMPT_SHOW_STRUCTURE_CONFIDENCE"),
+	}
 }
 
 // Name returns the reporter name
@@ -63,6 +69,15 @@ func (r *markdownReporter) Generate(result *evaluator.EvaluationResult) (string,
 	sb.WriteString(fmt.Sprintf("- **INVARIANTS 섹션**: %s\n", r.boolToStatus(result.Analysis.HasInvariants)))
 	sb.WriteString(fmt.Sprintf("- **OUTPUT FORMAT 섹션**: %s\n", r.boolToStatus(result.Analysis.HasOutputFormat)))
 	sb.WriteString(fmt.Sprintf("- **섹션 수**: %d\n", result.Analysis.SectionCount))
+
+	if r.showStructureConfidence {
+		sb.WriteString("\n")
+		sb.WriteString("### 구조 섹션 확신도\n")
+		sb.WriteString(fmt.Sprintf("- ROLE 확신도: %.0f%%\n", confidenceToPercent(result.Analysis.RoleConfidence)))
+		sb.WriteString(fmt.Sprintf("- INPUTS 확신도: %.0f%%\n", confidenceToPercent(result.Analysis.InputsConfidence)))
+		sb.WriteString(fmt.Sprintf("- INVARIANTS 확신도: %.0f%%\n", confidenceToPercent(result.Analysis.InvariantsConfidence)))
+		sb.WriteString(fmt.Sprintf("- OUTPUT FORMAT 확신도: %.0f%%\n", confidenceToPercent(result.Analysis.OutputFormatConfidence)))
+	}
 
 	if len(result.Analysis.DuplicateRules) > 0 {
 		sb.WriteString(fmt.Sprintf("- **중복 규칙**: %d개 발견\n", len(result.Analysis.DuplicateRules)))
@@ -154,4 +169,28 @@ func (r *markdownReporter) boolToStatus(b bool) string {
 		return "✅ 있음"
 	}
 	return "❌ 없음"
+}
+
+func envBool(key string) bool {
+	val := strings.TrimSpace(os.Getenv(key))
+	if val == "" {
+		return false
+	}
+
+	switch strings.ToLower(val) {
+	case "1", "true", "t", "yes", "y", "on":
+		return true
+	default:
+		return false
+	}
+}
+
+func confidenceToPercent(confidence float64) float64 {
+	if confidence < 0 {
+		confidence = 0
+	}
+	if confidence > 1 {
+		confidence = 1
+	}
+	return math.Round(confidence*100 + 1e-9)
 }

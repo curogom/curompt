@@ -1,0 +1,8 @@
+sections:
+  role:        ["role", "역할", "you are", "as a", "당신은", "담당"]
+  inputs:      ["inputs", "입력", "parameters", "요구 입력", "필요 입력"]
+  invariants:  ["invariants", "불변", "제약", "금지", "constraints", "limitations", "규칙"]
+  output:      ["output format", "출력 형식", "응답 형식", "schema", "format", "response", "output"]
+thresholds:
+  fuzzy: 0.85
+

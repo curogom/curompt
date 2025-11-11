@@ -27,29 +27,19 @@ func NewStructureMetricCalculator(prompt *parser.Prompt, analysis *analyzer.Anal
 // - 추가 섹션 존재: INPUTS, INVARIANTS, OUTPUT FORMAT (각 10점)
 // - 중복 규칙 감점: 중복당 -5점
 func (c *StructureMetricCalculator) Calculate() (float64, error) {
-	score := 0.0
+	roleFactor := confidenceOrFallback(c.analysis.RoleConfidence, c.analysis.HasRole)
+	inputFactor := confidenceOrFallback(c.analysis.InputsConfidence, c.analysis.HasInputs)
+	invariantFactor := confidenceOrFallback(c.analysis.InvariantsConfidence, c.analysis.HasInvariants)
+	outputFactor := confidenceOrFallback(c.analysis.OutputFormatConfidence, c.analysis.HasOutputFormat)
 
-	// 필수 섹션 체크
-	if c.analysis.HasRole {
-		score += 50.0
-	}
+	score := 50.0*roleFactor +
+		10.0*inputFactor +
+		10.0*invariantFactor +
+		10.0*outputFactor
 
-	// 추가 섹션 체크
-	if c.analysis.HasInputs {
-		score += 10.0
-	}
-	if c.analysis.HasInvariants {
-		score += 10.0
-	}
-	if c.analysis.HasOutputFormat {
-		score += 10.0
-	}
-
-	// 중복 규칙 감점
 	deduction := float64(len(c.analysis.DuplicateRules)) * 5.0
 	score -= deduction
 
-	// 최소 0점, 최대 100점
 	if score < 0 {
 		score = 0
 	}
@@ -157,4 +147,23 @@ func (c *RiskMetricCalculator) Calculate() (float64, error) {
 // contains checks if text contains substring (case-insensitive)
 func contains(text, substr string) bool {
 	return strings.Contains(strings.ToLower(text), strings.ToLower(substr))
+}
+
+func confidenceOrFallback(confidence float64, fallback bool) float64 {
+	result := clampConfidence(confidence)
+	if result <= 0 && fallback {
+		return 1.0
+	}
+	return result
+}
+
+func clampConfidence(v float64) float64 {
+	switch {
+	case v < 0:
+		return 0
+	case v > 1:
+		return 1
+	default:
+		return v
+	}
 }

@@ -1,5 +1,39 @@
 run:
   timeout: 5m
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - gofmt
+    - gofumpt
+    - revive
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - gosimple
+    - typecheck
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters-settings:
+  revive:
+    severity: warning
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: error-return
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+run:
+  timeout: 5m
   tests: true
 
 linters:
