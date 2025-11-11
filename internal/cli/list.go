@@ -46,13 +46,13 @@ func newListCmd() *cobra.Command {
 				return fmt.Errorf("저장소가 초기화되지 않았습니다. 먼저 프롬프트를 수집하거나 스캔해주세요")
 			}
 
-	repo, err := repository.NewSQLiteRepository(dbPath)
-	if err != nil {
-		return fmt.Errorf("저장소 초기화 실패: %w", err)
-	}
-	defer func() {
-		_ = repo.Close()
-	}()
+			repo, err := repository.NewSQLiteRepository(dbPath)
+			if err != nil {
+				return fmt.Errorf("저장소 초기화 실패: %w", err)
+			}
+			defer func() {
+				_ = repo.Close()
+			}()
 
 			ctx := context.Background()
 

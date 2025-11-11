@@ -8,12 +8,12 @@ import (
 )
 
 var (
-    // Version indicates the build version embedded at compile time.
-    Version = "dev"
-    // BuildTime is the UTC timestamp when the binary was built.
-    BuildTime = "unknown"
-    // GitCommit is the short SHA corresponding to the build.
-    GitCommit = "unknown"
+	// Version indicates the build version embedded at compile time.
+	Version = "dev"
+	// BuildTime is the UTC timestamp when the binary was built.
+	BuildTime = "unknown"
+	// GitCommit is the short SHA corresponding to the build.
+	GitCommit = "unknown"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package claude
 
 import (
-    "bytes"
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -13,8 +13,9 @@ import (
 	"github.com/curogom/curompt/internal/provider"
 )
 
-//revive:disable-next-line exported
 // ClaudeProvider implements Provider for Anthropic Claude API
+//
+//revive:disable-next-line exported
 type ClaudeProvider struct {
 	apiKey     string
 	model      string
@@ -77,13 +78,13 @@ func (p *ClaudeProvider) Evaluate(ctx context.Context, prompt string) (*provider
 	req.Header.Set("x-api-key", p.apiKey)
 	req.Header.Set("anthropic-version", "2023-06-01")
 
- resp, err := p.httpClient.Do(req)
- if err != nil {
-     return nil, fmt.Errorf("failed to send request: %w", err)
- }
- defer func() {
-     _ = resp.Body.Close()
- }()
+	resp, err := p.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send request: %w", err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		body, err := io.ReadAll(resp.Body)
