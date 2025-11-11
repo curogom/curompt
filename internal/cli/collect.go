@@ -23,7 +23,7 @@ func newCollectCmd() *cobra.Command {
 지원 도구:
   - claude: Claude Code history.jsonl 파일
   - codex: Codex CLI history.jsonl 파일
-  - cursor: Cursor IDE 로그 (예정)
+  - cursor: (지원 예정)
 
 예시:
   # Claude Code: 현재 프로젝트만 수집 (CLAUDE.md가 있는 디렉토리)
@@ -44,7 +44,9 @@ func newCollectCmd() *cobra.Command {
   curompt collect --from claude --file ~/.claude/history.jsonl
   
   # 수집 후 자동 평가
-  curompt collect --from claude --eval`,
+  curompt collect --from claude --eval
+
+현재 버전에서는 Cursor 로그 수집은 지원되지 않습니다.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			from, _ := cmd.Flags().GetString("from")         //nolint:errcheck
 			filePath, _ := cmd.Flags().GetString("file")     //nolint:errcheck
@@ -54,7 +56,7 @@ func newCollectCmd() *cobra.Command {
 			provider, _ := cmd.Flags().GetString("provider") //nolint:errcheck
 
 			if from == "" {
-				return fmt.Errorf("--from 옵션은 필수입니다 (claude, codex, cursor)")
+				return fmt.Errorf("--from 옵션은 필수입니다 (claude, codex)")
 			}
 
 			// 프로젝트 루트 확인 (--all이 아닌 경우)

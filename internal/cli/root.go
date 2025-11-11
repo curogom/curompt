@@ -43,7 +43,6 @@ func NewRootCmd(version, buildTime, gitCommit string) *cobra.Command {
 	// 서브커맨드 추가
 	rootCmd.AddCommand(newScanCmd())
 	rootCmd.AddCommand(newEvalCmd())
-	rootCmd.AddCommand(newSuggestCmd())
 	rootCmd.AddCommand(newListCmd())
 	rootCmd.AddCommand(newWrapCmd())
 	rootCmd.AddCommand(newCollectCmd())

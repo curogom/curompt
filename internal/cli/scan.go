@@ -197,9 +197,13 @@ func newScanCmd() *cobra.Command {
 				if useFileOutput && singleOut == "" {
 					filenameSeed := filepath.Base(r.displayPath)
 					if filenameSeed == "" {
-						filenameSeed = r.prompt.ID[:8]
+						filenameSeed = "prompt"
 					}
-					reportFileName := fmt.Sprintf("%s_report.md", sanitizeFileName(filenameSeed))
+					shortID := r.prompt.ID
+					if len(shortID) > 8 {
+						shortID = shortID[:8]
+					}
+					reportFileName := fmt.Sprintf("%s_%s_report.md", sanitizeFileName(filenameSeed), shortID)
 					reportPath := filepath.Join(outputDir, reportFileName)
 					if err := os.WriteFile(reportPath, []byte(r.report), 0644); err != nil {
 						cmd.Printf("  ⚠️  리포트 저장 실패: %v\n", err)
@@ -511,55 +515,27 @@ func isPathWithin(child, parent string) bool {
 }
 
 func maybeAutoCollect(ctx context.Context, repo repository.PromptRepository, targetPath string, cmd *cobra.Command) (int, error) {
-	if !isInteractive() {
-		cmd.Printf("경로에 해당하는 프롬프트가 없습니다. 먼저 'curompt collect --from claude|codex'를 실행하세요.\n")
-		return 0, nil
-	}
-
-	message := "해당 경로에서 저장된 프롬프트가 없습니다. 지금 히스토리를 수집할까요?"
-	proceed, err := promptYesNo(message, false)
-	if err != nil {
-		return 0, err
-	}
-	if !proceed {
-		return 0, nil
-	}
-
-	source, err := promptSourceSelection([]autoCollectOption{
-		{Label: "Claude Code history.jsonl", Value: "claude"},
-		{Label: "Codex CLI history.jsonl", Value: "codex"},
-	})
-	if err != nil {
-		return 0, err
-	}
-	if source == "" {
-		cmd.Printf("수집이 취소되었습니다.\n")
-		return 0, nil
-	}
-
-	logPath := getDefaultLogPath(source)
-	if logPath == "" || !fileExists(logPath) {
-		logPath, err = promptLine("로그 파일 경로를 입력하세요", logPath)
-		if err != nil {
-			return 0, err
+	sources := []string{"claude", "codex"}
+	totalSaved := 0
+	for _, source := range sources {
+		logPath := getDefaultLogPath(source)
+		if logPath == "" || !fileExists(logPath) {
+			cmd.Printf("로그 파일을 찾을 수 없어 %s 수집을 건너뜁니다. (%s)\n", source, logPath)
+			continue
 		}
-	}
-	if logPath == "" {
-		return 0, fmt.Errorf("로그 파일 경로가 필요합니다")
-	}
 
-	projectFilter := defaultProjectPath(source, targetPath)
-	if source == "claude" && projectFilter == "" {
-		projectFilter, err = promptLine("CLAUDE.md가 있는 프로젝트 경로를 입력하세요", "")
+		cmd.Printf("자동 수집 실행 중: %s (모든 프로젝트)\n", source)
+		_, saved, err := collectFromLog(ctx, repo, source, logPath, "", cmd)
 		if err != nil {
-			return 0, err
+			cmd.Printf("  ⚠️  %s 수집 실패: %v\n", source, err)
+			continue
 		}
+		totalSaved += saved
 	}
-	projectFilter = normalizeAbsPath(projectFilter)
 
-	_, saved, err := collectFromLog(ctx, repo, source, logPath, projectFilter, cmd)
-	if err != nil {
-		return 0, err
+	if totalSaved == 0 {
+		cmd.Printf("수집된 프롬프트가 없어 분석을 진행할 수 없습니다. 'curompt collect --from claude --all' 등을 직접 실행해 주세요.\n")
 	}
-	return saved, nil
+
+	return totalSaved, nil
 }
