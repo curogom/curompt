@@ -8,7 +8,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/curogom/curompt/internal/collector"
 	"github.com/curogom/curompt/internal/evaluator"
 	"github.com/curogom/curompt/internal/reporter"
 	"github.com/curogom/curompt/internal/repository"
@@ -106,52 +105,16 @@ func newCollectCmd() *cobra.Command {
 				}
 			}
 
-			// 파일 존재 확인
-			if _, err := os.Stat(filePath); os.IsNotExist(err) {
-				return fmt.Errorf("로그 파일을 찾을 수 없습니다: %s", filePath)
-			}
-
-			// Collector 생성
+			// Collector 실행
 			var projectFilter string
 			if !collectAll && projectRoot != "" {
 				projectFilter = projectRoot
 			}
-			logCollector := collector.NewLogFileCollector(repo, from, filePath)
-			if projectFilter != "" {
-				logCollector.SetProjectFilter(projectFilter)
-			}
 
-			// 수집 실행
 			ctx := context.Background()
-			cmd.Printf("로그 파일에서 프롬프트 수집 중: %s\n", filePath)
-			cmd.Printf("도구: %s\n", from)
-			if projectFilter != "" {
-				cmd.Printf("필터: %s (현재 프로젝트만)\n", projectFilter)
-			} else {
-				cmd.Printf("필터: 모든 프로젝트\n")
-			}
-			cmd.Println()
-
-			prompts, err := logCollector.Collect(ctx)
+			prompts, savedCount, err := collectFromLog(ctx, repo, from, filePath, projectFilter, cmd)
 			if err != nil {
 				return fmt.Errorf("수집 실패: %w", err)
-			}
-
-			if len(prompts) == 0 {
-				cmd.Printf("수집된 프롬프트가 없습니다.\n")
-				return nil
-			}
-
-			cmd.Printf("수집된 프롬프트: %d개\n\n", len(prompts))
-
-			// 저장
-			savedCount := 0
-			for i, prompt := range prompts {
-				if err := repo.Save(ctx, prompt); err != nil {
-					cmd.Printf("  [%d/%d] ⚠️  저장 실패: %v\n", i+1, len(prompts), err)
-					continue
-				}
-				savedCount++
 			}
 
 			cmd.Printf("저장 완료: %d개\n", savedCount)
@@ -209,46 +172,3 @@ func newCollectCmd() *cobra.Command {
 }
 
 // getDefaultLogPath returns the default log file path for a tool
-func getDefaultLogPath(tool string) string {
-	home := os.Getenv("HOME")
-	switch tool {
-	case "claude", "claude-code":
-		return filepath.Join(home, ".claude", "history.jsonl")
-	case "codex":
-		return filepath.Join(home, ".codex", "history.jsonl")
-	case "cursor":
-		// Cursor는 workspaceStorage에 있지만 형식이 다를 수 있음
-		// 기본적으로는 프로젝트별 .cursor 디렉토리 확인
-		// TODO: Cursor 히스토리 파일 위치 정확히 파악 필요
-		return ""
-	default:
-		return ""
-	}
-}
-
-// findProjectRoot finds the project root by looking for CLAUDE.md or Claude.md
-// It searches upward from the current directory
-func findProjectRoot(startDir string) string {
-	current := startDir
-	for {
-		// Check for CLAUDE.md or Claude.md
-		claudeMd := filepath.Join(current, "CLAUDE.md")
-		claudeMdLower := filepath.Join(current, "Claude.md")
-
-		if _, err := os.Stat(claudeMd); err == nil {
-			return current
-		}
-		if _, err := os.Stat(claudeMdLower); err == nil {
-			return current
-		}
-
-		// Move to parent directory
-		parent := filepath.Dir(current)
-		if parent == current {
-			// Reached filesystem root
-			break
-		}
-		current = parent
-	}
-	return ""
-}

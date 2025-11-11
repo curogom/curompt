@@ -1,0 +1,42 @@
+{
+  "homepage.hero.line1": {
+    "message": "Local-first CLI for analyzing, evaluating, and optimizing LLM prompts",
+    "description": "Hero subtitle line 1"
+  },
+  "homepage.hero.line2": {
+    "message": "Secure offline pipeline that never uploads prompt contents",
+    "description": "Hero subtitle line 2"
+  },
+  "homepage.hero.cta.docs": {
+    "message": "Read the docs",
+    "description": "Docs CTA button"
+  },
+  "homepage.hero.cta.github": {
+    "message": "GitHub",
+    "description": "GitHub CTA button"
+  },
+  "homepage.features.cli.title": {
+    "message": "Log-based CLI analysis",
+    "description": "Feature 1 title"
+  },
+  "homepage.features.cli.desc": {
+    "message": "Inspect local prompt execution logs to catch missing sections or forbidden terms before release.",
+    "description": "Feature 1 description"
+  },
+  "homepage.features.eval.title": {
+    "message": "Automated multi-sample evaluation",
+    "description": "Feature 2 title"
+  },
+  "homepage.features.eval.desc": {
+    "message": "Collect samples from Claude, OpenAI, Gemini, and local providers while tracking schema fit, latency, and cost.",
+    "description": "Feature 2 description"
+  },
+  "homepage.features.report.title": {
+    "message": "Evidence-based reports",
+    "description": "Feature 3 title"
+  },
+  "homepage.features.report.desc": {
+    "message": "Produce Markdown/JSON summaries with scores, token usage, and suggested fixes so PRs include reproducible evidence.",
+    "description": "Feature 3 description"
+  }
+}

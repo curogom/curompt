@@ -95,13 +95,13 @@ curompt eval --file prompt.md --output report.md
 ### 2. 레포지토리 스캔
 ```bash
 # 현재 디렉토리 스캔
-curompt scan --repo .
+curompt scan --path .
 
 # 특정 디렉토리 스캔
-curompt scan --repo ./prompts --output reports/
+curompt scan --path ./prompts --output reports/
 
 # 커스텀 패턴
-curompt scan --repo . --patterns "*.md" "*.txt"
+curompt scan --path . --patterns "*.md" "*.txt"
 ```
 
 ### 3. 개선 제안

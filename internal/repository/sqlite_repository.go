@@ -353,6 +353,72 @@ func (r *sqliteRepository) FindRecent(ctx context.Context, limit int) ([]*model.
 	return prompts, rows.Err()
 }
 
+// FindAll returns all stored prompts
+func (r *sqliteRepository) FindAll(ctx context.Context) ([]*model.CollectedPrompt, error) {
+	query := `SELECT id, tool, raw_prompt, role, inputs, invariants, output_format,
+	          timestamp, command, working_dir, metadata
+	          FROM prompts ORDER BY timestamp DESC`
+
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var prompts []*model.CollectedPrompt
+
+	for rows.Next() {
+		var p model.CollectedPrompt
+		var role, inputs, invariants, outputFormat, metadata string
+
+		err := rows.Scan(
+			&p.ID,
+			&p.Tool,
+			&p.RawPrompt,
+			&role,
+			&inputs,
+			&invariants,
+			&outputFormat,
+			&p.Timestamp,
+			&p.Command,
+			&p.WorkingDir,
+			&metadata,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if role != "" || inputs != "" {
+			p.Prompt = &parser.Prompt{Raw: p.RawPrompt, Role: role}
+			if inputs != "" {
+				if err := json.Unmarshal([]byte(inputs), &p.Prompt.Inputs); err != nil {
+					_ = err
+				}
+			}
+			if invariants != "" {
+				if err := json.Unmarshal([]byte(invariants), &p.Prompt.Invariants); err != nil {
+					_ = err
+				}
+			}
+			if outputFormat != "" {
+				if err := json.Unmarshal([]byte(outputFormat), &p.Prompt.OutputFormat); err != nil {
+					_ = err
+				}
+			}
+		}
+
+		if metadata != "" {
+			if err := json.Unmarshal([]byte(metadata), &p.Metadata); err != nil {
+				_ = err
+			}
+		}
+
+		prompts = append(prompts, &p)
+	}
+
+	return prompts, rows.Err()
+}
+
 // Close closes the repository connection
 func (r *sqliteRepository) Close() error {
 	return r.db.Close()

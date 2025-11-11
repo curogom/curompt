@@ -32,6 +32,9 @@ Available Commands:
   eval        프롬프트 평가 및 점수화
   scan        레포지토리 내 프롬프트 파일 스캔 및 분석
   suggest     프롬프트 개선 제안
+
+> **참고:** `curompt scan`은 collect/eval로 저장된 프롬프트를 분석합니다.  
+> 지정한 경로에 데이터가 없으면 CLI가 Claude Code 또는 Codex 로그를 자동 수집할지를 물어봅니다( Cursor 지원은 v1.1 예정 ).
 ```
 
 ## 2. 테스트용 프롬프트 파일 생성
@@ -140,7 +143,7 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 
 ```bash
 # test-prompts 디렉토리 스캔
-./bin/curompt scan --repo test-prompts
+./bin/curompt scan --path test-prompts
 ```
 
 예상 출력:
@@ -160,17 +163,17 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 ### 4.2 커스텀 출력 디렉토리
 
 ```bash
-./bin/curompt scan --repo test-prompts --output my-reports
+./bin/curompt scan --path test-prompts --output my-reports
 ```
 
 ### 4.3 파일 패턴 지정
 
 ```bash
 # .md 파일만 스캔
-./bin/curompt scan --repo test-prompts --patterns "*.md"
+./bin/curompt scan --path test-prompts --patterns "*.md"
 
 # 여러 패턴
-./bin/curompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
+./bin/curompt scan --path test-prompts --patterns "*.md" --patterns "*.txt"
 ```
 
 ## 5. 개선 제안: suggest 명령
@@ -269,7 +272,7 @@ mkdir -p prompts
 # ... 여러 프롬프트 파일 생성 ...
 
 # 일괄 스캔 및 분석
-./bin/curompt scan --repo prompts --output reports
+./bin/curompt scan --path prompts --output reports
 
 # 리포트 확인
 ls -la reports/
@@ -344,7 +347,7 @@ mkdir -p reports
 chmod 755 reports
 
 # 다시 시도
-./bin/curompt scan --repo test-prompts --output reports
+./bin/curompt scan --path test-prompts --output reports
 ```
 
 ## 9. 고급 사용법
@@ -383,4 +386,3 @@ done
 ---
 
 **문제가 발생하면**: GitHub Issues에 리포트하거나 문서를 확인하세요.
-

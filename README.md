@@ -17,6 +17,20 @@ CLI tool for **analyzing, evaluating, and optimizing** LLM prompts used by devel
 - **Refactoring Suggestions**: Token reduction, rule separation, few-shot summarization, cache optimization
 - **Report Output**: Terminal rich summary by default (<=100 lines). Optional file output via `--output` and `--single-output`.
 
+## Documentation
+
+The new Docusaurus site lives under [`website/`](website) and mirrors the English/Korean guides from `README*.md` and `docs/public/**`.
+
+Run it locally:
+
+```bash
+cd website
+npm install
+npm run start
+```
+
+CI builds the site via [`.github/workflows/docs.yml`](.github/workflows/docs.yml). Adjust `docusaurus.config.ts` once you select the final production URL (e.g., GitHub Pages).
+
 ## Quick Start
 
 ### 1. Build
@@ -44,6 +58,10 @@ make build
 # 병렬 작업 수 조정(예: 8)
 ./bin/curompt scan --concurrency 8
 ```
+
+> **Note**: `scan` analyzes prompts already stored in the local DB (saved via `curompt collect …` or `curompt eval …`).  
+> If the selected path has no history yet, the CLI will offer to auto-collect from Claude Code or Codex logs (Cursor support ships in v1.1).  
+> Use `--path /absolute/project/path` to filter by project directory.
 
 ### 3. Quick Test Script
 

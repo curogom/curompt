@@ -20,6 +20,9 @@ type PromptRepository interface {
 	// FindRecent finds recent prompts (limit)
 	FindRecent(ctx context.Context, limit int) ([]*model.CollectedPrompt, error)
 
+	// FindAll returns every stored prompt
+	FindAll(ctx context.Context) ([]*model.CollectedPrompt, error)
+
 	// Close closes the repository connection
 	Close() error
 }

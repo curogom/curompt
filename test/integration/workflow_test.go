@@ -131,7 +131,7 @@ func TestWorkflow_ScanEvaluateReport(t *testing.T) {
 		Tool:      "scan",
 		RawPrompt: string(content),
 		Timestamp: time.Now().Unix(),
-		Command:   "scan --repo " + tmpDir,
+		Command:   "scan --path " + tmpDir,
 	}
 
 	// 저장 및 평가

@@ -22,7 +22,7 @@
 curompt collect --from claude --project /Users/curogom/dev/danggroom
 
 # 특정 레포만 수집 (경로 패턴)
-curompt collect --from claude --repo /Users/curogom/dev/*
+curompt collect --from claude --path /Users/curogom/dev/*
 
 # 제외 옵션
 curompt collect --from claude --exclude /Users/curogom/dev/devrock
@@ -48,7 +48,7 @@ curompt list --tool claude --project /Users/curogom/dev/danggroom
 
 ### 1단계: 필터링 옵션 추가
 - `--project`: 특정 프로젝트 경로
-- `--repo`: 레포 경로 패턴 (glob 지원)
+- `--path`: 레포 경로 패턴 (glob 지원)
 - `--exclude`: 제외할 프로젝트 경로
 
 ### 2단계: 프로젝트별 히스토리 파일 지원
@@ -57,7 +57,7 @@ curompt list --tool claude --project /Users/curogom/dev/danggroom
 
 ### 3단계: `list` 명령에 필터링 추가
 - `--project`: 프로젝트별 조회
-- `--repo`: 레포별 조회
+- `--path`: 레포별 조회
 
 ## 구현 위치
 

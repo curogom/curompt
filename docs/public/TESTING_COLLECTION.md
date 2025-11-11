@@ -6,6 +6,9 @@
 
 This guide helps you test whether `curompt` successfully collects prompts when you use external tools like Claude Code, Codex CLI, or Cursor CLI.
 
+> **Scan note:** `curompt scan` analyzes prompts already saved in the local DB.  
+> If no history exists for a path, the CLI can auto-collect from Claude Code or Codex logs (Cursor support lands in v1.1).
+
 ## Important Notes
 
 ### Claude Code CLI
@@ -38,7 +41,7 @@ JSON format
 EOF
 
 # 2. Scan and collect
-curompt scan --repo .
+curompt scan --path .
 
 # 3. Verify collection
 curompt list
@@ -99,7 +102,7 @@ rm -rf ~/.curompt/db.sqlite
 echo "# ROLE\nEngineer" > test.md
 
 # 3. Scan and collect
-curompt scan --repo .
+curompt scan --path .
 
 # 4. Check if saved
 curompt list
@@ -116,7 +119,7 @@ echo "# ROLE\nEngineer1" > test-prompts/p1.md
 echo "# ROLE\nEngineer2" > test-prompts/p2.md
 
 # 2. Scan all
-curompt scan --repo test-prompts
+curompt scan --path test-prompts
 
 # 3. Verify count
 curompt list --limit 10
@@ -135,7 +138,7 @@ curompt list --limit 10
 curompt collect --from claude-code
 
 # Option B: If you saved prompts as files
-curompt scan --repo ./my-prompts
+curompt scan --path ./my-prompts
 
 # 3. Check collection
 curompt list
@@ -163,7 +166,7 @@ After running collection:
 **Solution:**
 ```bash
 # Re-scan with verbose output
-curompt scan --repo . --patterns "*.md"
+curompt scan --path . --patterns "*.md"
 curompt list
 ```
 
@@ -208,4 +211,3 @@ To improve Claude Code CLI support:
 ---
 
 **For M1 MVP**: File scanning (`scan` command) is fully functional and sufficient for testing prompt collection and evaluation.
-

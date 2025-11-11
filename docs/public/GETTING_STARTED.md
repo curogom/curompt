@@ -34,6 +34,9 @@ Available Commands (surface):
   scan        Scan, parallel-evaluate, and summarize prompts (default entry)
   suggest     Generate prompt improvement suggestions
   collect     Collect prompts from logs (Claude/Codex)
+
+> **Scan note:** `curompt scan` works on prompts already stored in the local DB (via `curompt collect`/`curompt eval`).  
+> If the requested path has no history, the CLI offers to auto-collect from Claude Code or Codex logs (Cursor support arrives in v1.1).
 ```
 
 ## 2. Create Test Prompt Files
@@ -97,14 +100,14 @@ EOF
 
 ```bash
 # Rich summary to console (<=100 lines): stats, distribution, Top-N, coaching
-./bin/curompt scan --repo test-prompts
+./bin/curompt scan --path test-prompts
 ```
 
 ### 3.2 Evaluate from Standard Input
 
 ```bash
 # Only the worst 5 prompts
-./bin/curompt scan --repo test-prompts --top 5
+./bin/curompt scan --path test-prompts --top 5
 ```
 
 Or direct input:
@@ -117,15 +120,15 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 
 ```bash
 # Save a single merged report file
-./bin/curompt scan --repo test-prompts --output reports --single-output all_reports.md
+./bin/curompt scan --path test-prompts --output reports --single-output all_reports.md
 ```
 
 ### 3.4 Change Provider (for token calculation)
 
 ```bash
 # Provider for token/cost metadata
-./bin/curompt scan --repo test-prompts --provider claude   # default
-./bin/curompt scan --repo test-prompts --provider openai
+./bin/curompt scan --path test-prompts --provider claude   # default
+./bin/curompt scan --path test-prompts --provider openai
 ```
 
 ## 4. Batch Scanning: scan Command
@@ -134,7 +137,7 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 
 ```bash
 # Scan test-prompts directory
-./bin/curompt scan --repo test-prompts
+./bin/curompt scan --path test-prompts
 ```
 
 Expected output (summary):
@@ -153,17 +156,17 @@ Expected output (summary):
 ### 4.2 Custom Output Directory
 
 ```bash
-./bin/curompt scan --repo test-prompts --output my-reports
+./bin/curompt scan --path test-prompts --output my-reports
 ```
 
 ### 4.3 Specify File Patterns
 
 ```bash
 # Scan only .md files
-./bin/curompt scan --repo test-prompts --patterns "*.md"
+./bin/curompt scan --path test-prompts --patterns "*.md"
 
 # Multiple patterns
-./bin/curompt scan --repo test-prompts --patterns "*.md" --patterns "*.txt"
+./bin/curompt scan --path test-prompts --patterns "*.md" --patterns "*.txt"
 ```
 
 ## 5. Improvement Suggestions: suggest Command
@@ -262,7 +265,7 @@ mkdir -p prompts
 # ... create multiple prompt files ...
 
 # Batch scan and analyze
-./bin/curompt scan --repo prompts --output reports --single-output all_reports.md
+./bin/curompt scan --path prompts --output reports --single-output all_reports.md
 
 # Check reports
 ls -la reports/
@@ -337,7 +340,7 @@ mkdir -p reports
 chmod 755 reports
 
 # Try again
-./bin/curompt scan --repo test-prompts --output reports
+./bin/curompt scan --path test-prompts --output reports
 ```
 
 ## 9. Advanced Usage

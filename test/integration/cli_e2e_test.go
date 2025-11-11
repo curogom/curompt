@@ -88,7 +88,7 @@ Designer
 	outputDir := filepath.Join(tmpDir, "reports")
 
 	// Run scan command
-	cmd := exec.Command(binaryPath, "scan", "--repo", promptsDir, "--output", outputDir, "--provider", "claude")
+	cmd := exec.Command(binaryPath, "scan", "--path", promptsDir, "--output", outputDir, "--provider", "claude")
 	output, err := cmd.CombinedOutput()
 
 	// Command should succeed

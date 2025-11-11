@@ -9,9 +9,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"time"
 
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 
 	"github.com/curogom/curompt/internal/evaluator"
@@ -24,18 +22,19 @@ import (
 func newScanCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "scan [flags]",
-		Short: "레포지토리 내 프롬프트 파일 스캔 및 분석",
-		Long: `레포지토리 내 프롬프트 파일을 찾아 분석하고 리포트를 생성합니다.
+		Short: "수집된 프롬프트를 분석하고 리포트를 생성",
+		Long: `저장소(DB)에 저장된 프롬프트 기록을 불러와 정적 분석/점수화를 수행합니다.
 
 예시:
-  curompt scan --repo .
-  curompt scan --repo ./prompts --output reports/`,
+  curompt scan                # 전체 히스토리 분석
+  curompt scan --path ~/dev   # 특정 경로에서 실행된 프롬프트만 분석
+  curompt scan --path repo --output reports/`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			repoPath, _ := cmd.Flags().GetString("repo")           //nolint:errcheck
+			pathFilter, _ := cmd.Flags().GetString("path")         //nolint:errcheck
+			legacyRepo, _ := cmd.Flags().GetString("repo")         //nolint:errcheck
 			outputDir, _ := cmd.Flags().GetString("output")        //nolint:errcheck
 			singleOut, _ := cmd.Flags().GetString("single-output") //nolint:errcheck
 			doClean, _ := cmd.Flags().GetBool("clean")             //nolint:errcheck
-			patterns, _ := cmd.Flags().GetStringSlice("patterns")  //nolint:errcheck
 			provider, _ := cmd.Flags().GetString("provider")       //nolint:errcheck
 			concurrency, _ := cmd.Flags().GetInt("concurrency")    //nolint:errcheck
 			fullOutput, _ := cmd.Flags().GetBool("full")           //nolint:errcheck
@@ -44,8 +43,18 @@ func newScanCmd() *cobra.Command {
 			summaryMode, _ := cmd.Flags().GetString("summary")     //nolint:errcheck
 			showAdvice, _ := cmd.Flags().GetBool("advice")         //nolint:errcheck
 
-			if repoPath == "" {
-				repoPath = "."
+			if pathFilter == "" {
+				pathFilter = legacyRepo
+			}
+			pathFilter = strings.TrimSpace(pathFilter)
+
+			var targetPath string
+			if pathFilter != "" {
+				abs, err := filepath.Abs(pathFilter)
+				if err != nil {
+					return fmt.Errorf("경로 해석 실패: %w", err)
+				}
+				targetPath = filepath.Clean(abs)
 			}
 
 			// 출력 디렉터리는 사용자가 지정한 경우에만 사용
@@ -66,35 +75,51 @@ func newScanCmd() *cobra.Command {
 				}
 			}
 
-			// 프롬프트 파일 찾기 (배치 수집)
-			files, err := findPromptFiles(repoPath, patterns)
-			if err != nil {
-				return fmt.Errorf("failed to find prompt files: %w", err)
-			}
-
-			if len(files) == 0 {
-				cmd.Printf("프롬프트 파일을 찾을 수 없습니다. (경로: %s, 패턴: %v)\n", repoPath, patterns)
-				return nil
-			}
-
-			cmd.Printf("발견된 프롬프트 파일: %d개\n\n", len(files))
-
-			// 저장소 초기화 (선택적)
+			// 저장소 초기화 (필수)
 			dbPath := filepath.Join(os.Getenv("HOME"), ".curompt", "db.sqlite")
-			if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
-				cmd.Printf("Warning: failed to create db directory: %v\n", err)
-				dbPath = "" // 저장소 없이 진행
+			if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+				return fmt.Errorf("저장된 프롬프트가 없습니다. 먼저 collect 명령으로 히스토리를 수집하세요")
 			}
 
-			var repo repository.PromptRepository
-			if dbPath != "" {
-				repo, err = repository.NewSQLiteRepository(dbPath)
+			if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+				return fmt.Errorf("저장소 경로 생성 실패: %w", err)
+			}
+
+			repo, err := repository.NewSQLiteRepository(dbPath)
+			if err != nil {
+				return fmt.Errorf("저장소 초기화 실패: %w", err)
+			}
+			defer repo.Close()
+
+			ctx := context.Background()
+
+			allPrompts, err := repo.FindAll(ctx)
+			if err != nil {
+				return fmt.Errorf("프롬프트 로드 실패: %w", err)
+			}
+
+			filteredPrompts := filterPromptsByPath(allPrompts, targetPath)
+			if len(filteredPrompts) == 0 {
+				added, err := maybeAutoCollect(ctx, repo, targetPath, cmd)
 				if err != nil {
-					cmd.Printf("Warning: failed to initialize repository: %v\n", err)
-				} else {
-					defer repo.Close()
+					return err
+				}
+				if added == 0 {
+					cmd.Printf("분석할 프롬프트가 없습니다. collect 또는 eval 명령으로 데이터를 저장한 뒤 다시 실행하세요.\n")
+					return nil
+				}
+				allPrompts, err = repo.FindAll(ctx)
+				if err != nil {
+					return fmt.Errorf("프롬프트 재조회 실패: %w", err)
+				}
+				filteredPrompts = filterPromptsByPath(allPrompts, targetPath)
+				if len(filteredPrompts) == 0 {
+					cmd.Printf("새로 수집한 프롬프트 중 조건과 일치하는 항목이 없습니다.\n")
+					return nil
 				}
 			}
+
+			cmd.Printf("선택된 프롬프트: %d개\n\n", len(filteredPrompts))
 
 			// 병렬 평가 설정
 			if concurrency <= 0 {
@@ -105,94 +130,45 @@ func newScanCmd() *cobra.Command {
 			}
 
 			type evalResult struct {
-				filePath string
-				absPath  string
-				report   string
-				score    float64
-				err      error
+				prompt      *model.CollectedPrompt
+				displayPath string
+				report      string
+				score       float64
+				err         error
 			}
 
 			eval := evaluator.NewEvaluator(provider)
-			ctx := context.Background()
 			markdownReporter := reporter.NewMarkdownReporter()
 
-			// Serialize DB writes to avoid SQLITE_BUSY under parallel evaluation
-			var saveWg sync.WaitGroup
-			saveJobs := make(chan *model.CollectedPrompt, 128)
-			if repo != nil {
-				saveWg.Add(1)
-				go func() {
-					defer saveWg.Done()
-					for cp := range saveJobs {
-						// retry with simple backoff
-						var lastErr error
-						for attempt := 0; attempt < 5; attempt++ {
-							if err := repo.Save(ctx, cp); err != nil {
-								lastErr = err
-								time.Sleep(time.Duration(50*(1<<attempt)) * time.Millisecond)
-								continue
-							}
-							lastErr = nil
-							break
-						}
-						if lastErr != nil {
-							// non-fatal: print a warning
-							cmd.Printf("  ⚠️  저장 실패(최대 재시도 후): %v\n", lastErr)
-						}
-					}
-				}()
-			}
-
-			jobs := make(chan string)
+			jobs := make(chan *model.CollectedPrompt)
 			var wg sync.WaitGroup
 			var mu sync.Mutex
 			var results []evalResult
 
 			worker := func() {
 				defer wg.Done()
-				for file := range jobs {
-					content, err := os.ReadFile(file)
+				for prompt := range jobs {
+					result, err := eval.Evaluate(ctx, prompt)
 					if err != nil {
 						mu.Lock()
-						results = append(results, evalResult{filePath: file, err: fmt.Errorf("파일 읽기 실패: %w", err)})
-						mu.Unlock()
-						continue
-					}
-					absPath, err := filepath.Abs(file)
-					if err != nil {
-						absPath = file
-					}
-					collectedPrompt := &model.CollectedPrompt{
-						ID:         uuid.New().String(),
-						Tool:       "scan",
-						RawPrompt:  string(content),
-						Timestamp:  time.Now().Unix(),
-						Command:    fmt.Sprintf("scan --repo %s --file %s", repoPath, file),
-						WorkingDir: repoPath,
-						Metadata: map[string]string{
-							"file_path": absPath,
-						},
-					}
-					result, err := eval.Evaluate(ctx, collectedPrompt)
-					if err != nil {
-						mu.Lock()
-						results = append(results, evalResult{filePath: file, absPath: absPath, err: fmt.Errorf("평가 실패: %w", err)})
+						results = append(results, evalResult{prompt: prompt, displayPath: resolvePromptDisplayPath(prompt), err: fmt.Errorf("평가 실패: %w", err)})
 						mu.Unlock()
 						continue
 					}
 					report, err := markdownReporter.Generate(result)
 					if err != nil {
 						mu.Lock()
-						results = append(results, evalResult{filePath: file, absPath: absPath, err: fmt.Errorf("리포트 생성 실패: %w", err)})
+						results = append(results, evalResult{prompt: prompt, displayPath: resolvePromptDisplayPath(prompt), err: fmt.Errorf("리포트 생성 실패: %w", err)})
 						mu.Unlock()
 						continue
 					}
-					if repo != nil {
-						// enqueue for serialized save
-						saveJobs <- collectedPrompt
-					}
 					mu.Lock()
-					results = append(results, evalResult{filePath: file, absPath: absPath, report: report, score: result.Score.OverallScore})
+					results = append(results, evalResult{
+						prompt:      prompt,
+						displayPath: resolvePromptDisplayPath(prompt),
+						report:      report,
+						score:       result.Score.OverallScore,
+					})
 					mu.Unlock()
 				}
 			}
@@ -201,8 +177,8 @@ func newScanCmd() *cobra.Command {
 				wg.Add(1)
 				go worker()
 			}
-			for _, f := range files {
-				jobs <- f
+			for _, p := range filteredPrompts {
+				jobs <- p
 			}
 			close(jobs)
 			wg.Wait()
@@ -212,26 +188,24 @@ func newScanCmd() *cobra.Command {
 			linesPrinted := 0
 			for _, r := range results {
 				if r.err != nil {
-					cmd.Printf("  ⚠️  %s: %v\n", r.filePath, r.err)
+					cmd.Printf("  ⚠️  %s: %v\n", r.displayPath, r.err)
 					continue
 				}
 
 				if useFileOutput && singleOut == "" {
-					reportFileName := fmt.Sprintf("%s_report.md", sanitizeFileName(filepath.Base(r.filePath)))
+					filenameSeed := filepath.Base(r.displayPath)
+					if filenameSeed == "" {
+						filenameSeed = r.prompt.ID[:8]
+					}
+					reportFileName := fmt.Sprintf("%s_report.md", sanitizeFileName(filenameSeed))
 					reportPath := filepath.Join(outputDir, reportFileName)
 					if err := os.WriteFile(reportPath, []byte(r.report), 0644); err != nil {
 						cmd.Printf("  ⚠️  리포트 저장 실패: %v\n", err)
 						continue
 					}
-
-					// finalize DB writes (once after processing all results)
-					if repo != nil {
-						close(saveJobs)
-						saveWg.Wait()
-					}
 					cmd.Printf("  ✅ 완료 - 점수: %.1f/100, 리포트: %s\n", r.score, reportPath)
 				} else if useFileOutput && singleOut != "" {
-					header := fmt.Sprintf("# %s\n\n", r.absPath)
+					header := fmt.Sprintf("# %s\n\n", r.displayPath)
 					mergedReports = append(mergedReports, header+r.report+"\n\n")
 					cmd.Printf("  ✅ 완료 - 점수: %.1f/100\n", r.score)
 				} else {
@@ -239,7 +213,7 @@ func newScanCmd() *cobra.Command {
 					if fullOutput {
 						// 전체 출력 강제
 						sep := strings.Repeat("-", 80)
-						cmd.Printf("%s\n파일: %s\n%s\n%s\n\n", sep, r.absPath, sep, r.report)
+						cmd.Printf("%s\n프롬프트: %s\n%s\n%s\n\n", sep, r.displayPath, sep, r.report)
 						cmd.Printf("  ✅ 완료 - 점수: %.1f/100 (stdout 출력)\n", r.score)
 					}
 				}
@@ -379,7 +353,7 @@ func newScanCmd() *cobra.Command {
 							limit = maxLines
 						}
 						for i := 0; i < limit; i++ {
-							cmd.Printf("%2d) %.1f  %s\n", i+1, good[i].score, good[i].absPath)
+							cmd.Printf("%2d) %.1f  %s\n", i+1, good[i].score, good[i].displayPath)
 							linesPrinted++
 							if maxLines > 0 && linesPrinted >= maxLines {
 								cmd.Printf("... (요약 출력 제한 %d라인에 도달)\n", maxLines)
@@ -397,7 +371,7 @@ func newScanCmd() *cobra.Command {
 								// good은 오름차순이므로 뒤에서부터 선택
 								for i := 0; i < bestN; i++ {
 									idx := len(good) - 1 - i
-									cmd.Printf("%2d) %.1f  %s\n", i+1, good[idx].score, good[idx].absPath)
+									cmd.Printf("%2d) %.1f  %s\n", i+1, good[idx].score, good[idx].displayPath)
 									linesPrinted++
 									if maxLines > 0 && linesPrinted >= maxLines {
 										cmd.Printf("... (요약 출력 제한 %d라인에 도달)\n", maxLines)
@@ -421,7 +395,7 @@ func newScanCmd() *cobra.Command {
 				}
 			}
 
-			cmd.Printf("\n총 %d개 파일 분석 완료\n", successCount)
+			cmd.Printf("\n총 %d개 프롬프트 분석 완료\n", successCount)
 			if useFileOutput {
 				cmd.Printf("리포트 저장 위치: %s\n", outputDir)
 			}
@@ -430,11 +404,14 @@ func newScanCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringP("repo", "r", ".", "스캔할 레포지토리 경로")
+	cmd.Flags().String("path", "", "특정 경로에서 생성된 프롬프트만 분석")
+	cmd.Flags().String("repo", "", "(deprecated) --path로 대체되었습니다")
+	if err := cmd.Flags().MarkHidden("repo"); err != nil {
+		cmd.Printf("Warning: failed to hide --repo flag: %v\n", err)
+	}
 	cmd.Flags().StringP("output", "o", "", "리포트 출력 디렉토리 (미지정 시 콘솔 출력)")
 	cmd.Flags().String("single-output", "", "여러 리포트를 하나의 파일로 병합해 저장 (— --output 필요)")
 	cmd.Flags().Bool("clean", false, "--output 디렉토리의 기존 .md 리포트를 정리하고 새로 생성")
-	cmd.Flags().StringSlice("patterns", []string{"*.md", "*.txt"}, "프롬프트 파일 패턴")
 	cmd.Flags().StringP("provider", "p", "claude", "LLM Provider (토큰 계산용)")
 	cmd.Flags().Int("concurrency", 0, "동시 평가 작업 수 (기본값: CPU 코어 수)")
 	cmd.Flags().Bool("full", false, "콘솔에 전체 리포트를 출력 (기본은 요약)")
@@ -446,48 +423,6 @@ func newScanCmd() *cobra.Command {
 	return cmd
 }
 
-// findPromptFiles finds prompt files matching patterns in the directory
-func findPromptFiles(rootPath string, patterns []string) ([]string, error) {
-	var files []string
-
-	err := filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			// 권한 문제 등 접근 불가 경로는 건너뜀
-			if os.IsPermission(err) {
-				return nil
-			}
-			// 기타 오류도 스캔을 멈추지 않고 계속 진행
-			return nil
-		}
-
-		if info.IsDir() {
-			// 특정 디렉토리는 제외
-			name := info.Name()
-			if strings.HasPrefix(name, ".") && name != "." {
-				return filepath.SkipDir
-			}
-			switch strings.ToLower(name) {
-			case ".git", ".hg", ".svn", ".trash", "node_modules", "vendor", "dist", "build", ".next", ".cache", "library":
-				return filepath.SkipDir
-			}
-			return nil
-		}
-
-		// 패턴 매칭
-		for _, pattern := range patterns {
-			matched, _ := filepath.Match(pattern, info.Name()) //nolint:errcheck
-			if matched {
-				files = append(files, path)
-				break
-			}
-		}
-
-		return nil
-	})
-
-	return files, err
-}
-
 // sanitizeFileName sanitizes file name for report output
 func sanitizeFileName(name string) string {
 	name = strings.TrimSuffix(name, filepath.Ext(name))
@@ -495,4 +430,134 @@ func sanitizeFileName(name string) string {
 	name = strings.ReplaceAll(name, "/", "_")
 	name = strings.ReplaceAll(name, "\\", "_")
 	return name
+}
+
+func filterPromptsByPath(prompts []*model.CollectedPrompt, target string) []*model.CollectedPrompt {
+	if target == "" {
+		return prompts
+	}
+	var filtered []*model.CollectedPrompt
+	for _, p := range prompts {
+		projectPath := resolvePromptProjectPath(p)
+		if projectPath == "" {
+			continue
+		}
+		if isPathWithin(normalizeAbsPath(projectPath), target) {
+			filtered = append(filtered, p)
+		}
+	}
+	return filtered
+}
+
+func resolvePromptProjectPath(p *model.CollectedPrompt) string {
+	if p.Metadata != nil {
+		if project := p.Metadata["project"]; project != "" {
+			return project
+		}
+		if filePath := p.Metadata["file_path"]; filePath != "" {
+			return filepath.Dir(filePath)
+		}
+	}
+	if p.WorkingDir != "" {
+		return p.WorkingDir
+	}
+	return ""
+}
+
+func resolvePromptDisplayPath(p *model.CollectedPrompt) string {
+	if p.Metadata != nil {
+		if filePath := p.Metadata["file_path"]; filePath != "" {
+			return filePath
+		}
+		if project := p.Metadata["project"]; project != "" {
+			return project
+		}
+	}
+	if p.WorkingDir != "" {
+		return p.WorkingDir
+	}
+	return p.ID
+}
+
+func normalizeAbsPath(path string) string {
+	if path == "" {
+		return ""
+	}
+	if !filepath.IsAbs(path) {
+		abs, err := filepath.Abs(path)
+		if err == nil {
+			path = abs
+		}
+	}
+	return filepath.Clean(path)
+}
+
+func isPathWithin(child, parent string) bool {
+	if parent == "" {
+		return true
+	}
+	parent = normalizeAbsPath(parent)
+	child = normalizeAbsPath(child)
+	if child == "" || parent == "" {
+		return false
+	}
+	rel, err := filepath.Rel(parent, child)
+	if err != nil {
+		return false
+	}
+	return rel == "." || (!strings.HasPrefix(rel, ".."))
+}
+
+func maybeAutoCollect(ctx context.Context, repo repository.PromptRepository, targetPath string, cmd *cobra.Command) (int, error) {
+	if !isInteractive() {
+		cmd.Printf("경로에 해당하는 프롬프트가 없습니다. 먼저 'curompt collect --from claude|codex'를 실행하세요.\n")
+		return 0, nil
+	}
+
+	message := "해당 경로에서 저장된 프롬프트가 없습니다. 지금 히스토리를 수집할까요?"
+	proceed, err := promptYesNo(message, false)
+	if err != nil {
+		return 0, err
+	}
+	if !proceed {
+		return 0, nil
+	}
+
+	source, err := promptSourceSelection([]autoCollectOption{
+		{Label: "Claude Code history.jsonl", Value: "claude"},
+		{Label: "Codex CLI history.jsonl", Value: "codex"},
+	})
+	if err != nil {
+		return 0, err
+	}
+	if source == "" {
+		cmd.Printf("수집이 취소되었습니다.\n")
+		return 0, nil
+	}
+
+	logPath := getDefaultLogPath(source)
+	if logPath == "" || !fileExists(logPath) {
+		logPath, err = promptLine("로그 파일 경로를 입력하세요", logPath)
+		if err != nil {
+			return 0, err
+		}
+	}
+	if logPath == "" {
+		return 0, fmt.Errorf("로그 파일 경로가 필요합니다")
+	}
+
+	projectFilter := defaultProjectPath(source, targetPath)
+	if source == "claude" && projectFilter == "" {
+		projectFilter, err = promptLine("CLAUDE.md가 있는 프로젝트 경로를 입력하세요", "")
+		if err != nil {
+			return 0, err
+		}
+	}
+	projectFilter = normalizeAbsPath(projectFilter)
+
+	_, saved, err := collectFromLog(ctx, repo, source, logPath, projectFilter, cmd)
+	if err != nil {
+		return 0, err
+	}
+	return saved, nil
 }

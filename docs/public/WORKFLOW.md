@@ -6,6 +6,9 @@
 
 This document explains how `curompt` collects, stores, and manages prompts.
 
+> **Scan note:** `curompt scan` works on prompts that already exist in the local DB.  
+> When no history is available for the selected path, the CLI can auto-collect from Claude Code or Codex logs (Cursor support arrives in v1.1).
+
 ## Current Workflow
 
 ### 1. Initial Setup
@@ -14,7 +17,7 @@ When you first run `curompt`, the database is automatically initialized:
 
 ```bash
 # First run - DB will be created at ~/.curompt/db.sqlite
-curompt scan --repo .
+curompt scan --path .
 ```
 
 The database is created at: `~/.curompt/db.sqlite`
@@ -27,13 +30,13 @@ Scan existing prompt files in your repository:
 
 ```bash
 # Scan current directory for prompt files
-curompt scan --repo .
+curompt scan --path .
 
 # Scan specific directory
-curompt scan --repo ./prompts
+curompt scan --path ./prompts
 
 # Custom file patterns
-curompt scan --repo . --patterns "*.md" --patterns "*.txt"
+curompt scan --path . --patterns "*.md" --patterns "*.txt"
 ```
 
 **What happens by default (all in one):**
@@ -112,7 +115,7 @@ curompt collect --from codex --all
 
 #### Deprecated: Direct Evaluation (`eval`)
 
-Single-file evaluation is covered by `scan` (pointing `--repo` to a file or using patterns).
+Single-file evaluation is covered by `scan` (pointing `--path` to a file or using patterns).
 If needed, `eval` can be used but is no longer highlighted in docs.
 
 Wrap external CLI tools to capture prompts:
@@ -167,7 +170,7 @@ curompt list --eval
 [1] ID: a1b2c3d4
     도구: scan
     시간: 2025-01-15 14:30:22
-    명령: scan --repo ./prompts
+    명령: scan --path ./prompts
     경로: /Users/user/project
     프롬프트: # ROLE\nSenior Engineer\n\n# INPUTS\n- task: string...
 ```
@@ -241,7 +244,7 @@ Stored information:
 1. **Initial Setup**
    ```bash
    # Scan your existing prompt files
-   curompt scan --repo ./prompts
+   curompt scan --path ./prompts
    ```
 
 2. **View Collected Prompts**
@@ -262,7 +265,7 @@ Stored information:
 1. **After Creating New Prompts**
    ```bash
    # Scan new prompts
-   curompt scan --repo ./prompts
+   curompt scan --path ./prompts
    ```
 
 2. **Quick Evaluation (Without Saving)**
@@ -288,4 +291,3 @@ Stored information:
 ---
 
 **Questions?** Check [Getting Started Guide](./GETTING_STARTED.md) or [Architecture](./ARCHITECTURE.md).
-

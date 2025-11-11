@@ -6,6 +6,9 @@
 
 이 문서는 `curompt`가 프롬프트를 수집, 저장, 관리하는 방법을 설명합니다.
 
+> **참고:** `curompt scan`은 DB에 저장된 프롬프트를 분석합니다.  
+> 지정한 경로에 데이터가 없으면 CLI가 Claude Code 또는 Codex 로그를 자동 수집할지를 물어보고, Cursor 지원은 v1.1에서 추가됩니다.
+
 ## 현재 워크플로우
 
 ### 1. 초기 설정
@@ -14,7 +17,7 @@
 
 ```bash
 # 첫 실행 - ~/.curompt/db.sqlite에 DB 생성됨
-curompt scan --repo .
+curompt scan --path .
 ```
 
 데이터베이스 위치: `~/.curompt/db.sqlite`
@@ -27,13 +30,13 @@ curompt scan --repo .
 
 ```bash
 # 현재 디렉토리에서 프롬프트 파일 스캔
-curompt scan --repo .
+curompt scan --path .
 
 # 특정 디렉토리 스캔
-curompt scan --repo ./prompts
+curompt scan --path ./prompts
 
 # 커스텀 파일 패턴
-curompt scan --repo . --patterns "*.md" --patterns "*.txt"
+curompt scan --path . --patterns "*.md" --patterns "*.txt"
 ```
 
 **작동 방식 (한 번에 모든 작업 수행):**
@@ -159,7 +162,7 @@ curompt list --eval
 [1] ID: a1b2c3d4
     도구: scan
     시간: 2025-01-15 14:30:22
-    명령: scan --repo ./prompts
+    명령: scan --path ./prompts
     경로: /Users/user/project
     프롬프트: # ROLE\nSenior Engineer\n\n# INPUTS\n- task: string...
 ```
@@ -233,7 +236,7 @@ curompt list --tool scan --eval --output reports/
 1. **초기 설정**
    ```bash
    # 기존 프롬프트 파일 스캔
-   curompt scan --repo ./prompts
+   curompt scan --path ./prompts
    ```
 
 2. **수집된 프롬프트 확인**
@@ -254,7 +257,7 @@ curompt list --tool scan --eval --output reports/
 1. **새 프롬프트 작성 후**
    ```bash
    # 새 프롬프트 스캔
-   curompt scan --repo ./prompts
+   curompt scan --path ./prompts
    ```
 
 2. **빠른 평가 (저장 없이)**
@@ -280,4 +283,3 @@ curompt list --tool scan --eval --output reports/
 ---
 
 **질문?** [시작하기 가이드](./GETTING_STARTED.md) 또는 [아키텍처](./ARCHITECTURE.md)를 확인하세요.
-

@@ -31,12 +31,16 @@ echo "# ROLE\nEngineer\n\n# INPUTS\n- task: string" | ./bin/curompt eval
 # 파일로 평가
 ./bin/curompt eval --file prompts/dev_contract_v2.md
 
-# 일괄 스캔
-./bin/curompt scan --repo prompts/
+# 일괄 스캔 (reports/에 저장된 프롬프트 기준)
+./bin/curompt scan --path prompts/
 
 # 개선 제안 확인
 ./bin/curompt suggest --file prompts/dev_contract_v2.md
 ```
+
+> `scan` 명령은 collect/eval로 저장된 프롬프트를 분석합니다.  
+> 현재 경로에 해당하는 히스토리가 없으면 CLI가 Claude Code 또는 Codex 로그를 자동 수집할지 물어봅니다( Cursor 지원은 v1.1 예정 ).  
+> 특정 프로젝트에 한정하려면 `--path /프로젝트/절대/경로` 옵션을 사용하세요.
 
 ### 3. 빠른 테스트 스크립트
 

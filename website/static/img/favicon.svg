@@ -1,0 +1,19 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <style>
+      .shield { stroke:#43115c; stroke-width:8; stroke-linejoin:round; }
+      .circuit { stroke:#24cbb7; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; }
+    </style>
+  </defs>
+  <path class="shield" d="M64 8 L102 24 V60 C102 82 86 108 64 118 C42 108 26 82 26 60 V24 Z" />
+  <polyline class="circuit" points="36 32 48 32" />
+  <polyline class="circuit" points="92 32 80 32" />
+  <polyline class="circuit" points="36 96 52 96" />
+  <polyline class="circuit" points="92 72 76 72" />
+  <circle class="circuit" cx="52" cy="32" r="3" />
+  <circle class="circuit" cx="76" cy="32" r="3" />
+  <circle class="circuit" cx="52" cy="96" r="3" />
+  <circle class="circuit" cx="76" cy="72" r="3" />
+  <polyline class="circuit" points="50 54 62 64 50 74" />
+  <line class="circuit" x1="70" y1="64" x2="86" y2="64" />
+</svg>

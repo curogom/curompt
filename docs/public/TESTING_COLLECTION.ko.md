@@ -6,6 +6,8 @@
 
 이 가이드는 Claude Code, Codex CLI, Cursor CLI 같은 외부 도구를 사용할 때 `curompt`가 프롬프트를 성공적으로 수집하는지 테스트하는 방법을 안내합니다.
 
+> **참고:** `curompt scan`은 DB에 저장된 프롬프트를 분석하며, 해당 경로에 데이터가 없으면 Claude Code 또는 Codex 로그를 자동 수집할지 물어봅니다. (Cursor 지원은 v1.1 예정)
+
 ## 중요 사항
 
 ### Claude Code CLI
@@ -38,7 +40,7 @@ JSON format
 EOF
 
 # 2. 스캔 및 수집
-curompt scan --repo .
+curompt scan --path .
 
 # 3. 수집 확인
 curompt list
@@ -99,7 +101,7 @@ rm -rf ~/.curompt/db.sqlite
 echo "# ROLE\nEngineer" > test.md
 
 # 3. 스캔 및 수집
-curompt scan --repo .
+curompt scan --path .
 
 # 4. 저장 확인
 curompt list
@@ -116,7 +118,7 @@ echo "# ROLE\nEngineer1" > test-prompts/p1.md
 echo "# ROLE\nEngineer2" > test-prompts/p2.md
 
 # 2. 모두 스캔
-curompt scan --repo test-prompts
+curompt scan --path test-prompts
 
 # 3. 개수 확인
 curompt list --limit 10
@@ -135,7 +137,7 @@ curompt list --limit 10
 curompt collect --from claude-code
 
 # 옵션 B: 프롬프트를 파일로 저장했다면
-curompt scan --repo ./my-prompts
+curompt scan --path ./my-prompts
 
 # 3. 수집 확인
 curompt list
@@ -163,7 +165,7 @@ curompt list
 **해결:**
 ```bash
 # 상세 출력과 함께 재스캔
-curompt scan --repo . --patterns "*.md"
+curompt scan --path . --patterns "*.md"
 curompt list
 ```
 
@@ -204,4 +206,3 @@ Claude Code를 완전히 지원하려면:
 ---
 
 **M1 MVP를 위해**: 파일 스캔(`scan` 명령)이 완전히 작동하며 프롬프트 수집 및 평가 테스트에 충분합니다.
-

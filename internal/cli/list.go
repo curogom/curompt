@@ -81,8 +81,8 @@ func newListCmd() *cobra.Command {
 			if len(prompts) == 0 {
 				cmd.Printf("저장된 프롬프트가 없습니다.\n")
 				cmd.Printf("\n프롬프트를 수집하려면:\n")
-				cmd.Printf("  - scan 명령으로 파일 스캔: curompt scan --repo .\n")
-				cmd.Printf("  - eval 명령으로 평가 및 저장: curompt eval --file prompt.md\n")
+				cmd.Printf("  - collect 명령으로 Claude/Codex 로그를 수집하세요.\n")
+				cmd.Printf("  - eval 명령으로 개별 프롬프트를 평가해 저장하세요.\n")
 				return nil
 			}
 

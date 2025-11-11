@@ -34,10 +34,9 @@ echo "=== 4. suggest 명령 테스트 ==="
 ./bin/curompt suggest --file test-prompts/sample.md | head -15
 
 echo ""
-echo "=== 5. scan 명령 테스트 ==="
-mkdir -p test-reports
-./bin/curompt scan --repo test-prompts --output test-reports 2>&1 | tail -10
+echo "=== 5. 참고: scan은 히스토리 기반 ==="
+echo "현재 스크립트에서는 eval/suggest만 확인합니다."
+echo "실제 환경에서는 'curompt collect --from claude' 후 'curompt scan --path <project>'를 실행하세요."
 
 echo ""
 echo "=== 테스트 완료! ==="
-echo "리포트 확인: ls -la test-reports/"

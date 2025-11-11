@@ -7,7 +7,9 @@ on:
 
 # GitHub Actions 권한 설정
 permissions:
-  contents: write  # Release 생성에 필요
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   release:
@@ -132,3 +134,46 @@ jobs:
           files: |
             bin/${{ matrix.asset_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  docs:
+    name: Build Docs
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: website/package-lock.json
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci
+      - name: Build website
+        working-directory: website
+        run: npm run build
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/build
+
+  deploy-docs:
+    name: Deploy Docs
+    needs: docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
